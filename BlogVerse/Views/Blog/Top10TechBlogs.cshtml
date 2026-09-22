@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Top 10 Tech Blogs to Follow";
+}
+
+<div class="content blog-content">
+    <h1 class="text-center mb-4"><span style="font-weight: bold;">Top 10 Tech Blogs to Follow</span></h1>
+    <img src="~/images/tech-blogs.png" alt="Top Tech Blogs" class="img-fluid rounded mx-auto d-block mb-4" style="max-height: 400px;" />
+
+    <div class="content">
+        <p>
+            Staying up-to-date with technology is easier when you follow the right voices. In 2025, these tech blogs stand out for their insights, innovation, and community engagement.
+        </p>
+
+        <ol>
+            <li><strong>TechCrunch</strong> – Latest startup news, product launches, and industry trends.</li>
+            <li><strong>The Verge</strong> – Great coverage of gadgets, tech culture, and reviews.</li>
+            <li><strong>Wired</strong> – In-depth features on how technology is changing the world.</li>
+            <li><strong>Ars Technica</strong> – Brilliant deep-dives into science, IT, and policy.</li>
+            <li><strong>9to5Mac / 9to5Google</strong> – News dedicated to Apple and Google ecosystems.</li>
+            <li><strong>Mashable Tech</strong> – A fun mix of tech and digital culture.</li>
+            <li><strong>TechRadar</strong> – Hardware reviews and buyer guides.</li>
+            <li><strong>Hacker Noon</strong> – Stories from the developer and tech community.</li>
+            <li><strong>MIT Technology Review</strong> – Research-backed analysis on AI, robotics, and more.</li>
+            <li><strong>BlogVerse</strong> – A growing space for fresh, upcoming tech voices (yes, that’s us 😉).</li>
+        </ol>
+
+        <p>Bookmark these blogs to stay informed and inspired throughout the year!</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        if (!sessionStorage.getItem('registerPromptShown')) {
+            const shouldRedirect = confirm("Love writing? Join BlogVerse and share your journey. Want to register?");
+            if (shouldRedirect) {
+                window.location.href = "/Account/Register";
+            }
+            sessionStorage.setItem('registerPromptShown', 'true');
+        }
+    }, 3000);
+</script>

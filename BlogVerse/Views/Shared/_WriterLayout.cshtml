@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - BlogVerse</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .writer-layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .writer-sidebar {
+            width: 240px;
+            background-color: #8E83A9;
+            color: white;
+            padding: 1rem 0.5rem;
+            transition: width 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .writer-sidebar.collapsed {
+                width: 60px;
+            }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            align-self: flex-start;
+            margin-left: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            white-space: nowrap;
+            transition: opacity 0.3s ease;
+        }
+
+        .writer-sidebar.collapsed .sidebar-title {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .writer-sidebar.collapsed .logo-img {
+            width: 0;
+            height: 0;
+            margin: 0;
+            opacity: 0;
+        }
+
+        .nav {
+            list-style: none;
+            padding-left: 0;
+            width: 100%;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+            .nav-link:hover {
+                background-color: #B6A8CA;
+            }
+
+        .link-text {
+            margin-left: 1.5rem;
+            transition: opacity 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .writer-sidebar.collapsed .link-text {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .writer-content {
+            flex-grow: 1;
+            padding: 2rem;
+            background-color: #F4EAF1;
+            overflow-y: auto;
+            transition: padding 0.3s ease;
+        }
+
+            .writer-content.expanded {
+                padding-left: 4rem;
+            }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <div class="writer-layout">
+        <aside class="writer-sidebar" id="writerSidebar">
+            <button id="toggleSidebar" class="toggle-btn" title="Toggle Sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <img src="~/images/icon-quill-spark.png" alt="Logo" class="logo-img" />
+            <h4 class="sidebar-title">Writer's SPACE</h4>
+
+            <ul class="nav flex-column">
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="@Url.Action("MyPosts", "Posts")"><i class="fas fa-file-alt me-2"></i> <span class="link-text">My Post</span></a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="@Url.Action("SavedDrafts", "Posts")"><i class="fas fa-save me-2"></i> <span class="link-text">Saved Draft</span></a>
+                </li>
+                <li class="nav-item mb-2">
+                    <a class="nav-link" href="@Url.Action("Analytics", "Posts")"><i class="fas fa-chart-line me-2"></i> <span class="link-text">Analytics</span></a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="writer-content" id="writerContent">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("writerSidebar");
+        const toggleBtn = document.getElementById("toggleSidebar");
+        const content = document.getElementById("writerContent");
+
+        toggleBtn.addEventListener("click", () => {
+            sidebar.classList.toggle("collapsed");
+            content.classList.toggle("expanded");
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

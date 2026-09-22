@@ -1,0 +1,59 @@
+﻿@model List<BlogVerse.Models.Post>
+
+@{
+    ViewData["Title"] = "Analytics";
+    var categoryLabels = Model.Select(p => p.Category).Distinct().ToList();
+    var categoryCounts = categoryLabels.Select(label => Model.Count(p => p.Category == label)).ToList();
+}
+
+<h2 class="text-2xl font-bold mb-4">Post Analytics</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no published posts yet.</p>
+}
+else
+{
+    <div class="mb-8">
+        <canvas id="categoryChart" width="400" height="200"></canvas>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        @foreach (var post in Model)
+        {
+            <div class="border rounded-lg p-4 bg-white shadow-md">
+                <h3 class="text-xl font-semibold">@post.Title</h3>
+                <p class="text-sm text-gray-500">Category: @post.Category | @post.CreatedAt.ToShortDateString()</p>
+                <div class="mt-2 text-gray-700">@Html.Raw(post.Content.Substring(0, Math.Min(post.Content.Length, 150)))...</div>
+            </div>
+        }
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('categoryChart').getContext('2d');
+        const categoryChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(categoryLabels)),
+                datasets: [{
+                    label: 'Number of Posts',
+                    data: @Html.Raw(Json.Serialize(categoryCounts)),
+                    backgroundColor: 'rgba(142, 131, 169, 0.7)',
+                    borderColor: '#8E83A9',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        });
+    </script>
+}

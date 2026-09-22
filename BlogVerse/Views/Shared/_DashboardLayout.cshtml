@@ -1,0 +1,657 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewData["Title"] - BlogVerse</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/dashboard.css" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    @RenderSection("Styles", required: false)
+
+    <style>
+
+        /* =========================================
+                   SIDEBAR LOGO FIX
+                ========================================= */
+
+        .sidebar-logo {
+            width: 125px !important;
+            height: 125px !important;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .sidebar-logo-container {
+            height: 145px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-bottom: 10px;
+        }
+
+
+        /* =========================================
+                   SIDEBAR
+                ========================================= */
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+
+            /* =========================================
+                   NAVIGATION
+                ========================================= */
+
+            .sidebar nav {
+                flex-shrink: 0;
+            }
+
+            .sidebar .nav-link {
+                min-height: 42px;
+            }
+
+
+        /* =========================================
+                   FOLLOWING SECTION
+                ========================================= */
+
+        .following-section {
+            flex-shrink: 0;
+        }
+
+
+        /* =========================================
+                   MOBILE
+                ========================================= */
+
+        @@media (max-width: 768px) {
+
+            .sidebar-logo {
+                width: 100px !important;
+                height: 100px !important;
+            }
+
+            .sidebar-logo-container {
+                height: 115px;
+            }
+        }
+    </style>
+
+</head>
+
+<body style="background-color: #F4EAF1;">
+
+    <div class="dashboard-container">
+
+
+        <!-- =========================================
+             HAMBURGER BUTTON
+        ========================================== -->
+
+        <button class="hamburger-btn"
+                type="button"
+                onclick="toggleSidebar()">
+
+            <i class="fas fa-bars"></i>
+
+        </button>
+
+
+
+        <!-- =========================================
+             LEFT SIDEBAR
+        ========================================== -->
+
+        <aside class="sidebar p-4"
+               style="
+                    background-color: #B9B1CD;
+                    color: white;
+                    width: 260px;
+                    margin-left: 0;
+                    flex-shrink: 0;
+               ">
+
+
+            <!-- =====================================
+                 LOGO
+            ====================================== -->
+
+            <div class="sidebar-logo-container">
+
+                <img src="~/images/modified_logo.png"
+                     alt="BlogVerse Logo"
+                     class="sidebar-logo" />
+
+            </div>
+
+
+
+            <!-- =====================================
+                 MAIN NAVIGATION
+            ====================================== -->
+
+            <nav>
+
+                <ul class="nav flex-column">
+
+
+                    <!-- HOME -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="@Url.Action("Index", "Dashboard")">
+
+                            <i class="fas fa-home me-2"></i>
+
+                            Home
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- BREAKING NEWS -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="@Url.Action("BreakingNews", "Dashboard")">
+
+                            <i class="fas fa-bolt me-2"></i>
+
+                            Breaking News
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- TRENDING -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="fas fa-chart-line me-2"></i>
+
+                            Trending
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- COMMUNITY -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="@Url.Action("Community", "Dashboard")">
+
+                            <i class="fas fa-users me-2"></i>
+
+                            Community
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- CATEGORY -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="fas fa-list-ul me-2"></i>
+
+                            Category
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- HISTORY -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="fas fa-history me-2"></i>
+
+                            History
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- SAVED -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="fas fa-bookmark me-2"></i>
+
+                            Saved
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- COLLECTIONS -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="#">
+
+                            <i class="fas fa-folder-open me-2"></i>
+
+                            Collections
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- SETTINGS -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="@Url.Action("Settings", "Dashboard")">
+
+                            <i class="fas fa-cog me-2"></i>
+
+                            Settings
+
+                        </a>
+
+                    </li>
+
+
+
+                    <!-- =================================
+                         ADMIN SECTION
+                    ================================== -->
+                    @if (User.Identity?.IsAuthenticated == true &&
+                                        User.IsInRole("Admin"))
+                    {
+
+                        <!-- ADMIN DASHBOARD -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               href="@Url.Action("Index", "Admin")">
+
+                                <i class="fas fa-gauge-high me-2"></i>
+
+                                Admin Dashboard
+
+                            </a>
+
+                        </li>
+
+
+
+                        <!-- USER MANAGEMENT -->
+
+                        <li class="nav-item">
+
+                            <a class="nav-link"
+                               href="@Url.Action("Index", "Users")">
+
+                                <i class="fas fa-users me-2"></i>
+
+                                User Management
+
+                            </a>
+
+                        </li>
+
+                    }
+
+
+
+                    <!-- ACCOUNT -->
+
+                    <li class="nav-item">
+
+                        <a class="nav-link"
+                           href="@Url.Action("Account", "Dashboard")">
+
+                            <i class="fas fa-user-circle me-2"></i>
+
+                            Account
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+
+            <!-- =====================================
+                 FOLLOWING
+            ====================================== -->
+            <!-- =====================================
+                 FOLLOWING
+            ====================================== -->
+
+            <div class="following-section">
+
+                <hr class="my-3">
+
+                <h6 style="color: black !important; padding-left: 10px;">
+                    Following
+                </h6>
+
+                <ul class="nav flex-column">
+
+                    <li class="nav-item">
+
+                        <span class="nav-link"
+                              style="color: black !important;">
+
+                            <i class="fas fa-rss me-2"></i>
+
+                            No followed channels
+
+                        </span>
+
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+
+            <!-- =====================================
+                 CREATE POST
+            ====================================== -->
+
+            <hr class="my-3">
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+
+                    <a class="btn btn-primary w-100"
+                       href="@Url.Action("Create", "Posts")">
+
+                        <i class="fas fa-pen-nib me-2"></i>
+
+                        Create a Post
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+
+
+            <!-- =====================================
+                 HELP + LOGOUT
+            ====================================== -->
+
+            <hr class="my-3">
+
+            <ul class="nav flex-column">
+
+
+                <!-- HELP -->
+
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="#">
+
+                        <i class="fas fa-question-circle me-2"></i>
+
+                        Help Center
+
+                    </a>
+
+                </li>
+
+
+
+                <!-- LOGOUT -->
+
+                <li class="nav-item">
+
+                    <form method="post"
+                          action="@Url.Action("Logout", "Logout")"
+                          style="margin: 0;">
+
+                        <button type="submit"
+                                class="nav-link text-danger btn btn-link"
+                                style="
+                                    color: #dc3545 !important;
+                                    padding: 0.75rem 1rem;
+                                    text-decoration: none;
+                                    display: flex;
+                                    align-items: center;
+                                    width: 100%;
+                                    border: none;
+                                ">
+
+                            <i class="fas fa-sign-out-alt me-2"></i>
+
+                            Log Out
+
+                        </button>
+
+                    </form>
+
+                </li>
+
+            </ul>
+
+        </aside>
+
+
+
+        <!-- =========================================
+             MAIN CONTENT
+        ========================================== -->
+
+        <main class="main-content">
+
+            @RenderBody()
+
+        </main>
+
+
+
+        <!-- =========================================
+             RIGHT SIDEBAR
+        ========================================== -->
+
+        <aside class="right-sidebar bg-light p-3">
+
+            <div style="
+                background-image: url('/images/png.png');
+                background-size: cover;
+                background-position: center;
+                height: 500px;
+            ">
+            </div>
+
+
+            <h5 class="mb-3">
+
+                Top Creator
+
+            </h5>
+
+
+
+            <!-- CREATOR 1 -->
+
+            <div class="d-flex align-items-center mb-3">
+
+                <img src="~/images/person3.png"
+                     alt="Anne Johnson"
+                     class="rounded-circle me-3"
+                     width="40"
+                     height="40">
+
+                <div>
+
+                    <h6 class="mb-0">
+
+                        Anne Johnson
+
+                    </h6>
+
+                    <small class="text-muted">
+
+                        10.5k Followers
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CREATOR 2 -->
+
+            <div class="d-flex align-items-center mb-3">
+
+                <img src="~/images/person2.png"
+                     alt="Jane Smith"
+                     class="rounded-circle me-3"
+                     width="40"
+                     height="40">
+
+                <div>
+
+                    <h6 class="mb-0">
+
+                        Jane Smith
+
+                    </h6>
+
+                    <small class="text-muted">
+
+                        7.8k Followers
+
+                    </small>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- CREATOR 3 -->
+
+            <div class="d-flex align-items-center mb-3">
+
+                <img src="~/images/person1.png"
+                     alt="Peter Jones"
+                     class="rounded-circle me-3"
+                     width="40"
+                     height="40">
+
+                <div>
+
+                    <h6 class="mb-0">
+
+                        Peter Jones
+
+                    </h6>
+
+                    <small class="text-muted">
+
+                        5.2k Followers
+
+                    </small>
+
+                </div>
+
+            </div>
+
+        </aside>
+
+    </div>
+
+
+
+    <!-- =========================================
+         SCRIPTS
+    ========================================== -->
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+
+
+    <script>
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.querySelector('.sidebar');
+
+            const mainContent =
+                document.querySelector('.main-content');
+
+
+            if (sidebar && mainContent) {
+
+                sidebar.classList.toggle('sidebar-hidden');
+
+                mainContent.classList.toggle('full-width');
+
+            }
+
+        }
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,87 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>Access Denied - BlogVerse</title>
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F4EAF1;
+            font-family: Arial, sans-serif;
+        }
+
+        .access-card {
+            width: 90%;
+            max-width: 500px;
+            background: white;
+            padding: 45px 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+        }
+
+        .access-icon {
+            width: 80px;
+            height: 80px;
+            margin: auto;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8e7e7;
+            color: #dc3545;
+            font-size: 38px;
+        }
+
+        .access-card h1 {
+            margin-top: 25px;
+            font-weight: 700;
+        }
+
+        .access-card p {
+            color: #777;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="access-card">
+
+        <div class="access-icon">
+            <i>!</i>
+        </div>
+
+        <h1>Access Denied</h1>
+
+        <p>
+            You don't have permission to access this page.
+            Please contact the administrator if you need access.
+        </p>
+
+        <a href="/Dashboard"
+           class="btn btn-dark px-4">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+</body>
+</html>

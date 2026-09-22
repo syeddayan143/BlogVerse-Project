@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Community";
+    var availableCommunities = ViewBag.AvailableCommunities as List<BlogVerse.Models.CommunityModel>;
+}
+
+<div class="container mt-4">
+    <h1 style="color: black;">Explore Communities</h1>
+    <hr class="mb-4" />
+
+    @if (TempData["JoinMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["JoinMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @if (availableCommunities != null && availableCommunities.Any())
+        {
+            @foreach (var community in availableCommunities)
+            {
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        @if (!string.IsNullOrEmpty(community.ImageUrl))
+                        {
+                            <img src="@Url.Content(community.ImageUrl)" class="card-img-top" alt="@community.Name" style="height: 150px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title" style="color: black;">@community.Name</h5>
+                            <p class="card-text" style="color: black;">@community.Description</p>
+                            <p class="card-text"><small class="text-muted">@community.MemberCount Members</small></p>
+                            <form method="post" asp-action="JoinCommunity" asp-route-communityId="@community.Id">
+                                <button type="submit" class="btn btn-primary btn-sm">Join</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col">
+                <p style="color: black;">No communities available yet.</p>
+            </div>
+        }
+    </div>
+</div>

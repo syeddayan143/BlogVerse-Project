@@ -1,0 +1,359 @@
+﻿@model BlogVerse.Models.CreatePostViewModel
+
+@{
+    ViewData["Title"] = "Create Post";
+    Layout = "~/Views/Shared/_WriterLayout.cshtml";
+}
+
+<style>
+    .create-form-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        max-width: 900px;
+        margin: 2rem auto;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-heading {
+        text-align: center;
+        color: #8E83A9;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        font-weight: bold;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #4A4A4A;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 1rem;
+        outline: none;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .form-control:focus {
+            border-color: #B6A8CA;
+            box-shadow: 0 0 0 3px rgba(182, 168, 202, 0.3);
+        }
+
+    /* File Upload Box */
+    .attachment-box {
+        background: #F8F6FB;
+        border: 2px dashed #C9C3DE;
+        border-radius: 1rem;
+        padding: 1.2rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        .attachment-box:hover {
+            border-color: #8E83A9;
+            background: #F4F1F8;
+        }
+
+    .attachment-info {
+        margin-top: 0.5rem;
+        font-size: 0.85rem;
+        color: #777;
+        line-height: 1.5;
+    }
+
+        .attachment-info strong {
+            color: #555;
+        }
+
+    .btn-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 2rem;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.3s ease;
+    }
+
+    .btn-publish {
+        background-color: #8E83A9;
+        color: white;
+    }
+
+    .btn-draft {
+        background-color: #C9C3DE;
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        opacity: 0.95;
+    }
+
+    .validation-message {
+        color: #dc3545;
+        font-size: 0.9rem;
+        margin-top: -1rem;
+        margin-bottom: 1rem;
+    }
+
+    @@media (max-width: 600px) {
+        .create-form-container
+
+    {
+        margin: 1rem;
+        padding: 1.25rem;
+    }
+
+    .form-heading {
+        font-size: 1.5rem;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+    }</style>
+
+
+<div class="create-form-container">
+
+    <h2 class="form-heading">
+        Create a New Blog Post
+    </h2>
+
+
+    <form asp-action="Create"
+          method="post"
+          enctype="multipart/form-data">
+
+        @Html.AntiForgeryToken()
+
+
+        <!-- ================================================= -->
+        <!-- TITLE -->
+        <!-- ================================================= -->
+
+        <label for="Title" class="form-label">
+            Title
+        </label>
+
+        <input type="text"
+               id="Title"
+               name="Title"
+               class="form-control"
+               value="@Model?.Title"
+               required />
+
+        <span asp-validation-for="Title"
+              class="validation-message">
+        </span>
+
+
+        <!-- ================================================= -->
+        <!-- CATEGORY -->
+        <!-- ================================================= -->
+
+        <label for="Category" class="form-label">
+            Category
+        </label>
+
+        <select id="Category"
+                name="Category"
+                class="form-control"
+                required>
+
+            <option value="">
+                -- Select Category --
+            </option>
+
+            <option value="Tech"
+                    selected="@(Model?.Category == "Tech")">
+                Tech
+            </option>
+
+            <option value="Lifestyle"
+                    selected="@(Model?.Category == "Lifestyle")">
+                Lifestyle
+            </option>
+
+            <option value="Health"
+                    selected="@(Model?.Category == "Health")">
+                Health
+            </option>
+
+            <option value="Entertainment"
+                    selected="@(Model?.Category == "Entertainment")">
+                Entertainment
+            </option>
+
+        </select>
+
+        <span asp-validation-for="Category"
+              class="validation-message">
+        </span>
+
+
+        <!-- ================================================= -->
+        <!-- FEATURED IMAGE -->
+        <!-- ================================================= -->
+
+        <label for="Image" class="form-label">
+            Featured Image
+        </label>
+
+        <input type="file"
+               id="Image"
+               name="Image"
+               class="form-control"
+               accept="image/*" />
+
+        <span asp-validation-for="Image"
+              class="validation-message">
+        </span>
+
+
+        <!-- ================================================= -->
+        <!-- FILE / DOCUMENT -->
+        <!-- ================================================= -->
+
+        <label for="Attachment" class="form-label">
+            Upload File / Document
+        </label>
+
+        <div class="attachment-box">
+
+            <input type="file"
+                   id="Attachment"
+                   name="Attachment"
+                   class="form-control"
+                   accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.ppt,.pptx,.txt,.rtf,.json,.xml,.zip,.rar,.jpg,.jpeg,.png,.gif,.webp,.mp3,.wav,.mp4,.mov,.avi" />
+
+            <div class="attachment-info">
+
+                <strong>Allowed files:</strong>
+                PDF, DOC, DOCX, XLS, XLSX, CSV, PPT, PPTX,
+                TXT, RTF, JSON, XML, ZIP, RAR,
+                JPG, PNG, GIF, WEBP, MP3, WAV, MP4, MOV, AVI.
+
+                <br />
+
+                <strong>Maximum size:</strong>
+                25 MB
+
+            </div>
+
+        </div>
+
+        <span asp-validation-for="Attachment"
+              class="validation-message">
+        </span>
+
+
+        <!-- ================================================= -->
+        <!-- CONTENT -->
+        <!-- ================================================= -->
+
+        <label for="Content" class="form-label">
+            Content
+        </label>
+
+        <textarea id="Content"
+                  name="Content"
+                  class="form-control">@Model?.Content</textarea>
+
+        <span asp-validation-for="Content"
+              class="validation-message">
+        </span>
+
+
+        <!-- ================================================= -->
+        <!-- BUTTONS -->
+        <!-- ================================================= -->
+
+        <div class="btn-group mt-4">
+
+            <button type="submit"
+                    name="submitButton"
+                    value="SaveDraft"
+                    class="btn btn-draft">
+
+                Save as Draft
+
+            </button>
+
+
+            <button type="submit"
+                    name="submitButton"
+                    value="Publish"
+                    class="btn btn-publish">
+
+                Publish
+
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdn.tiny.cloud/1/icfog4ecnzjz60lfl9fczlxk04aluusho74t6b6xkv5h1imw/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin">
+    </script>
+
+
+    <script>
+
+        tinymce.init({
+
+            selector: '#Content',
+
+            height: 500,
+
+            menubar: true,
+
+            plugins:
+                'advlist autolink lists link image media table code help wordcount',
+
+            toolbar:
+                'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist | link image media | code',
+
+            content_style:
+                'body { font-family:Arial,sans-serif; font-size:16px }'
+
+        });
+
+
+        document.querySelector('form')
+            .addEventListener('submit', function () {
+
+                tinymce.triggerSave();
+
+            });
+
+    </script>
+}

@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - BlogVerse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlogVerse.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --primary-bg: #F4EAF1;
+            --navbar-bg: #B9B1CD;
+            --footer-bg: #B6A8CA;
+            --text-color: white;
+            --link-color: #F4EAF1;
+            --blog-text-color: #333;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #2D2D39;
+            --navbar-bg: #4A4A5E;
+            --footer-bg: #3A3A50;
+            --text-color: #E4E4F2;
+            --link-color: #C9C3DE;
+            --blog-text-color: #E4E4F2;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+        }
+
+        .navbar-custom {
+            background-color: var(--navbar-bg);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .navbar-light .navbar-brand {
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 1.4rem;
+        }
+
+        .footer {
+            background-color: var(--footer-bg);
+            color: var(--text-color);
+            padding: 1rem 0;
+            text-align: center;
+        }
+
+            .footer a {
+                color: var(--link-color);
+            }
+
+        #theme-toggle {
+            background-color: transparent;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="@ViewBag.PageClass">
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light navbar-custom shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/images/icon-quill-spark.png" alt="BlogVerse Logo" />
+                    BlogVerse
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
+                        <li class="nav-item">
+                            <button id="theme-toggle" title="Toggle light/dark mode">🌓</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+            integrity="sha512-Yc6vNteNsMSgn4Prd9zKdyYSlKZSn4U0D53+XNPKvE6De4v6e4Z7bHoKrDBafNcAjRHh+Ngf4V1nA83cQQuERA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
+            integrity="sha512-Wgdf3O44FhR9fyxqXjE/N7rzqMdOocT0VjylWYMB1IgcO4FhNq+UlKqPZSEz1cQmFUpuUKmVUq6l5ql5KXn9tA=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+
+        toggle?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

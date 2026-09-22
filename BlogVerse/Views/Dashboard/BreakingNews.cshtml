@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Breaking News";
+}
+
+<div class="container mt-5">
+    <h1 style="color: black;">Breaking News</h1>
+    <hr class="mb-4" />
+
+    <div class="row">
+        @* Example Breaking News Item 1 *@
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="~/images/earthquake.png" alt="Earthquake Image" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h2 class="card-title text-danger">Breaking: Major Earthquake Hits Region</h2>
+                            <h6 class="card-subtitle mb-2 text-muted">Updated 5 minutes ago - CNN</h6>
+                            <p class="card-text"><strong>In Brief:</strong> A powerful 7.5 magnitude earthquake struck the central region, causing significant damage.</p>
+                            <p class="card-text"><small class="text-muted">Details: A powerful earthquake with a magnitude of 7.5 on the Richter scale has struck the central region at approximately 05:30 AM local time. Initial reports indicate widespread damage to infrastructure, including collapsed buildings and disrupted transportation networks. Rescue teams have been dispatched to the affected areas, and authorities are urging residents to remain vigilant for aftershocks. The earthquake's epicenter was located approximately 50 kilometers northeast of the capital city...</small></p>
+                            @* Removed "Read More" button *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Example Breaking News Item 2 *@
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="~/images/sharemarket (1).png" alt="Stock Market Image" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h2 class="card-title text-primary">Breaking: Stock Market Surges After Positive Economic Data</h2>
+                            <h6 class="card-subtitle mb-2 text-muted">Published 15 minutes ago - Reuters</h6>
+                            <p class="card-text"><strong>In Brief:</strong> Following the release of strong economic data, the stock market experienced a significant surge this morning.</p>
+                            <p class="card-text"><small class="text-muted">Details: The Dow Jones Industrial Average jumped by over 300 points in early trading today after the Bureau of Labor Statistics released figures showing a stronger-than-expected increase in non-farm payrolls and a decrease in the unemployment rate. Analysts believe this positive economic news signals a robust recovery, leading to increased investor confidence and buying activity across various sectors...</small></p>
+                            @* Removed "Read More" button *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @* Add more breaking news items here, potentially using a loop if you're passing a list of news articles from your controller *@
+    </div>
+</div>

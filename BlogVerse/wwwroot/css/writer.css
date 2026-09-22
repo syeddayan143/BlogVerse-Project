@@ -1,0 +1,80 @@
+﻿.writer-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #F4EAF1;
+}
+
+.writer-sidebar {
+    width: 250px;
+    min-width: 250px;
+    background-color: #8E83A9;
+    color: white;
+    padding: 1rem;
+    transition: width 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+    .writer-sidebar.collapsed {
+        width: 70px;
+    }
+
+    .writer-sidebar .sidebar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+    }
+
+    .writer-sidebar .sidebar-title {
+        font-size: 1.2rem;
+        transition: opacity 0.3s;
+    }
+
+    .writer-sidebar.collapsed .sidebar-title {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.writer-sidebar .nav-link {
+    color: white;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    transition: padding 0.3s;
+}
+
+    .writer-sidebar .nav-link:hover {
+        text-decoration: underline;
+    }
+
+.writer-sidebar .link-text {
+    margin-left: 0.5rem;
+    transition: opacity 0.3s;
+}
+
+.writer-sidebar.collapsed .link-text {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.writer-content {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #F9F9FB;
+    overflow-y: auto;
+    transition: margin-left 0.3s;
+}
+
+    .writer-content.expanded {
+        margin-left: -180px; /* adjusts based on the sidebar shrink */
+    }

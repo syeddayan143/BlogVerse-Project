@@ -1,0 +1,413 @@
+﻿@* Views/Dashboard/Settings.cshtml *@
+
+@{
+    ViewData["Title"] = "Settings";
+
+    string profileImage =
+        ViewBag.ProfileImagePath as string
+        ?? "/images/default-profile.png";
+}
+
+<style>
+    :root {
+        --primary-bg: #F4EAF1;
+        --navbar-bg: #B9B1CD;
+        --footer-bg: #B6A8CA;
+        --text-color: #000000;
+        --link-color: #007bff;
+    }
+
+    .card-header {
+        background-color: var(--navbar-bg) !important;
+        color: var(--text-color) !important;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .card-body {
+        background-color: var(--primary-bg) !important;
+        color: var(--text-color) !important;
+    }
+
+    h2, h5, label, .form-check-label {
+        color: var(--text-color) !important;
+    }
+
+    .profile-section {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        padding: 20px;
+        background: rgba(255,255,255,0.55);
+        border-radius: 15px;
+        margin-bottom: 25px;
+    }
+
+    .profile-image-wrapper {
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+
+    .profile-info h4 {
+        margin-bottom: 5px;
+        font-weight: 700;
+    }
+
+    .profile-info p {
+        margin-bottom: 12px;
+        color: #666;
+    }
+
+    .profile-upload {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+    }
+
+        .profile-upload input[type="file"] {
+            max-width: 100%;
+        }
+
+    .btn-primary {
+        background-color: var(--link-color) !important;
+        border-color: var(--link-color) !important;
+        color: white !important;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+    }
+
+    .btn-danger {
+        color: white !important;
+    }
+
+    .alert {
+        border-radius: 10px;
+    }
+
+    @@media (max-width: 576px) {
+
+        .profile-section {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .profile-upload {
+            justify-content: center;
+        }
+
+            .profile-upload input[type="file"] {
+                width: 100%;
+            }
+    }
+</style>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-header">
+                    <h2 class="mb-0">
+                        Account Settings
+                    </h2>
+                </div>
+
+                <div class="card-body">
+
+                    @* SUCCESS MESSAGE *@
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success">
+                            @TempData["Success"]
+                        </div>
+                    }
+
+                    @* ERROR MESSAGE *@
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["Error"]
+                        </div>
+                    }
+
+
+                    <!-- ======================================
+                         PROFILE PHOTO
+                    ======================================= -->
+
+                    <h5 class="mb-3">
+                        Profile Photo
+                    </h5>
+
+                    <div class="profile-section">
+
+                        <div class="profile-image-wrapper">
+
+                            <img src="@profileImage"
+                                 alt="Profile Photo"
+                                 class="profile-image" />
+
+                        </div>
+
+                        <div class="profile-info">
+
+                            <h4>
+                                @ViewBag.UserName
+                            </h4>
+
+                            <p>
+                                @ViewBag.UserEmail
+                            </p>
+
+
+                            <!-- UPLOAD PHOTO -->
+
+                            <form asp-controller="Dashboard"
+                                  asp-action="UploadProfilePhoto"
+                                  method="post"
+                                  enctype="multipart/form-data">
+
+                                @Html.AntiForgeryToken()
+
+                                <div class="profile-upload">
+
+                                    <input type="file"
+                                           name="ProfilePhoto"
+                                           class="form-control"
+                                           accept=".jpg,.jpeg,.png,.gif,.webp"
+                                           required />
+
+                                    <button type="submit"
+                                            class="btn btn-primary">
+
+                                        <i class="fas fa-camera me-2"></i>
+                                        Upload Photo
+
+                                    </button>
+
+                                </div>
+
+                            </form>
+
+
+                            @* REMOVE PHOTO *@
+
+                            @if (!string.IsNullOrWhiteSpace(ViewBag.ProfileImagePath))
+                            {
+                                <form asp-controller="Dashboard"
+                                      asp-action="RemoveProfilePhoto"
+                                      method="post"
+                                      class="mt-2">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm">
+
+                                        <i class="fas fa-trash me-2"></i>
+                                        Remove Photo
+
+                                    </button>
+
+                                </form>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- ======================================
+                         PROFILE SETTINGS
+                    ======================================= -->
+
+                    <h5 class="mb-3">
+                        Profile Settings
+                    </h5>
+
+                    <div class="mb-3">
+
+                        <label for="displayName"
+                               class="form-label">
+
+                            Display Name
+
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               id="displayName"
+                               value="@ViewBag.UserName">
+
+                    </div>
+
+
+                    <div class="mb-3">
+
+                        <label for="bio"
+                               class="form-label">
+
+                            Bio
+
+                        </label>
+
+                        <textarea class="form-control"
+                                  id="bio"
+                                  rows="3">A short description about yourself.</textarea>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- ======================================
+                         EMAIL NOTIFICATIONS
+                    ======================================= -->
+
+                    <h5 class="mb-3">
+                        Email Notifications
+                    </h5>
+
+                    <div class="form-check mb-2">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="newFollower"
+                               checked>
+
+                        <label class="form-check-label"
+                               for="newFollower">
+
+                            Notify me when someone follows me
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-check mb-2">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="newComment">
+
+                        <label class="form-check-label"
+                               for="newComment">
+
+                            Notify me of new comments on my blogs
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-check mb-3">
+
+                        <input class="form-check-input"
+                               type="checkbox"
+                               id="blogUpdates"
+                               checked>
+
+                        <label class="form-check-label"
+                               for="blogUpdates">
+
+                            Receive updates about new blogs from followed channels
+
+                        </label>
+
+                    </div>
+
+
+                    <hr class="my-4">
+
+
+                    <!-- ======================================
+                         PRIVACY SETTINGS
+                    ======================================= -->
+
+                    <h5 class="mb-3">
+                        Privacy Settings
+                    </h5>
+
+
+                    <div class="form-check mb-2">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="profileVisibility"
+                               id="public"
+                               value="public"
+                               checked>
+
+                        <label class="form-check-label"
+                               for="public">
+
+                            Public - Everyone can view my profile
+
+                        </label>
+
+                    </div>
+
+
+                    <div class="form-check mb-3">
+
+                        <input class="form-check-input"
+                               type="radio"
+                               name="profileVisibility"
+                               id="private"
+                               value="private">
+
+                        <label class="form-check-label"
+                               for="private">
+
+                            Private - Only followers can view my profile
+
+                        </label>
+
+                    </div>
+
+
+                    <button class="btn btn-primary">
+
+                        <i class="fas fa-save me-2"></i>
+                        Save Changes
+
+                    </button>
+
+
+                    <button class="btn btn-secondary ms-2">
+
+                        <i class="fas fa-undo me-2"></i>
+                        Reset Settings
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

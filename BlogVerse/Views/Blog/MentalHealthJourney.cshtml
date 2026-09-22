@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "Mental Health & Writing Journey";
+}
+
+<div class="content blog-content">
+    <h1 class="text-center mb-4"><span style="font-weight: bold;">Mental Health & Writing Journey</span></h1>
+    <img src="~/images/mental-health.png" alt="Mental Health and Writing" class="img-fluid rounded mx-auto d-block mb-4" style="max-height: 400px;" />
+
+    <div class="content">
+        <p>
+            Writing can be both therapeutic and overwhelming. For many, blogging is more than just content—it's a form of self-expression, healing, and personal growth.
+        </p>
+
+        <h4>The Healing Power of Words</h4>
+        <p>
+            Sharing your story helps you release stress, validate your feelings, and connect with others going through similar experiences. It gives your pain a voice and transforms it into something meaningful.
+        </p>
+
+        <h4>Protecting Your Mental Space</h4>
+        <p>
+            While writing helps, it's essential to set boundaries. Don’t force content during burnout. Take breaks, and let your creative process be kind to your mind.
+        </p>
+
+        <h4>Finding Your Safe Audience</h4>
+        <p>
+            Communities like BlogVerse allow you to write freely without judgment. Whether anonymous or under your name, you're in charge of your narrative.
+        </p>
+
+        <p>
+            Remember, your blog doesn’t need to be perfect—it just needs to be yours.
+        </p>
+    </div>
+</div>
+
+<script>
+    setTimeout(() => {
+        if (!sessionStorage.getItem('registerPromptShown')) {
+            const shouldRedirect = confirm("Love writing? Join BlogVerse and share your journey. Want to register?");
+            if (shouldRedirect) {
+                window.location.href = "/Account/Register";
+            }
+            sessionStorage.setItem('registerPromptShown', 'true');
+        }
+    }, 3000);
+</script>

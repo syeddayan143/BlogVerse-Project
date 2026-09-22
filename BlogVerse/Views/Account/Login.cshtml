@@ -1,0 +1,160 @@
+﻿@model BlogVerse.Models.LoginViewModel
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - BlogVerse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlogVerse.styles.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --primary-bg: #F4EAF1;
+            --navbar-bg: #B9B1CD;
+            --footer-bg: #B6A8CA;
+            --text-color: black;
+            --link-color: #007bff;
+        }
+
+        [data-theme="dark"] {
+            --primary-bg: #2D2D39;
+            --navbar-bg: #4A4A5E;
+            --footer-bg: #3A3A50;
+            --text-color: #E4E4F2;
+            --link-color: #C9C3DE;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+        }
+
+        a {
+            color: var(--link-color);
+        }
+
+        .login-fullpage {
+            height: 100vh;
+            display: flex;
+        }
+
+        .login-left-image {
+            flex: 1;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+            .login-left-image img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        .login-form-section {
+            flex-basis: 400px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-left: 20px;
+        }
+
+        .login-form-wrapper {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+            .login-form-wrapper input.form-control {
+                border: 1px solid #C9C3DE;
+            }
+
+        .btn-primary {
+            background-color: #8E83A9;
+            border: none;
+            color: white;
+        }
+
+        #theme-toggle {
+            background-color: transparent;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-color);
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle" title="Toggle light/dark mode">🌓</button>
+    <div class="login-fullpage">
+        <div class="login-left-image">
+            <img src="~/images/left-side4.jpeg" class="img-fluid" />
+        </div>
+
+        <div class="login-form-section">
+            <div class="login-form-wrapper p-4">
+                <h2 class="mb-4 text-center brand-name">Welcome Back</h2>
+
+                <!-- ✅ Added error summary here -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <form method="post" asp-action="Login">
+                    <div class="mb-3">
+                        <input asp-for="Email" class="form-control" placeholder="Email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <input asp-for="Password" class="form-control" placeholder="Password" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
+                </form>
+
+                <p class="mt-3 text-center">
+                    Don't have an account? <a href="/Account/Register">Register</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        const toggle = document.getElementById('theme-toggle');
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme) {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+
+        toggle?.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+        });
+    </script>
+</body>
+</html>

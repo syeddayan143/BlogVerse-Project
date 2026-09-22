@@ -1,0 +1,110 @@
+﻿@* Views/Dashboard/Account.cshtml *@
+@{
+    ViewData["Title"] = "Account";
+}
+
+<style>
+    .card-header {
+        background-color: var(--navbar-bg) !important;
+        color: var(--text-color) !important;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .card-body {
+        background-color: var(--primary-bg) !important;
+        /* Set text color to navbar background color */
+        color: var(--navbar-bg) !important;
+    }
+
+    h3, h4, p, label, strong, .form-control {
+        color: var(--navbar-bg) !important; /* Apply navbar background color to these elements */
+    }
+
+    .form-label {
+        color: var(--navbar-bg) !important;
+    }
+
+    .border {
+        border-color: #ccc !important;
+        background-color: white;
+        color: var(--navbar-bg) !important; /* Apply to text inside border */
+    }
+
+    .text-muted {
+        color: #6c757d !important; /* Keep a slightly lighter shade if desired */
+    }
+
+    .btn-primary {
+        background-color: var(--link-color) !important;
+        border-color: var(--link-color) !important;
+        color: white !important;
+    }
+
+        .btn-primary:hover {
+            background-color: darken(var(--link-color), 10%) !important;
+            border-color: darken(var(--link-color), 10%) !important;
+        }
+
+    .btn-secondary {
+        background-color: #6c757d !important;
+        border-color: #6c757d !important;
+        color: white !important;
+    }
+
+        .btn-secondary:hover {
+            background-color: darken(#6c757d, 10%) !important;
+            border-color: darken(#6c757d, 10%) !important;
+        }
+</style>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h2 class="mb-0">Your Account</h2>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <img src="~/images/avatar-default.jpg" alt="Profile Icon" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                        <h3 class="mt-2">@User.Identity.Name</h3>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="contact" class="form-label"><strong>Contact:</strong></label>
+                        <input type="text" class="form-control" id="contact" value="+91 9876543210" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label"><strong>Email ID:</strong></label>
+                        <input type="email" class="form-control" id="email" value="sa@example.com" readonly>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <div class="border p-3 text-center">
+                                <h4>125</h4>
+                                <p class="mb-0 text-muted">Blogs Read</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border p-3 text-center">
+                                <h4>32</h4>
+                                <p class="mb-0 text-muted">Blogs Posted</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-edit me-2"></i> Edit Profile
+                        </button>
+                        <button class="btn btn-secondary ms-2">
+                            <i class="fas fa-cog me-2"></i> Account Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

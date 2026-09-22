@@ -1,0 +1,103 @@
+.hero-section {
+    background: url('/images/hero-banner2.jpg') center center / cover no-repeat;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(52, 41, 73, 0.4); /* Dark lavender overlay */
+    z-index: 1;
+}
+
+.hero-content {
+    z-index: 2;
+    position: relative;
+}
+
+.blogverse-highlight {
+    color: #4A6473; /* Light Pinkish for better contrast */
+}
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.brand-name {
+    color: #C9C3DE; /* Soft Lavender */
+    font-weight: 700;
+}
+
+.text-highlight {
+    color: #B6A8CA; /* Dusty Lilac */
+}
+
+
+.text-accent {
+    color: #8E83A9; /* Deep Lavender */
+}
+
+.why-section .icon-img {
+    width: 60px;
+    height: auto;
+}
+
+.why-section {
+    color: #4A4A4A; /* Choose a contrasting color for readability */
+}
+
+.trending-section h6 {
+    color: #4A4A4A;
+    font-weight: 500;
+}
+
+.blog-content {
+    color: var(--blog-text-color);
+    font-size: 1.1rem; /* Slightly larger for readability */
+    line-height: 1.7; /* Good spacing for paragraphs */
+    
+}
+
+
+
+.footer-cta {
+    position: relative;
+    background: url('/images/footer-cta.jpg') center center / cover no-repeat;
+    height: 350px;
+    margin-top: 3rem;
+}
+
+    .footer-cta .cta-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(138, 122, 166, 0.6); /* Deep lavender overlay */
+        z-index: 0;
+    }
+
+    .footer-cta .cta-content {
+        position: relative;
+        z-index: 1;
+        color: #ffffff;
+    }
+
+.real-footer {
+    background-color: #8E83A9;
+    font-size: 0.9rem;
+}
+
+
+.navbar-brand img {
+    height: 32px;
+}
