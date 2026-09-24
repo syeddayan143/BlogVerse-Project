@@ -28,8 +28,8 @@ namespace BlogVerse.Models
         [Required]
         public string? UserId { get; set; }
 
-        [ForeignKey("UserId")]
-        public ApplicationUser User { get; set; }
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser? User { get; set; }
 
         public bool IsPublished { get; set; } = false;
 
@@ -37,10 +37,9 @@ namespace BlogVerse.Models
 
         public int Likes { get; set; } = 0;
 
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
+            = DateTime.Now;
 
         public DateTime? PublishedAt { get; set; }
-
-        
     }
 }

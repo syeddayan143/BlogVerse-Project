@@ -1,0 +1,833 @@
+﻿@model BlogVerse.Models.Post
+
+@{
+    ViewData["Title"] = Model.Title;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var comments = ViewBag.Comments as List<BlogVerse.Models.Comment>
+                   ?? new List<BlogVerse.Models.Comment>();
+
+    var topLevelComments = comments
+        .Where(c => c.ParentCommentId == null)
+        .OrderBy(c => c.CreatedAt)
+        .ToList();
+}
+
+<style>
+
+    .post-details-page {
+        max-width: 950px;
+        margin: 0 auto;
+        padding: 35px 20px 60px;
+    }
+
+    .post-details-header {
+        margin-bottom: 25px;
+    }
+
+    .post-details-category {
+        display: inline-block;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+
+    .post-details-title {
+        font-size: 44px;
+        line-height: 1.2;
+        font-weight: 900;
+        color: #111827;
+        margin-bottom: 15px;
+    }
+
+    .post-details-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .post-details-image {
+        width: 100%;
+        max-height: 520px;
+        object-fit: cover;
+        border-radius: 22px;
+        display: block;
+        margin-bottom: 30px;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
+    .post-details-content-box {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 22px;
+        padding: 35px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+
+    .protected-post-content {
+        font-size: 17px;
+        line-height: 1.9;
+        color: #374151;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+        .protected-post-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        .protected-post-content h1,
+        .protected-post-content h2,
+        .protected-post-content h3,
+        .protected-post-content h4,
+        .protected-post-content h5,
+        .protected-post-content h6 {
+            color: #111827;
+            margin-top: 28px;
+            margin-bottom: 12px;
+        }
+
+        .protected-post-content p {
+            margin-bottom: 18px;
+        }
+
+        .protected-post-content blockquote {
+            border-left: 4px solid #4f46e5;
+            padding-left: 18px;
+            color: #6b7280;
+            font-style: italic;
+            margin: 25px 0;
+        }
+
+        .protected-post-content ul,
+        .protected-post-content ol {
+            padding-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .protected-post-content a {
+            color: #4f46e5;
+        }
+
+    .post-attachment {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+    }
+
+    .post-attachment-name {
+        font-weight: 700;
+        margin-bottom: 15px;
+        word-break: break-word;
+    }
+
+    .post-download-btn {
+        display: inline-block;
+        padding: 10px 17px;
+        background: #4f46e5;
+        color: white;
+        border-radius: 10px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+    }
+
+        .post-download-btn:hover {
+            background: #4338ca;
+            color: white;
+        }
+
+    .post-details-footer {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin-top: 25px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    /* LIKE */
+
+    .post-like-btn {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        color: #374151;
+        padding: 8px 15px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .post-like-btn:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+    /* COMMENTS */
+
+    .comments-section {
+        margin-top: 35px;
+    }
+
+    .comments-title {
+        font-size: 25px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 20px;
+    }
+
+    .comment-form {
+        margin-bottom: 30px;
+    }
+
+    .comment-textarea {
+        width: 100%;
+        min-height: 110px;
+        padding: 14px 16px;
+        border: 1px solid #d1d5db;
+        border-radius: 14px;
+        resize: vertical;
+        font-size: 15px;
+        outline: none;
+    }
+
+        .comment-textarea:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79,70,229,0.10);
+        }
+
+    .comment-submit-btn {
+        margin-top: 10px;
+        border: none;
+        background: #4f46e5;
+        color: white;
+        padding: 10px 18px;
+        border-radius: 10px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .comment-submit-btn:hover {
+            background: #4338ca;
+        }
+
+    .comment-item {
+        padding: 18px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .comment-user {
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .comment-date {
+        color: #9ca3af;
+        font-size: 12px;
+    }
+
+    .comment-text {
+        color: #374151;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .comment-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .reply-btn {
+        border: none;
+        background: transparent;
+        color: #4f46e5;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 5px 0;
+    }
+
+    .delete-comment-btn {
+        border: none;
+        background: transparent;
+        color: #dc2626;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 5px 0;
+    }
+
+    .reply-box {
+        display: none;
+        margin-top: 12px;
+        padding-left: 20px;
+    }
+
+        .reply-box.show {
+            display: block;
+        }
+
+    .reply-textarea {
+        width: 100%;
+        min-height: 80px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        resize: vertical;
+    }
+
+    .reply-submit-btn {
+        margin-top: 8px;
+        border: none;
+        background: #111827;
+        color: white;
+        padding: 8px 14px;
+        border-radius: 9px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .reply-item {
+        margin-top: 15px;
+        margin-left: 25px;
+        padding-left: 18px;
+        border-left: 3px solid #eef2ff;
+    }
+
+    .comment-error {
+        padding: 12px 15px;
+        border-radius: 10px;
+        background: #fef2f2;
+        color: #b91c1c;
+        margin-bottom: 15px;
+    }
+
+    .no-comments {
+        color: #6b7280;
+        padding: 15px 0;
+    }
+
+    @@media (max-width: 768px) {
+
+        .post-details-page {
+            padding: 20px 15px 40px;
+        }
+
+        .post-details-title {
+            font-size: 30px;
+        }
+
+        .post-details-content-box {
+            padding: 22px;
+        }
+
+        .protected-post-content {
+            font-size: 16px;
+        }
+
+        .reply-item {
+            margin-left: 10px;
+        }
+    }
+
+</style>
+
+<div class="post-details-page">
+
+    <!-- HEADER -->
+
+    <header class="post-details-header">
+
+        <span class="post-details-category">
+            @(string.IsNullOrWhiteSpace(Model.Category)
+                        ? "General"
+                        : Model.Category)
+        </span>
+
+        <h1 class="post-details-title">
+            @Model.Title
+        </h1>
+
+        <div class="post-details-meta">
+
+            <span>
+                👤
+                @if (Model.User != null &&
+                                !string.IsNullOrWhiteSpace(Model.User.Name))
+                {
+                    @Model.User.Name
+                }
+                else
+                {
+                    @:BlogVerse User
+                }
+            </span>
+
+            <span>
+                📅
+                @(Model.PublishedAt ?? Model.CreatedAt)
+                .ToString("MMMM dd, yyyy")
+            </span>
+
+            <span>
+                👁 @Model.Views Views
+            </span>
+
+            <span>
+                ❤️ @ViewBag.LikeCount Likes
+            </span>
+
+        </div>
+
+    </header>
+
+    <!-- COVER IMAGE -->
+    @if (!string.IsNullOrWhiteSpace(Model.ImagePath))
+    {
+        <img src="@Model.ImagePath"
+             alt="@Model.Title"
+             class="post-details-image"
+             draggable="false" />
+    }
+
+    <!-- CONTENT -->
+
+    <article class="post-details-content-box">
+
+        <div id="protectedPostContent"
+             class="protected-post-content">
+
+            @Html.Raw(Model.Content)
+
+        </div>
+
+        <!-- ATTACHMENT -->
+        @if (!string.IsNullOrWhiteSpace(Model.AttachmentPath))
+        {
+            <div class="post-attachment">
+
+                <div class="post-attachment-name">
+                    📎 @Model.AttachmentName
+                </div>
+
+                <a href="@Model.AttachmentPath"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   download="@Model.AttachmentName"
+                   class="post-download-btn">
+
+                    ⬇ Download Attachment
+
+                </a>
+
+            </div>
+        }
+
+        <!-- FOOTER -->
+
+        <div class="post-details-footer">
+
+            <span>
+                👁 @Model.Views Views
+            </span>
+
+            <span>
+                ❤️ @ViewBag.LikeCount Likes
+            </span>
+
+            <form asp-controller="Posts"
+                  asp-action="ToggleLike"
+                  method="post"
+                  style="display:inline;">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                <button type="submit"
+                        class="post-like-btn">
+
+                    @(ViewBag.IsLiked == true
+                                        ? "❤️ Liked"
+                                        : "🤍 Like")
+
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- COMMENTS -->
+
+        <section class="comments-section">
+
+            <h2 class="comments-title">
+                💬 Comments
+            </h2>
+
+            @if (TempData["CommentError"] != null)
+            {
+                <div class="comment-error">
+                    @TempData["CommentError"]
+                </div>
+            }
+
+            <!-- ADD COMMENT -->
+
+            <form asp-controller="Posts"
+                  asp-action="AddComment"
+                  method="post"
+                  class="comment-form">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="postId"
+                       value="@Model.Id" />
+
+                <textarea name="commentText"
+                          class="comment-textarea"
+                          maxlength="2000"
+                          placeholder="Write a comment or suggest an improvement..."
+                          required></textarea>
+
+                <button type="submit"
+                        class="comment-submit-btn">
+
+                    💬 Post Comment
+
+                </button>
+
+            </form>
+
+            <!-- COMMENT LIST -->
+            @if (topLevelComments.Any())
+            {
+                foreach (var comment in topLevelComments)
+                {
+                    <div class="comment-item">
+
+                        <div class="comment-header">
+
+                            <span class="comment-user">
+
+                                👤
+                                @(string.IsNullOrWhiteSpace(
+                                                        comment.User?.Name)
+                                                        ? "BlogVerse User"
+                                                        : comment.User.Name)
+
+                    </span>
+
+                            <span class="comment-date">
+
+                                @comment.CreatedAt.ToString(
+                                                "MMM dd, yyyy hh:mm tt")
+
+                    </span>
+
+                </div>
+
+                <div class="comment-text">
+                    @comment.CommentText
+                </div>
+
+                <div class="comment-actions">
+
+                    <button type="button"
+                            class="reply-btn"
+                            onclick="toggleReply(@comment.Id)">
+
+                        ↩ Reply
+
+                    </button>
+
+                    @if (comment.UserId ==
+                                        User.FindFirst(
+                                        System.Security.Claims.ClaimTypes.NameIdentifier)
+                                        ?.Value)
+                            {
+                                <form asp-controller="Posts"
+                                      asp-action="DeleteComment"
+                                      method="post"
+                                      style="display:inline;">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@comment.Id" />
+
+                                    <input type="hidden"
+                                           name="postId"
+                                           value="@Model.Id" />
+
+                                    <button type="submit"
+                                            class="delete-comment-btn"
+                                            onclick="return confirm('Delete this comment?');">
+
+                                        🗑 Delete
+
+                                    </button>
+
+                                </form>
+                            }
+
+                        </div>
+
+                        <!-- REPLY FORM -->
+
+                        <div id="reply-box-@comment.Id"
+                             class="reply-box">
+
+                            <form asp-controller="Posts"
+                                  asp-action="ReplyComment"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="postId"
+                                       value="@Model.Id" />
+
+                                <input type="hidden"
+                                       name="parentCommentId"
+                                       value="@comment.Id" />
+
+                                <textarea name="commentText"
+                                  class="reply-textarea"
+                                  maxlength="2000"
+                                  placeholder="Write a reply..."
+                                  required></textarea>
+
+                                <button type="submit"
+                                        class="reply-submit-btn">
+
+                                    ↩ Post Reply
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                        <!-- REPLIES -->
+                        @{
+                            var replies = comments
+                            .Where(c =>
+                            c.ParentCommentId ==
+                            comment.Id)
+                            .OrderBy(c => c.CreatedAt)
+                            .ToList();
+                        }
+
+                        @foreach (var reply in replies)
+                        {
+                            <div class="reply-item">
+
+                                <div class="comment-header">
+
+                                    <span class="comment-user">
+
+                                        👤
+                                        @(string.IsNullOrWhiteSpace(
+                                                                    reply.User?.Name)
+                                                                    ? "BlogVerse User"
+                                                                    : reply.User.Name)
+
+                        </span>
+
+                                    <span class="comment-date">
+
+                                        @reply.CreatedAt.ToString(
+                                                        "MMM dd, yyyy hh:mm tt")
+
+                        </span>
+
+                    </div>
+
+                    <div class="comment-text">
+                        @reply.CommentText
+                    </div>
+
+                    @if (reply.UserId ==
+                                        User.FindFirst(
+                                        System.Security.Claims.ClaimTypes.NameIdentifier)
+                                        ?.Value)
+                                {
+                                    <div class="comment-actions">
+
+                                        <form asp-controller="Posts"
+                                              asp-action="DeleteComment"
+                                              method="post">
+
+                                            @Html.AntiForgeryToken()
+
+                                            <input type="hidden"
+                                                   name="id"
+                                                   value="@reply.Id" />
+
+                                            <input type="hidden"
+                                                   name="postId"
+                                                   value="@Model.Id" />
+
+                                            <button type="submit"
+                                                    class="delete-comment-btn"
+                                                    onclick="return confirm('Delete this reply?');">
+
+                                                🗑 Delete
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="no-comments">
+                    No comments yet. Be the first to share your suggestion.
+                </div>
+            }
+
+        </section>
+
+    </article>
+
+</div>
+
+<script>
+
+    function toggleReply(commentId) {
+
+        const box =
+            document.getElementById(
+                "reply-box-" + commentId);
+
+        if (!box) {
+            return;
+        }
+
+        box.classList.toggle("show");
+    }
+
+
+    // =========================================================
+    // BLOG CONTENT PROTECTION
+    // =========================================================
+
+    (function () {
+
+        const content =
+            document.getElementById(
+                "protectedPostContent");
+
+        if (!content) {
+            return;
+        }
+
+        content.addEventListener(
+            "contextmenu",
+            function (event) {
+                event.preventDefault();
+            }
+        );
+
+        content.addEventListener(
+            "copy",
+            function (event) {
+                event.preventDefault();
+            }
+        );
+
+        content.addEventListener(
+            "cut",
+            function (event) {
+                event.preventDefault();
+            }
+        );
+
+        content.addEventListener(
+            "dragstart",
+            function (event) {
+                event.preventDefault();
+            }
+        );
+
+        content.addEventListener(
+            "selectstart",
+            function (event) {
+                event.preventDefault();
+            }
+        );
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                const key =
+                    event.key.toLowerCase();
+
+                const modifier =
+                    event.ctrlKey ||
+                    event.metaKey;
+
+                if (!modifier) {
+                    return;
+                }
+
+                const blockedKeys = [
+                    "c",
+                    "x",
+                    "a",
+                    "u",
+                    "s"
+                ];
+
+                if (blockedKeys.includes(key)) {
+                    event.preventDefault();
+                }
+
+            }
+        );
+
+    })();
+
+</script>

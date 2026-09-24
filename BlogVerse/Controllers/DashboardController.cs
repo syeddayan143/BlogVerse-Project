@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using BlogVerse.Models;
-using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
-// Alias the Channel model to avoid conflict with System.Threading.Channels
-using AppChannel = BlogVerse.Models.Channel;
+using BlogVerse.Models;
 using BlogVerse.ViewModels;
+
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+
+using AppChannel = BlogVerse.Models.Channel;
 
 namespace BlogVerse.Controllers
 {
@@ -15,35 +21,60 @@ namespace BlogVerse.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _environment;
+        private readonly ApplicationDbContext _context;
 
         public DashboardController(
             UserManager<ApplicationUser> userManager,
-            IWebHostEnvironment environment)
+            IWebHostEnvironment environment,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _environment = environment;
+            _context = context;
         }
 
-        public IActionResult Index()
+        // =========================================================
+        // DASHBOARD
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
+            var posts = await _context.Posts
+                .AsNoTracking()
+                .Include(p => p.User)
+                .Where(p =>
+                    p.IsPublished &&
+                    p.User != null &&
+                    p.User.IsActive)
+                .OrderByDescending(
+                    p => p.PublishedAt ?? p.CreatedAt)
+                .ToListAsync();
+
             var model = new DashboardViewModel
             {
                 FollowedChannels = GetMockChannels(),
-                Posts = GetMockPosts()
+                Posts = posts
             };
 
             return View(model);
         }
 
+        // =========================================================
+        // ACCOUNT
+        // =========================================================
+
+        [HttpGet]
         public IActionResult Account()
         {
             ViewData["Title"] = "Account";
+
             return View();
         }
 
-        // =====================================================
-        // SETTINGS - GET
-        // =====================================================
+        // =========================================================
+        // SETTINGS
+        // =========================================================
 
         [HttpGet]
         public async Task<IActionResult> Settings()
@@ -64,13 +95,14 @@ namespace BlogVerse.Controllers
             return View();
         }
 
-        // =====================================================
-        // PROFILE PHOTO - UPLOAD
-        // =====================================================
+        // =========================================================
+        // UPLOAD PROFILE PHOTO
+        // =========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UploadProfilePhoto(IFormFile? ProfilePhoto)
+        public async Task<IActionResult> UploadProfilePhoto(
+            IFormFile? ProfilePhoto)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -79,16 +111,20 @@ namespace BlogVerse.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            if (ProfilePhoto == null || ProfilePhoto.Length == 0)
+            if (ProfilePhoto == null ||
+                ProfilePhoto.Length == 0)
             {
-                TempData["Error"] = "Please select a profile photo.";
+                TempData["Error"] =
+                    "Please select a profile photo.";
+
                 return RedirectToAction(nameof(Settings));
             }
 
-            // Maximum 5 MB
             if (ProfilePhoto.Length > 5 * 1024 * 1024)
             {
-                TempData["Error"] = "Profile photo must be less than 5 MB.";
+                TempData["Error"] =
+                    "Profile photo must be less than 5 MB.";
+
                 return RedirectToAction(nameof(Settings));
             }
 
@@ -101,7 +137,9 @@ namespace BlogVerse.Controllers
                 ".webp"
             };
 
-            var extension = Path.GetExtension(ProfilePhoto.FileName).ToLowerInvariant();
+            var extension =
+                Path.GetExtension(ProfilePhoto.FileName)
+                    .ToLowerInvariant();
 
             if (!allowedExtensions.Contains(extension))
             {
@@ -111,28 +149,26 @@ namespace BlogVerse.Controllers
                 return RedirectToAction(nameof(Settings));
             }
 
-            // Create folder if it doesn't exist
             var uploadFolder = Path.Combine(
                 _environment.WebRootPath,
                 "uploads",
                 "profiles"
             );
 
-            if (!Directory.Exists(uploadFolder))
-            {
-                Directory.CreateDirectory(uploadFolder);
-            }
+            Directory.CreateDirectory(uploadFolder);
 
-            // Delete old profile image
-            if (!string.IsNullOrWhiteSpace(user.ProfileImagePath))
+            // Delete old profile photo
+            if (!string.IsNullOrWhiteSpace(
+                user.ProfileImagePath))
             {
                 var oldFileName =
-                    Path.GetFileName(user.ProfileImagePath);
+                    Path.GetFileName(
+                        user.ProfileImagePath);
 
-                var oldFilePath = Path.Combine(
-                    uploadFolder,
-                    oldFileName
-                );
+                var oldFilePath =
+                    Path.Combine(
+                        uploadFolder,
+                        oldFileName);
 
                 if (System.IO.File.Exists(oldFilePath))
                 {
@@ -140,24 +176,22 @@ namespace BlogVerse.Controllers
                 }
             }
 
-            // Generate unique filename
             var fileName =
-                $"{Guid.NewGuid()}{extension}";
+                $"{Guid.NewGuid():N}{extension}";
 
-            var filePath = Path.Combine(
-                uploadFolder,
-                fileName
-            );
+            var filePath =
+                Path.Combine(
+                    uploadFolder,
+                    fileName);
 
-            // Save new image
-            using (var stream = new FileStream(
-                filePath,
-                FileMode.Create))
+            using (var stream =
+                   new FileStream(
+                       filePath,
+                       FileMode.Create))
             {
                 await ProfilePhoto.CopyToAsync(stream);
             }
 
-            // Save path in database
             user.ProfileImagePath =
                 $"/uploads/profiles/{fileName}";
 
@@ -169,9 +203,9 @@ namespace BlogVerse.Controllers
             return RedirectToAction(nameof(Settings));
         }
 
-        // =====================================================
-        // PROFILE PHOTO - REMOVE
-        // =====================================================
+        // =========================================================
+        // REMOVE PROFILE PHOTO
+        // =========================================================
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -184,10 +218,12 @@ namespace BlogVerse.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
-            if (!string.IsNullOrWhiteSpace(user.ProfileImagePath))
+            if (!string.IsNullOrWhiteSpace(
+                user.ProfileImagePath))
             {
                 var fileName =
-                    Path.GetFileName(user.ProfileImagePath);
+                    Path.GetFileName(
+                        user.ProfileImagePath);
 
                 var filePath = Path.Combine(
                     _environment.WebRootPath,
@@ -212,63 +248,44 @@ namespace BlogVerse.Controllers
             return RedirectToAction(nameof(Settings));
         }
 
-        // =====================================================
-        // OTHER DASHBOARD ACTIONS
-        // =====================================================
+        // =========================================================
+        // BREAKING NEWS
+        // =========================================================
 
+        [HttpGet]
         public IActionResult BreakingNews()
         {
             ViewData["Title"] = "Breaking News";
+
             return View();
         }
 
+        // =========================================================
+        // COMMUNITY
+        // =========================================================
+
+        [HttpGet]
         public IActionResult Community()
         {
-            var availableCommunities = new List<CommunityModel>()
-            {
-                new CommunityModel
-                {
-                    Id = 1,
-                    Name = "Photography Enthusiasts",
-                    Description = "Share your best photos and discuss techniques.",
-                    ImageUrl = "~/images/Photography.png",
-                    MemberCount = 150
-                },
-                new CommunityModel
-                {
-                    Id = 2,
-                    Name = "Food Lovers United",
-                    Description = "A place to share recipes, restaurant reviews, and all things food!",
-                    ImageUrl = "~/images/foodie.png",
-                    MemberCount = 280
-                },
-                new CommunityModel
-                {
-                    Id = 3,
-                    Name = "Travel Explorers",
-                    Description = "Discuss your travel adventures, share tips, and plan your next trip.",
-                    ImageUrl = "~/images/travel.png",
-                    MemberCount = 95
-                },
-                new CommunityModel
-                {
-                    Id = 4,
-                    Name = "Book Worms Corner",
-                    Description = "Talk about your favorite books, authors, and literary discussions.",
-                    ImageUrl = "~/images/bookwormm.png",
-                    MemberCount = 210
-                }
-            };
+            var availableCommunities =
+                GetCommunities();
 
-            ViewBag.AvailableCommunities = availableCommunities;
+            ViewBag.AvailableCommunities =
+                availableCommunities;
 
             return View();
         }
 
+        // =========================================================
+        // JOIN COMMUNITY
+        // =========================================================
+
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult JoinCommunity(int communityId)
         {
-            var community = GetCommunityById(communityId);
+            var community =
+                GetCommunityById(communityId);
 
             if (community != null)
             {
@@ -281,24 +298,67 @@ namespace BlogVerse.Controllers
                     "Error: Community not found!";
             }
 
-            return RedirectToAction("Community");
+            return RedirectToAction(nameof(Community));
         }
 
-        public IActionResult MyPosts()
+        // =========================================================
+        // MY POSTS
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> MyPosts()
         {
-            var posts = GetMockPosts();
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var posts = await _context.Posts
+                .Where(p =>
+                    p.UserId == userId &&
+                    p.IsPublished)
+                .OrderByDescending(
+                    p => p.PublishedAt ?? p.CreatedAt)
+                .ToListAsync();
 
             return View(posts);
         }
 
-        public IActionResult Analytics()
+        // =========================================================
+        // ANALYTICS
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Analytics()
         {
-            var posts = GetMockPosts();
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var posts = await _context.Posts
+                .Where(p =>
+                    p.UserId == userId &&
+                    p.IsPublished)
+                .OrderByDescending(
+                    p => p.CreatedAt)
+                .ToListAsync();
 
             return View(posts);
         }
+
+        // =========================================================
+        // TOGGLE FOLLOW
+        // =========================================================
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ToggleFollow(int channelId)
         {
             return Json(new
@@ -308,8 +368,13 @@ namespace BlogVerse.Controllers
             });
         }
 
-        private List<AppChannel> GetMockChannels() =>
-            new List<AppChannel>
+        // =========================================================
+        // MOCK CHANNELS
+        // =========================================================
+
+        private List<AppChannel> GetMockChannels()
+        {
+            return new List<AppChannel>
             {
                 new AppChannel
                 {
@@ -332,37 +397,24 @@ namespace BlogVerse.Controllers
                     IsFollowed = false
                 }
             };
+        }
 
-        private List<Post> GetMockPosts() =>
-            new List<Post>
-            {
-                new Post
-                {
-                    Id = 1,
-                    Title = "AI Writing Tips",
-                    Views = 120,
-                    Likes = 25
-                },
+        // =========================================================
+        // COMMUNITIES
+        // =========================================================
 
-                new Post
-                {
-                    Id = 2,
-                    Title = "React vs ASP.NET",
-                    Views = 80,
-                    Likes = 12
-                }
-            };
-
-        private CommunityModel GetCommunityById(int id)
+        private List<CommunityModel> GetCommunities()
         {
-            var availableCommunities = new List<CommunityModel>()
+            return new List<CommunityModel>
             {
                 new CommunityModel
                 {
                     Id = 1,
                     Name = "Photography Enthusiasts",
-                    Description = "Share your best photos and discuss techniques.",
-                    ImageUrl = "~/images/Photography.png",
+                    Description =
+                        "Share your best photos and discuss techniques.",
+                    ImageUrl =
+                        "~/images/Photography.png",
                     MemberCount = 150
                 },
 
@@ -370,8 +422,10 @@ namespace BlogVerse.Controllers
                 {
                     Id = 2,
                     Name = "Food Lovers United",
-                    Description = "A place to share recipes, restaurant reviews, and all things food!",
-                    ImageUrl = "~/images/foodie.png",
+                    Description =
+                        "A place to share recipes, restaurant reviews, and all things food!",
+                    ImageUrl =
+                        "~/images/foodie.png",
                     MemberCount = 280
                 },
 
@@ -379,8 +433,10 @@ namespace BlogVerse.Controllers
                 {
                     Id = 3,
                     Name = "Travel Explorers",
-                    Description = "Discuss your travel adventures, share tips, and plan your next trip.",
-                    ImageUrl = "~/images/travel.png",
+                    Description =
+                        "Discuss your travel adventures, share tips, and plan your next trip.",
+                    ImageUrl =
+                        "~/images/travel.png",
                     MemberCount = 95
                 },
 
@@ -388,13 +444,22 @@ namespace BlogVerse.Controllers
                 {
                     Id = 4,
                     Name = "Book Worms Corner",
-                    Description = "Talk about your favorite books, authors, and literary discussions.",
-                    ImageUrl = "~/images/bookwormm.png",
+                    Description =
+                        "Talk about your favorite books, authors, and literary discussions.",
+                    ImageUrl =
+                        "~/images/bookwormm.png",
                     MemberCount = 210
                 }
             };
+        }
 
-            return availableCommunities
+        // =========================================================
+        // GET COMMUNITY BY ID
+        // =========================================================
+
+        private CommunityModel? GetCommunityById(int id)
+        {
+            return GetCommunities()
                 .FirstOrDefault(c => c.Id == id);
         }
     }
