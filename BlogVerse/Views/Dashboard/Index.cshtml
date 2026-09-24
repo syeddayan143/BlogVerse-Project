@@ -1,531 +1,545 @@
-﻿@* Dashboard/Index.cshtml *@
+﻿@model BlogVerse.ViewModels.DashboardViewModel
 
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Dashboard";
 }
 
-@section Styles {
-    <style>
+<style>
+    .blog-dashboard {
+        padding: 24px;
+    }
 
-        /* =========================================
-                   DASHBOARD PAGE
-                ========================================= */
+    /* =========================
+           HERO
+        ========================= */
 
-        .dashboard-page {
-            width: 100%;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 0;
-        }
+    .dashboard-hero {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #111827, #1f2937);
+        border-radius: 24px;
+        padding: 35px;
+        margin-bottom: 28px;
+        color: #ffffff;
+    }
 
-
-        /* =========================================
-                   HERO / SEARCH SECTION
-                ========================================= */
-
-        .dashboard-hero {
-            width: 100%;
-            margin: 0 auto 28px auto;
-        }
-
-        .header-image-container {
-            position: relative;
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-            .header-image-container > img {
-                display: block;
-                width: 100%;
-                height: auto;
-                max-height: 420px;
-                object-fit: cover;
-            }
-
-
-        /* =========================================
-                   HERO OVERLAY
-                ========================================= */
-
-        .overlay-content {
+        .dashboard-hero::before {
+            content: "";
             position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 35px;
-            width: 100%;
-            padding: 0 30px;
-            text-align: center;
-            color: white;
-            box-sizing: border-box;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            right: -80px;
+            top: -100px;
         }
 
-            .overlay-content h2 {
-                margin: 0 0 18px 0;
-                font-size: clamp(28px, 4vw, 48px);
-                font-weight: 700;
-                line-height: 1.1;
-                text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
-            }
-
-            .overlay-content .input-group {
-                width: 100%;
-                max-width: 700px;
-                margin: 0 auto;
-            }
-
-            .overlay-content .form-control {
-                height: 46px;
-                border: none;
-                outline: none;
-                padding: 0 15px;
-                font-size: 15px;
-            }
-
-            .overlay-content .btn {
-                min-width: 50px;
-            }
-
-
-        /* =========================================
-                   TOP TABS
-                ========================================= */
-
-        .dashboard-tabs {
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto 22px auto;
-        }
-
-            .dashboard-tabs .nav-tabs {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                gap: 8px;
-                width: 100%;
-                margin: 0;
-                border-bottom: 1px solid #dddddd;
-                overflow-x: auto;
-                white-space: nowrap;
-                scrollbar-width: none;
-            }
-
-                .dashboard-tabs .nav-tabs::-webkit-scrollbar {
-                    display: none;
-                }
-
-            .dashboard-tabs .nav-link {
-                color: #555555;
-                font-weight: 500;
-                padding: 10px 16px;
-                border: none;
-                border-bottom: 2px solid transparent;
-                text-decoration: none;
-                flex-shrink: 0;
-            }
-
-                .dashboard-tabs .nav-link:hover {
-                    color: #222222;
-                }
-
-                .dashboard-tabs .nav-link.active {
-                    color: #007bff;
-                    border-bottom: 2px solid #007bff;
-                    background: transparent;
-                }
-
-
-        /* =========================================
-                   CATEGORY PILLS
-                ========================================= */
-
-        .category-section {
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto 30px auto;
-        }
-
-        .category-pills {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            padding: 10px 12px;
-            background: #ffffff;
-            border-radius: 10px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-        }
-
-            .category-pills::-webkit-scrollbar {
-                display: none;
-            }
-
-            .category-pills .nav-item {
-                flex-shrink: 0;
-            }
-
-            .category-pills .nav-link {
-                display: block;
-                color: #555555;
-                background: #eeeeee;
-                padding: 8px 16px;
-                border-radius: 20px;
-                font-size: 14px;
-                font-weight: 500;
-                white-space: nowrap;
-                text-decoration: none;
-                transition: all 0.2s ease;
-            }
-
-                .category-pills .nav-link:hover {
-                    background: #dddddd;
-                }
-
-                .category-pills .nav-link.active {
-                    background: #007bff;
-                    color: white;
-                }
-
-
-        /* =========================================
-                   TRENDING NEWS HEADER
-                ========================================= */
-
-        .trending-section {
-            width: 100%;
-            max-width: 960px;
-            margin: 0 auto;
-        }
-
-        .trending-title {
-            margin: 0 0 18px 0;
-            font-size: 24px;
-            font-weight: 700;
-            color: #222222;
-        }
-
-
-        /* =========================================
-                   NEWS GRID
-                ========================================= */
-
-        .news-grid {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 22px;
-        }
-
-
-        /* =========================================
-                   NEWS CARD
-                ========================================= */
-
-        .news-card {
-            width: 100%;
-            min-width: 0;
-            background: #ffffff;
-            border: 1px solid #e1e1e1;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-            .news-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-            }
-
-
-        /* =========================================
-                   CARD IMAGE
-                ========================================= */
-
-        .news-card-image-wrapper {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .news-card-image {
-            display: block;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-
-        /* =========================================
-                   LIVE BADGE
-                ========================================= */
-
-        .live-badge {
+        .dashboard-hero::after {
+            content: "";
             position: absolute;
-            top: 10px;
-            left: 10px;
-            background: #dc3545;
-            color: white;
-            padding: 5px 9px;
-            border-radius: 5px;
-            font-size: 11px;
-            font-weight: 700;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+            right: 120px;
+            bottom: -100px;
         }
 
+    .dashboard-hero-content {
+        position: relative;
+        z-index: 2;
+        max-width: 700px;
+    }
 
-        /* =========================================
-                   CARD BODY
-                ========================================= */
+    .dashboard-hero h1 {
+        margin: 0 0 10px;
+        font-size: 34px;
+        line-height: 1.2;
+        font-weight: 800;
+    }
 
-        .news-card-body {
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
+    .dashboard-hero p {
+        margin: 0;
+        color: #d1d5db;
+        font-size: 15px;
+        line-height: 1.7;
+    }
+
+    /* =========================
+           SEARCH
+        ========================= */
+
+    .dashboard-search {
+        margin-top: 24px;
+        max-width: 650px;
+    }
+
+    .dashboard-search-box {
+        display: flex;
+        align-items: center;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.15);
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+        .dashboard-search-box span {
+            padding-left: 15px;
+            font-size: 18px;
+        }
+
+        .dashboard-search-box input {
             flex: 1;
-        }
-
-        .news-category {
-            margin: 0 0 7px 0;
-            font-size: 12px;
-            font-weight: 600;
-            color: #6c757d;
-        }
-
-            .news-category i {
-                margin-right: 4px;
-            }
-
-        .news-title {
-            margin: 0 0 10px 0;
-            font-size: 17px;
-            font-weight: 700;
-            line-height: 1.35;
-            color: #222222;
-        }
-
-        .news-description {
-            margin: 0 0 15px 0;
-            font-size: 13px;
-            line-height: 1.6;
-            color: #555555;
-            flex: 1;
-        }
-
-
-        /* =========================================
-                   CARD FOOTER
-                ========================================= */
-
-        .news-card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-top: auto;
-            font-size: 12px;
-            color: #777777;
-        }
-
-        .news-author {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .news-time {
-            flex-shrink: 0;
-        }
-
-
-        /* =========================================
-                   TABLET
-                ========================================= */
-
-        @@media (max-width: 1200px) {
-            .dashboard-page
-
-        {
-            max-width: 100%;
-        }
-
-        .news-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        }
-
-
-        /* =========================================
-                   SMALL TABLET
-                ========================================= */
-
-        @@media (max-width: 992px) {
-            .dashboard-page
-
-        {
-            padding: 0;
-        }
-
-        .header-image-container,
-        .dashboard-tabs,
-        .category-section,
-        .trending-section {
-            max-width: 100%;
-        }
-
-        .news-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        }
-
-
-        /* =========================================
-                   MOBILE
-                ========================================= */
-
-        @@media (max-width: 768px) {
-            .dashboard-page
-
-        {
-            width: 100%;
-        }
-
-        .header-image-container {
-            border-radius: 10px;
-        }
-
-            .header-image-container > img {
-                min-height: 250px;
-                max-height: 320px;
-                object-fit: cover;
-            }
-
-        .overlay-content {
-            bottom: 22px;
-            padding: 0 15px;
-        }
-
-            .overlay-content h2 {
-                font-size: 28px;
-                margin-bottom: 12px;
-            }
-
-            .overlay-content .form-control {
-                height: 42px;
-                font-size: 14px;
-            }
-
-        .dashboard-tabs .nav-tabs {
-            justify-content: flex-start;
-        }
-
-        .dashboard-tabs .nav-link {
-            padding: 9px 13px;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #ffffff;
+            padding: 13px 14px;
             font-size: 14px;
         }
 
-        .category-pills {
-            padding: 8px;
-        }
-
-            .category-pills .nav-link {
-                padding: 7px 13px;
-                font-size: 13px;
+            .dashboard-search-box input::placeholder {
+                color: #cbd5e1;
             }
 
-        .trending-title {
-            font-size: 21px;
+    /* =========================
+           TABS
+        ========================= */
+
+    .dashboard-tabs {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        margin-bottom: 22px;
+        padding-bottom: 4px;
+    }
+
+    .dashboard-tab {
+        border: none;
+        background: #f3f4f6;
+        color: #4b5563;
+        padding: 10px 18px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: 0.2s ease;
+    }
+
+        .dashboard-tab:hover {
+            background: #e5e7eb;
         }
 
-        .news-grid {
-            grid-template-columns: 1fr;
-            gap: 18px;
+        .dashboard-tab.active {
+            background: #111827;
+            color: #ffffff;
         }
 
-        .news-card-image-wrapper {
-            height: 210px;
+    /* =========================
+           CATEGORY FILTERS
+        ========================= */
+
+    .category-section {
+        margin-bottom: 25px;
+    }
+
+    .category-title {
+        font-size: 15px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 12px;
+    }
+
+    .category-pills {
+        display: flex;
+        gap: 9px;
+        flex-wrap: wrap;
+    }
+
+    .category-pill {
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
+        color: #4b5563;
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+        .category-pill:hover,
+        .category-pill.active {
+            background: #111827;
+            color: #ffffff;
+            border-color: #111827;
         }
 
+    /* =========================
+           SECTION HEADER
+        ========================= */
+
+    .posts-section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+        .posts-section-header h2 {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 800;
+            color: #111827;
         }
 
+    .posts-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #4f46e5;
+        font-size: 12px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
 
-        /* =========================================
-                   SMALL MOBILE
-                ========================================= */
+    /* =========================
+           NEWS GRID
+        ========================= */
 
-        @@media (max-width: 480px) {
-            .overlay-content
+    .news-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 22px;
+    }
 
-        {
-            bottom: 15px;
+    /* =========================
+           NEWS CARD
+        ========================= */
+
+    .news-card {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 7px 25px rgba(0,0,0,0.05);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 16px 35px rgba(0,0,0,0.10);
         }
 
-        .overlay-content h2 {
-            font-size: 23px;
+    /* =========================
+           IMAGE
+        ========================= */
+
+    .news-image {
+        width: 100%;
+        height: 205px;
+        background: #f3f4f6;
+        overflow: hidden;
+    }
+
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.4s ease;
         }
 
-        .header-image-container > img {
-            min-height: 230px;
+    .news-card:hover .news-image img {
+        transform: scale(1.05);
+    }
+
+    .news-image.no-image {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient( 135deg, #eef2ff, #f5f3ff );
+    }
+
+        .news-image.no-image span {
+            font-size: 48px;
         }
 
-        .news-card-image-wrapper {
-            height: 190px;
+    /* =========================
+           CARD CONTENT
+        ========================= */
+
+    .news-card-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        padding: 20px;
+    }
+
+    .news-category {
+        display: inline-flex;
+        align-self: flex-start;
+        background: #eef2ff;
+        color: #4f46e5;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        margin-bottom: 11px;
+    }
+
+    .news-card-content h3 {
+        margin: 0 0 9px;
+        color: #111827;
+        font-size: 20px;
+        line-height: 1.35;
+        font-weight: 800;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .news-author {
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .news-description {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.7;
+        margin: 0 0 20px;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    /* =========================
+           CARD FOOTER
+        ========================= */
+
+    .news-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 15px;
+        border-top: 1px solid #f1f5f9;
+    }
+
+    .news-stats {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 9px;
+        color: #6b7280;
+        font-size: 11px;
+    }
+
+        .news-stats span {
+            white-space: nowrap;
         }
 
-        .news-card-body {
-            padding: 14px;
+    .read-more-btn {
+        color: #4f46e5;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 800;
+        white-space: nowrap;
+    }
+
+        .read-more-btn:hover {
+            color: #3730a3;
+            text-decoration: underline;
         }
 
-        .news-title {
-            font-size: 16px;
+    /* =========================
+           ATTACHMENT BADGE
+        ========================= */
+
+    .attachment-badge {
+        color: #7c3aed;
+        font-weight: 700;
+    }
+
+    /* =========================
+           EMPTY POSTS
+        ========================= */
+
+    .no-posts {
+        grid-column: 1 / -1;
+        background: #ffffff;
+        border: 1px dashed #d1d5db;
+        border-radius: 20px;
+        padding: 60px 25px;
+        text-align: center;
+    }
+
+    .no-posts-icon {
+        font-size: 52px;
+        margin-bottom: 12px;
+    }
+
+    .no-posts h3 {
+        margin: 0 0 8px;
+        font-size: 22px;
+        color: #111827;
+        font-weight: 800;
+    }
+
+    .no-posts p {
+        margin: 0 0 20px;
+        color: #6b7280;
+        font-size: 14px;
+    }
+
+    .create-post-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: #111827;
+        color: #ffffff;
+        text-decoration: none;
+        padding: 11px 18px;
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+        .create-post-btn:hover {
+            background: #1f2937;
+            color: #ffffff;
         }
 
-        .news-description {
-            font-size: 12px;
+    /* =========================
+           NO SEARCH RESULT
+        ========================= */
+
+    .no-search-result {
+        display: none;
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 45px 20px;
+        color: #6b7280;
+    }
+
+    /* =========================
+           RESPONSIVE
+        ========================= */
+
+    @@media (max-width: 1100px) {
+        .news-grid
+
+    {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .blog-dashboard
+
+    {
+        padding: 18px;
+    }
+
+    .dashboard-hero {
+        padding: 25px;
+        border-radius: 20px;
+    }
+
+        .dashboard-hero h1 {
+            font-size: 27px;
         }
 
-        }</style>
-}
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .posts-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .news-image {
+        height: 220px;
+    }
+
+    }
+
+    @@media (max-width: 480px) {
+        .blog-dashboard
+
+    {
+        padding: 14px;
+    }
+
+    .dashboard-hero {
+        padding: 22px;
+    }
+
+        .dashboard-hero h1 {
+            font-size: 24px;
+        }
+
+    .news-card-content {
+        padding: 17px;
+    }
+
+    .news-card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    }</style>
 
 
-<div class="dashboard-page">
+<div class="blog-dashboard">
 
-    <!-- =========================================
+    <!-- =====================================================
          HERO
-    ========================================== -->
+    ====================================================== -->
 
     <section class="dashboard-hero">
 
-        <div class="header-image-container">
+        <div class="dashboard-hero-content">
 
-            <img src="~/images/dashboard-search-banner.png"
-                 alt="Search Banner" />
+            <h1>
+                Welcome to BlogVerse 👋
+            </h1>
 
-            <div class="overlay-content">
+            <p>
+                Discover stories, ideas and experiences
+                shared by the BlogVerse community.
+            </p>
 
-                <h2>Explore the BlogVerse</h2>
 
-                <div class="input-group">
+            <!-- SEARCH -->
+
+            <div class="dashboard-search">
+
+                <div class="dashboard-search-box">
+
+                    <span>🔍</span>
 
                     <input type="text"
-                           class="form-control"
-                           placeholder="Search blogs..." />
-
-                    <button class="btn btn-outline-light"
-                            type="button">
-
-                        <i class="fas fa-search"></i>
-
-                    </button>
+                           id="postSearch"
+                           placeholder="Search posts, categories or authors..."
+                           autocomplete="off" />
 
                 </div>
 
@@ -536,542 +550,667 @@
     </section>
 
 
-    <!-- =========================================
-         MAIN TABS
-    ========================================== -->
+    <!-- =====================================================
+         TABS
+    ====================================================== -->
 
-    <section class="dashboard-tabs">
+    <div class="dashboard-tabs">
 
-        <ul class="nav-tabs">
+        <button type="button"
+                class="dashboard-tab active"
+                data-tab="all">
+            All Posts
+        </button>
 
-            <li class="nav-item">
-                <a class="nav-link active" href="#">
-                    Following
-                </a>
-            </li>
+        <button type="button"
+                class="dashboard-tab"
+                data-tab="latest">
+            Latest
+        </button>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Community
-                </a>
-            </li>
+        <button type="button"
+                class="dashboard-tab"
+                data-tab="popular">
+            Popular
+        </button>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Trending
-                </a>
-            </li>
+        <button type="button"
+                class="dashboard-tab"
+                data-tab="trending">
+            Trending
+        </button>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    For You
-                </a>
-            </li>
-
-        </ul>
-
-    </section>
+    </div>
 
 
-    <!-- =========================================
-         CATEGORY FILTER
-    ========================================== -->
+    <!-- =====================================================
+         CATEGORY FILTERS
+    ====================================================== -->
+    @{
+        var categories = Model.Posts
+        .Where(p => !string.IsNullOrWhiteSpace(p.Category))
+        .Select(p => p.Category!.Trim())
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .OrderBy(c => c)
+        .ToList();
+    }
 
-    <section class="category-section">
+    @if (categories.Any())
+    {
+        <div class="category-section">
 
-        <ul class="category-pills">
+            <div class="category-title">
+                Browse by Category
+            </div>
 
-            <li class="nav-item">
-                <a class="nav-link active" href="#">
+            <div class="category-pills">
+
+                <button type="button"
+                        class="category-pill active"
+                        data-category="all">
                     All
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Business
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Entertainment
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Global
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Politics
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Technology
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Sport
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Food &amp; Drink
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    Art
-                </a>
-            </li>
-
-        </ul>
-
-    </section>
-
-
-    <!-- =========================================
-         TRENDING NEWS
-    ========================================== -->
-
-    <section class="trending-section">
-
-        <h4 class="trending-title">
-            Trending News
-        </h4>
-
-
-        <div class="news-grid">
-
-
-            <!-- CARD 1 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/juice.jpg"
-                         class="news-card-image"
-                         alt="Food and Drink" />
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-utensils"></i>
-                            Food &amp; Drink
-                        </div>
-
-                        <h5 class="news-title">
-                            Flavors &amp; Feasts: Latest Culinary Trends and Savory Delights
-                        </h5>
-
-                        <p class="news-description">
-                            Explore the newest culinary trends and indulge in
-                            mouth-watering delights with our comprehensive
-                            coverage of flavors and feasts...
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Leonor Davinci
-                        </span>
-
-                        <span class="news-time">
-                            2h Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 2 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/culinary.png"
-                         class="news-card-image"
-                         alt="Delicious Cake Dessert" />
-
-                    <span class="live-badge">
-                        LIVE
-                    </span>
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-utensils"></i>
-                            Desserts
-                        </div>
-
-                        <h5 class="news-title">
-                            Heavenly Cakes
-                        </h5>
-
-                        <p class="news-description">
-                            Dive into the world of decadent cake desserts—from
-                            classic chocolate layers to fruity delights and
-                            artisanal creations that melt in your mouth...
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Chloe Baker
-                        </span>
-
-                        <span class="news-time">
-                            45m Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 3 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/sports.jpg"
-                         class="news-card-image"
-                         alt="Basketball" />
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-basketball-ball"></i>
-                            Sport
-                        </div>
-
-                        <h5 class="news-title">
-                            Basketball Blitz: Courtside Action &amp; Star Highlights
-                        </h5>
-
-                        <p class="news-description">
-                            Experience the thrill of the court with updates on
-                            NBA matchups, rising stars, legendary plays, and
-                            in-depth coverage of basketball culture around
-                            the globe.
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Leonor Davinci
-                        </span>
-
-                        <span class="news-time">
-                            2h Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 4 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/headphones.png"
-                         class="news-card-image"
-                         alt="Technology" />
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-headphones"></i>
-                            Technology
-                        </div>
-
-                        <h5 class="news-title">
-                            Technology Trends and Future Innovations
-                        </h5>
-
-                        <p class="news-description">
-                            Discover the cutting-edge of technology with our
-                            in-depth articles on gadgets, software, AI, and
-                            the future of innovation...
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Leonor Davinci
-                        </span>
-
-                        <span class="news-time">
-                            2h Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 5 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/politics.jpg"
-                         class="news-card-image"
-                         alt="Political News" />
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-landmark"></i>
-                            Politics
-                        </div>
-
-                        <h5 class="news-title">
-                            Power &amp; Policy: Decoding Today’s Political Landscape
-                        </h5>
-
-                        <p class="news-description">
-                            Stay informed with expert insights, policy analysis,
-                            and the latest updates from local, national, and
-                            global news.
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Leonor Davinci
-                        </span>
-
-                        <span class="news-time">
-                            2h Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <!-- CARD 6 -->
-
-            <article class="news-card">
-
-                <div class="news-card-image-wrapper">
-
-                    <img src="~/images/abstract.jpg"
-                         class="news-card-image"
-                         alt="Abstract Art" />
-
-                </div>
-
-                <div class="news-card-body">
-
-                    <div>
-
-                        <div class="news-category">
-                            <i class="fas fa-palette"></i>
-                            Art &amp; Design
-                        </div>
-
-                        <h5 class="news-title">
-                            Art and Craft
-                        </h5>
-
-                        <p class="news-description">
-                            Immerse yourself in the world of creativity with
-                            articles on art, design, photography, and the
-                            inspiring stories behind them...
-                        </p>
-
-                    </div>
-
-                    <div class="news-card-footer">
-
-                        <span class="news-author">
-                            <i class="fas fa-user"></i>
-                            Reya Poddar
-                        </span>
-
-                        <span class="news-time">
-                            2h Ago
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </article>
+                </button>
+
+                @foreach (var category in categories)
+                {
+                    <button type="button"
+                            class="category-pill"
+                            data-category="@category">
+                        @category
+                    </button>
+                }
+
+            </div>
 
         </div>
+    }
 
-    </section>
+
+    <!-- =====================================================
+         POSTS HEADER
+    ====================================================== -->
+
+    <div class="posts-section-header">
+
+        <h2>
+            Latest Posts
+        </h2>
+
+        <span class="posts-count">
+            @Model.Posts.Count
+            @(Model.Posts.Count == 1 ? "Post" : "Posts")
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         POSTS GRID
+    ====================================================== -->
+
+    <div class="news-grid"
+         id="postsGrid">
+
+        @if (Model.Posts != null &&
+                Model.Posts.Any())
+        {
+            @foreach (var post in Model.Posts)
+            {
+                var authorName =
+                post.User != null &&
+                !string.IsNullOrWhiteSpace(
+                post.User.Name)
+                ? post.User.Name
+                : "BlogVerse User";
+
+                var postDate =
+                post.PublishedAt ??
+                post.CreatedAt;
+
+                var plainText =
+                System.Text.RegularExpressions
+                .Regex
+                .Replace(
+                post.Content ?? "",
+                "<.*?>",
+                string.Empty
+                );
+
+                plainText =
+                System.Net.WebUtility
+                .HtmlDecode(plainText)
+                .Trim();
+
+                if (plainText.Length > 180)
+                {
+                    plainText =
+                    plainText.Substring(0, 180)
+                    + "...";
+                }
+
+                <article class="news-card"
+                         data-category="@post.Category"
+                         data-title="@post.Title"
+                         data-author="@authorName"
+                         data-date="@postDate.Ticks"
+                         data-views="@post.Views"
+                         data-likes="@post.Likes">
+
+                    <!-- IMAGE -->
+                    @if (!string.IsNullOrWhiteSpace(
+                                post.ImagePath))
+                    {
+                        <div class="news-image">
+
+                            <img src="@post.ImagePath"
+                                 alt="@post.Title"
+                                 loading="lazy"
+                                 draggable="false" />
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="news-image no-image">
+
+                            <span>📝</span>
+
+                        </div>
+                    }
+
+
+                <!-- CONTENT -->
+
+                <div class="news-card-content">
+
+                    <!-- CATEGORY -->
+
+                    <span class="news-category">
+                        @(string.IsNullOrWhiteSpace(
+                                            post.Category)
+                                            ? "General"
+                                            : post.Category)
+                </span>
+
+
+                        <!-- TITLE -->
+
+                        <h3>
+                            @post.Title
+                        </h3>
+
+
+                        <!-- AUTHOR / DATE -->
+
+                        <div class="news-author">
+
+                            👤 @authorName
+
+                            <span> · </span>
+
+                            📅 @postDate.ToString("MMM dd, yyyy")
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+
+                        <p class="news-description">
+                            @plainText
+                        </p>
+
+
+                        <!-- FOOTER -->
+
+                        <div class="news-card-footer">
+
+                            <div class="news-stats">
+
+                                <span>
+                                    👁 @post.Views
+                                </span>
+
+                                <span>
+                                    ❤️ @post.Likes
+                                </span>
+
+                        @if (!string.IsNullOrWhiteSpace(
+                                                post.AttachmentPath))
+                                {
+                                    <span class="attachment-badge">
+                                        📎
+                                    </span>
+                                }
+
+                            </div>
+
+
+                            <a asp-controller="Posts"
+                               asp-action="Details"
+                               asp-route-id="@post.Id"
+                               class="read-more-btn">
+
+                                Read More →
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </article>
+            }
+
+
+            <!-- SEARCH EMPTY -->
+
+            <div class="no-search-result"
+                 id="noSearchResult">
+
+                🔍
+
+                <h3>
+                    No matching posts found
+                </h3>
+
+                <p>
+                    Try another title, category or author.
+                </p>
+
+            </div>
+        }
+        else
+        {
+            <!-- =================================================
+                 NO POSTS
+            ================================================== -->
+
+            <div class="no-posts">
+
+                <div class="no-posts-icon">
+                    📝
+                </div>
+
+                <h3>
+                    No Published Posts Yet
+                </h3>
+
+                <p>
+                    Be the first person to share
+                    something with the BlogVerse community.
+                </p>
+
+                <a asp-controller="Posts"
+                   asp-action="Create"
+                   class="create-post-btn">
+
+                    ✍️ Create Your First Post
+
+                </a>
+
+            </div>
+        }
+
+    </div>
 
 </div>
 
 
-@section Scripts {
+<script>
 
-    <script>
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
 
-        $(document).ready(function () {
+            const searchInput =
+                document.getElementById(
+                    "postSearch"
+                );
 
-            /* Category pills */
+            const postCards =
+                Array.from(
+                    document.querySelectorAll(
+                        ".news-card"
+                    )
+                );
 
-            $('.category-pills .nav-link').on('click', function (e) {
+            const noSearchResult =
+                document.getElementById(
+                    "noSearchResult"
+                );
 
-                e.preventDefault();
+            const tabButtons =
+                document.querySelectorAll(
+                    ".dashboard-tab"
+                );
 
-                $('.category-pills .nav-link.active')
-                    .removeClass('active');
+            const categoryButtons =
+                document.querySelectorAll(
+                    ".category-pill"
+                );
 
-                $(this).addClass('active');
+
+            let selectedCategory = "all";
+
+            let selectedTab = "all";
+
+
+            /* =========================================
+               FILTER POSTS
+            ========================================== */
+
+            function filterPosts() {
+
+                const searchTerm =
+                    searchInput
+                        ? searchInput.value
+                            .toLowerCase()
+                            .trim()
+                        : "";
+
+
+                let visibleCount = 0;
+
+
+                postCards.forEach(function (card) {
+
+                    const title =
+                        (
+                            card.dataset.title || ""
+                        ).toLowerCase();
+
+                    const author =
+                        (
+                            card.dataset.author || ""
+                        ).toLowerCase();
+
+                    const category =
+                        (
+                            card.dataset.category || ""
+                        ).toLowerCase();
+
+                    const searchMatch =
+                        !searchTerm ||
+                        title.includes(searchTerm) ||
+                        author.includes(searchTerm) ||
+                        category.includes(searchTerm);
+
+
+                    const categoryMatch =
+                        selectedCategory === "all" ||
+                        category ===
+                            selectedCategory.toLowerCase();
+
+
+                    let tabMatch = true;
+
+
+                    /*
+                        Latest:
+                        Controller already sends newest
+                        posts first, so all posts remain.
+
+                        Popular:
+                        Posts with higher views/likes
+                        are shown first.
+
+                        Trending:
+                        Posts with recent/high activity
+                        are shown first.
+                    */
+
+                    if (selectedTab === "popular") {
+
+                        tabMatch = true;
+
+                    }
+
+                    if (selectedTab === "trending") {
+
+                        tabMatch = true;
+
+                    }
+
+
+                    const visible =
+                        searchMatch &&
+                        categoryMatch &&
+                        tabMatch;
+
+
+                    card.style.display =
+                        visible ? "" : "flex";
+
+
+                    if (visible) {
+                        visibleCount++;
+                    }
+
+                });
+
+
+                if (noSearchResult) {
+
+                    noSearchResult.style.display =
+                        visibleCount === 0
+                            ? "block"
+                            : "none";
+
+                }
+
+
+                if (
+                    selectedTab === "popular" ||
+                    selectedTab === "trending"
+                ) {
+
+                    sortPosts();
+
+                }
+
+            }
+
+
+            /* =========================================
+               SORT POSTS
+            ========================================== */
+
+            function sortPosts() {
+
+                const grid =
+                    document.getElementById(
+                        "postsGrid"
+                    );
+
+                if (!grid) {
+                    return;
+                }
+
+
+                const cards =
+                    Array.from(
+                        grid.querySelectorAll(
+                            ".news-card"
+                        )
+                    );
+
+
+                if (selectedTab === "popular") {
+
+                    cards.sort(function (a, b) {
+
+                        const aScore =
+                            Number(
+                                a.dataset.views || 0
+                            ) +
+                            Number(
+                                a.dataset.likes || 0
+                            ) * 3;
+
+                        const bScore =
+                            Number(
+                                b.dataset.views || 0
+                            ) +
+                            Number(
+                                b.dataset.likes || 0
+                            ) * 3;
+
+                        return bScore - aScore;
+
+                    });
+
+                }
+                else if (selectedTab === "trending") {
+
+                    cards.sort(function (a, b) {
+
+                        const aDate =
+                            Number(
+                                a.dataset.date || 0
+                            );
+
+                        const bDate =
+                            Number(
+                                b.dataset.date || 0
+                            );
+
+                        return bDate - aDate;
+
+                    });
+
+                }
+                else {
+
+                    cards.sort(function (a, b) {
+
+                        const aDate =
+                            Number(
+                                a.dataset.date || 0
+                            );
+
+                        const bDate =
+                            Number(
+                                b.dataset.date || 0
+                            );
+
+                        return bDate - aDate;
+
+                    });
+
+                }
+
+
+                cards.forEach(function (card) {
+
+                    grid.appendChild(card);
+
+                });
+
+
+                if (noSearchResult) {
+
+                    grid.appendChild(
+                        noSearchResult
+                    );
+
+                }
+
+            }
+
+
+            /* =========================================
+               SEARCH
+            ========================================== */
+
+            if (searchInput) {
+
+                searchInput.addEventListener(
+                    "input",
+                    filterPosts
+                );
+
+            }
+
+
+            /* =========================================
+               TABS
+            ========================================== */
+
+            tabButtons.forEach(function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        tabButtons.forEach(
+                            function (item) {
+                                item.classList.remove(
+                                    "active"
+                                );
+                            }
+                        );
+
+                        button.classList.add(
+                            "active"
+                        );
+
+                        selectedTab =
+                            button.dataset.tab ||
+                            "all";
+
+                        sortPosts();
+
+                        filterPosts();
+
+                    }
+                );
 
             });
 
 
-            /* Top tabs */
+            /* =========================================
+               CATEGORY
+            ========================================== */
 
-            $('.dashboard-tabs .nav-link').on('click', function (e) {
+            categoryButtons.forEach(
+                function (button) {
 
-                e.preventDefault();
+                    button.addEventListener(
+                        "click",
+                        function () {
 
-                $('.dashboard-tabs .nav-link.active')
-                    .removeClass('active');
+                            categoryButtons.forEach(
+                                function (item) {
+                                    item.classList.remove(
+                                        "active"
+                                    );
+                                }
+                            );
 
-                $(this).addClass('active');
+                            button.classList.add(
+                                "active"
+                            );
 
-            });
+                            selectedCategory =
+                                button.dataset.category ||
+                                "all";
+
+                            filterPosts();
+
+                        }
+                    );
+
+                }
+            );
 
 
-            /* Breaking News */
+            /* =========================================
+               INITIAL SORT
+            ========================================== */
 
-            $('#breakingNewsSidebarLink').on('click', function (e) {
+            sortPosts();
 
-                e.preventDefault();
+        }
+    );
 
-                $('#mainContentArea').html(`
-
-                    <h4>Breaking News</h4>
-
-                    <p>
-                        This is the content for breaking news!
-                    </p>
-
-                    <p>
-                        You can add more HTML here as needed.
-                    </p>
-
-                    <div class="row g-4">
-
-                        <div class="col-md-6">
-
-                            <div class="card">
-
-                                <div class="card-body">
-
-                                    <h5 class="card-title">
-                                        Breaking Story 1
-                                    </h5>
-
-                                    <p class="card-text">
-                                        Details of the first breaking news story.
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-6">
-
-                            <div class="card">
-
-                                <div class="card-body">
-
-                                    <h5 class="card-title">
-                                        Breaking Story 2
-                                    </h5>
-
-                                    <p class="card-text">
-                                        Details of the second breaking news story.
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                `);
-
-            });
-
-        });
-
-    </script>
-}
+</script>
