@@ -15,6 +15,7 @@ namespace BlogVerse.Models
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<UserDashboardPreference> DashboardPreferences { get; set; } // [NEW] Added for customizable dashboards
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -94,6 +95,17 @@ namespace BlogVerse.Models
             builder.Entity<PostLike>()
                 .HasIndex(pl => new { pl.PostId, pl.UserId })
                 .IsUnique();
+
+            // =====================================================
+            // [NEW] USER DASHBOARD PREFERENCE CONFIGURATION
+            // =====================================================
+
+            builder.Entity<UserDashboardPreference>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasIndex(e => e.UserId).IsUnique();
+                entity.Property(e => e.LayoutConfiguration).IsRequired();
+            });
         }
     }
 }

@@ -40,6 +40,22 @@ namespace BlogVerse.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var userId = _userManager.GetUserId(User);
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                var preference = await _context.DashboardPreferences
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(p => p.UserId == userId);
+
+                ViewBag.LayoutConfig = preference?.LayoutConfiguration ?? "{}";
+                ViewBag.UserPreferences = preference; // Loaded for custom styles and widgets
+            }
+            else
+            {
+                ViewBag.LayoutConfig = "{}";
+                ViewBag.UserPreferences = null;
+            }
+
             var posts = await _context.Posts
                 .AsNoTracking()
                 .Include(p => p.User)
@@ -61,6 +77,100 @@ namespace BlogVerse.Controllers
         }
 
         // =========================================================
+        // SAVE LAYOUT PREFERENCE [NEW]
+        // =========================================================
+
+        [HttpPost]
+        public async Task<IActionResult> SaveLayout([FromBody] string layoutConfig)
+        {
+            var userId = _userManager.GetUserId(User);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrEmpty(layoutConfig))
+            {
+                return BadRequest("Invalid layout configuration.");
+            }
+
+            var preference = await _context.DashboardPreferences
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (preference == null)
+            {
+                preference = new UserDashboardPreference
+                {
+                    UserId = userId,
+                    LayoutConfiguration = layoutConfig
+                };
+                _context.DashboardPreferences.Add(preference);
+            }
+            else
+            {
+                preference.LayoutConfiguration = layoutConfig;
+                preference.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+            return Ok(new { success = true, message = "Layout saved successfully." });
+        }
+
+        // =========================================================
+        // [NEW] SAVE FULL DASHBOARD CUSTOMIZATION SETTINGS
+        // =========================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SaveCustomizationSettings(string themeColor, string accentColor, string fontFamily, string dashboardStyle, string customWidgetName)
+        {
+            var userId = _userManager.GetUserId(User);
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                return Unauthorized();
+            }
+
+            var preference = await _context.DashboardPreferences
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            if (preference == null)
+            {
+                preference = new UserDashboardPreference
+                {
+                    UserId = userId,
+                    ThemeColor = themeColor ?? "#0f172a",
+                    AccentColor = accentColor ?? "#38bdf8",
+                    FontFamily = fontFamily ?? "Segoe UI",
+                    DashboardStyle = dashboardStyle ?? "glassmorphism",
+                    LayoutConfiguration = "{}"
+                };
+                _context.DashboardPreferences.Add(preference);
+            }
+            else
+            {
+                preference.ThemeColor = themeColor ?? preference.ThemeColor;
+                preference.AccentColor = accentColor ?? preference.AccentColor;
+                preference.FontFamily = fontFamily ?? preference.FontFamily;
+                preference.DashboardStyle = dashboardStyle ?? preference.DashboardStyle;
+
+                if (!string.IsNullOrWhiteSpace(customWidgetName))
+                {
+                    var widgets = string.IsNullOrEmpty(preference.CustomWidgetsJson)
+                        ? new List<string>()
+                        : System.Text.Json.JsonSerializer.Deserialize<List<string>>(preference.CustomWidgetsJson) ?? new List<string>();
+
+                    widgets.Add(customWidgetName.Trim());
+                    preference.CustomWidgetsJson = System.Text.Json.JsonSerializer.Serialize(widgets);
+                }
+
+                preference.UpdatedAt = DateTime.UtcNow;
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Dashboard customization and theme updated successfully!";
+            return RedirectToAction(nameof(Settings));
+        }
+
+        // =========================================================
         // ACCOUNT
         // =========================================================
 
@@ -68,7 +178,6 @@ namespace BlogVerse.Controllers
         public IActionResult Account()
         {
             ViewData["Title"] = "Account";
-
             return View();
         }
 
@@ -86,9 +195,15 @@ namespace BlogVerse.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var userId = user.Id;
+            var preference = await _context.DashboardPreferences
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.UserId == userId);
+
             ViewBag.UserName = user.Name;
             ViewBag.UserEmail = user.Email;
             ViewBag.ProfileImagePath = user.ProfileImagePath;
+            ViewBag.UserPreferences = preference; // Loaded into settings for customization
 
             ViewData["Title"] = "Settings";
 
@@ -176,30 +291,18 @@ namespace BlogVerse.Controllers
                 }
             }
 
-            var fileName =
-                $"{Guid.NewGuid():N}{extension}";
+            var fileName = $"{Guid.NewGuid():N}{extension}";
+            var filePath = Path.Combine(uploadFolder, fileName);
 
-            var filePath =
-                Path.Combine(
-                    uploadFolder,
-                    fileName);
-
-            using (var stream =
-                   new FileStream(
-                       filePath,
-                       FileMode.Create))
+            using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await ProfilePhoto.CopyToAsync(stream);
             }
 
-            user.ProfileImagePath =
-                $"/uploads/profiles/{fileName}";
-
+            user.ProfileImagePath = $"/uploads/profiles/{fileName}";
             await _userManager.UpdateAsync(user);
 
-            TempData["Success"] =
-                "Profile photo updated successfully.";
-
+            TempData["Success"] = "Profile photo updated successfully.";
             return RedirectToAction(nameof(Settings));
         }
 
@@ -256,7 +359,6 @@ namespace BlogVerse.Controllers
         public IActionResult BreakingNews()
         {
             ViewData["Title"] = "Breaking News";
-
             return View();
         }
 
@@ -452,10 +554,6 @@ namespace BlogVerse.Controllers
                 }
             };
         }
-
-        // =========================================================
-        // GET COMMUNITY BY ID
-        // =========================================================
 
         private CommunityModel? GetCommunityById(int id)
         {
