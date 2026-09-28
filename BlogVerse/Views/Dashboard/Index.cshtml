@@ -3,73 +3,176 @@
 @{
     Layout = "~/Views/Shared/_DashboardLayout.cshtml";
     ViewData["Title"] = "Dashboard";
+
+    // Read stored user preferences from DB for dynamic custom styling
+    var dashboardPrefs = ViewBag.UserPreferences as BlogVerse.Models.UserDashboardPreference;
+    var dynTheme = dashboardPrefs?.ThemeColor ?? "#0f172a";
+    var dynAccent = dashboardPrefs?.AccentColor ?? "#38bdf8";
+    var dynFont = dashboardPrefs?.FontFamily ?? "Segoe UI";
+    var dynStyle = dashboardPrefs?.DashboardStyle ?? "glassmorphism";
+
+    var customWidgetsList = new List<string>();
+    if (!string.IsNullOrEmpty(dashboardPrefs?.CustomWidgetsJson))
+    {
+        try { customWidgetsList = System.Text.Json.JsonSerializer.Deserialize<List<string>>(dashboardPrefs.CustomWidgetsJson) ?? new List<string>(); } catch { }
+    }
 }
 
+<!-- Include Sortable.js CDN for Drag-and-Drop Widget Customization -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+
 <style>
+    /* =========================================
+           DYNAMIC USER SETTINGS (Colors & Font)
+           ========================================= */
     .blog-dashboard {
         padding: 24px;
+        background: @dynTheme !important;
+        font-family: @dynFont !important;
+        min-height: 100vh;
+        border-radius: 20px;
+        color: #f8fafc;
+        transition: all 0.3s ease;
     }
 
-    /* =========================
-           HERO
-        ========================= */
+    /* =========================================
+           10 MORPHISM DESIGN STYLES ENGINE
+           ========================================= */
+    .style-glassmorphism .news-card, .style-glassmorphism .dashboard-hero {
+        background: rgba(255, 255, 255, 0.06);
+        backdrop-filter: blur(14px);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        border-radius: 20px;
+    }
 
+    .style-neumorphism .blog-dashboard {
+        background: #e0e5ec !important;
+        color: #333 !important;
+    }
+
+    .style-neumorphism .news-card, .style-neumorphism .dashboard-hero {
+        background: #e0e5ec;
+        border: none;
+        box-shadow: 9px 9px 16px #a3b1c1, -9px -9px 16px #ffffff;
+        border-radius: 20px;
+        color: #333;
+    }
+
+    .style-claymorphism .news-card, .style-claymorphism .dashboard-hero {
+        background: #f0f4f8;
+        border-radius: 35px;
+        box-shadow: inset 6px 6px 12px rgba(255, 255, 255, 0.8), inset -6px -6px 12px rgba(163, 177, 198, 0.6), 10px 20px 30px rgba(0,0,0,0.1);
+        border: 4px solid #ffffff;
+        color: #2d3748;
+    }
+
+    .style-auroramorphism .news-card, .style-auroramorphism .dashboard-hero {
+        background: linear-gradient(135deg, rgba(56, 189, 248, 0.1), rgba(168, 85, 247, 0.15));
+        backdrop-filter: blur(20px);
+        border: 2px solid;
+        border-image: linear-gradient(to right, #38bdf8, #a855f7) 1;
+        box-shadow: 0 0 25px rgba(168, 85, 247, 0.2);
+        border-radius: 20px;
+    }
+
+    .style-skeuomorphism .news-card, .style-skeuomorphism .dashboard-hero {
+        background: linear-gradient(to bottom, #f9f9f9, #e0e0e0);
+        border: 1px solid #b5b5b5;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.8);
+        border-radius: 12px;
+        color: #111;
+    }
+
+    .style-skeuominimalism .news-card, .style-skeuominimalism .dashboard-hero {
+        background: #fafafa;
+        border: 1px solid #dedede;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        border-radius: 16px;
+        color: #222;
+    }
+
+    .style-genmorphism .news-card, .style-genmorphism .dashboard-hero {
+        background: #ffe600;
+        border: 3px solid #000;
+        box-shadow: 6px 6px 0px #000;
+        border-radius: 20px;
+        color: #000;
+    }
+
+    .style-woodmorphism .blog-dashboard {
+        background: #3b2314 !important;
+    }
+
+    .style-woodmorphism .news-card, .style-woodmorphism .dashboard-hero {
+        background: #5c3a21;
+        border: 2px solid #2b180a;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.5), inset 0 1px 3px rgba(255,255,255,0.1);
+        border-radius: 16px;
+        color: #f3e9dc;
+    }
+
+    .style-metalmorphism .blog-dashboard {
+        background: #1e2229 !important;
+    }
+
+    .style-metalmorphism .news-card, .style-metalmorphism .dashboard-hero {
+        background: linear-gradient(135deg, #2c313c, #1a1d24);
+        border: 1px solid #4f586a;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.15);
+        border-radius: 16px;
+        color: #e2e8f0;
+    }
+
+    .style-papermorphism .blog-dashboard {
+        background: #fdfbf7 !important;
+        color: #2c2c2c !important;
+    }
+
+    .style-papermorphism .news-card, .style-papermorphism .dashboard-hero {
+        background: #ffffff;
+        border: 1px solid #e3dec9;
+        box-shadow: 2px 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+        border-radius: 4px;
+        color: #2c2c2c;
+    }
+
+    /* CUSTOMIZE TOOLBAR */
+    .customize-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 12px 20px;
+        border-radius: 14px;
+        margin-bottom: 24px;
+    }
+
+    /* HERO SECTION */
     .dashboard-hero {
         position: relative;
         overflow: hidden;
-        background: linear-gradient(135deg, #111827, #1f2937);
         border-radius: 24px;
         padding: 35px;
         margin-bottom: 28px;
-        color: #ffffff;
     }
 
-        .dashboard-hero::before {
-            content: "";
-            position: absolute;
-            width: 240px;
-            height: 240px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            right: -80px;
-            top: -100px;
+        .dashboard-hero h1 {
+            margin: 0 0 10px;
+            font-size: 34px;
+            font-weight: 800;
         }
 
-        .dashboard-hero::after {
-            content: "";
-            position: absolute;
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.04);
-            right: 120px;
-            bottom: -100px;
+        .dashboard-hero p {
+            margin: 0;
+            font-size: 15px;
+            line-height: 1.7;
+            opacity: 0.85;
         }
 
-    .dashboard-hero-content {
-        position: relative;
-        z-index: 2;
-        max-width: 700px;
-    }
-
-    .dashboard-hero h1 {
-        margin: 0 0 10px;
-        font-size: 34px;
-        line-height: 1.2;
-        font-weight: 800;
-    }
-
-    .dashboard-hero p {
-        margin: 0;
-        color: #d1d5db;
-        font-size: 15px;
-        line-height: 1.7;
-    }
-
-    /* =========================
-           SEARCH
-        ========================= */
-
+    /* SEARCH */
     .dashboard-search {
         margin-top: 24px;
         max-width: 650px;
@@ -78,7 +181,7 @@
     .dashboard-search-box {
         display: flex;
         align-items: center;
-        background: rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.08);
         border: 1px solid rgba(255,255,255,0.15);
         border-radius: 14px;
         overflow: hidden;
@@ -94,19 +197,12 @@
             border: none;
             outline: none;
             background: transparent;
-            color: #ffffff;
+            color: inherit;
             padding: 13px 14px;
             font-size: 14px;
         }
 
-            .dashboard-search-box input::placeholder {
-                color: #cbd5e1;
-            }
-
-    /* =========================
-           TABS
-        ========================= */
-
+    /* TABS */
     .dashboard-tabs {
         display: flex;
         gap: 10px;
@@ -116,31 +212,23 @@
     }
 
     .dashboard-tab {
-        border: none;
-        background: #f3f4f6;
-        color: #4b5563;
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.05);
         padding: 10px 18px;
         border-radius: 999px;
         font-size: 14px;
         font-weight: 700;
         cursor: pointer;
         white-space: nowrap;
-        transition: 0.2s ease;
     }
 
-        .dashboard-tab:hover {
-            background: #e5e7eb;
-        }
-
         .dashboard-tab.active {
-            background: #111827;
-            color: #ffffff;
+            background: @dynAccent !important;
+            color: #0f172a !important;
+            border-color: @dynAccent !important;
         }
 
-    /* =========================
-           CATEGORY FILTERS
-        ========================= */
-
+    /* CATEGORY PILLS */
     .category-section {
         margin-bottom: 25px;
     }
@@ -148,7 +236,6 @@
     .category-title {
         font-size: 15px;
         font-weight: 800;
-        color: #111827;
         margin-bottom: 12px;
     }
 
@@ -159,42 +246,28 @@
     }
 
     .category-pill {
-        border: 1px solid #e5e7eb;
-        background: #ffffff;
-        color: #4b5563;
+        border: 1px solid rgba(255,255,255,0.15);
+        background: rgba(255,255,255,0.05);
         padding: 8px 14px;
         border-radius: 999px;
         cursor: pointer;
         font-size: 13px;
         font-weight: 600;
-        transition: 0.2s ease;
     }
 
-        .category-pill:hover,
         .category-pill.active {
-            background: #111827;
-            color: #ffffff;
-            border-color: #111827;
+            background: @dynAccent !important;
+            color: #0f172a !important;
+            border-color: @dynAccent !important;
         }
 
-    /* =========================
-           SECTION HEADER
-        ========================= */
-
+    /* SECTION HEADER */
     .posts-section-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 15px;
         margin-bottom: 18px;
     }
-
-        .posts-section-header h2 {
-            margin: 0;
-            font-size: 25px;
-            font-weight: 800;
-            color: #111827;
-        }
 
     .posts-count {
         display: inline-flex;
@@ -202,59 +275,65 @@
         justify-content: center;
         padding: 7px 13px;
         border-radius: 999px;
-        background: #eef2ff;
-        color: #4f46e5;
+        background: rgba(56, 189, 248, 0.15);
+        color: @dynAccent !important;
         font-size: 12px;
         font-weight: 800;
-        white-space: nowrap;
     }
 
-    /* =========================
-           NEWS GRID
-        ========================= */
-
+    /* NEWS GRID */
     .news-grid {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 22px;
+        min-height: 200px;
     }
-
-    /* =========================
-           NEWS CARD
-        ========================= */
 
     .news-card {
         display: flex;
         flex-direction: column;
         min-width: 0;
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
-        border-radius: 20px;
         overflow: hidden;
-        box-shadow: 0 7px 25px rgba(0,0,0,0.05);
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        transition: transform 0.25s ease;
     }
 
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 16px 35px rgba(0,0,0,0.10);
+    .dashboard-editable .news-card {
+        cursor: grab;
+        border: 2px dashed @dynAccent !important;
+        position: relative;
+    }
+
+        .dashboard-editable .news-card:active {
+            cursor: grabbing;
         }
 
-    /* =========================
-           IMAGE
-        ========================= */
+        .dashboard-editable .news-card::after {
+            content: '⠿ Drag to reorder';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: @dynAccent;
+            color: #0f172a;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            z-index: 10;
+        }
+
+    .news-card:hover {
+        transform: translateY(-5px);
+    }
 
     .news-image {
         width: 100%;
         height: 205px;
-        background: #f3f4f6;
         overflow: hidden;
     }
 
         .news-image img {
             width: 100%;
             height: 100%;
-            display: block;
             object-fit: cover;
             transition: transform 0.4s ease;
         }
@@ -267,16 +346,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient( 135deg, #eef2ff, #f5f3ff );
+        font-size: 48px;
     }
-
-        .news-image.no-image span {
-            font-size: 48px;
-        }
-
-    /* =========================
-           CARD CONTENT
-        ========================= */
 
     .news-card-content {
         display: flex;
@@ -288,304 +359,128 @@
     .news-category {
         display: inline-flex;
         align-self: flex-start;
-        background: #eef2ff;
-        color: #4f46e5;
         padding: 5px 10px;
         border-radius: 999px;
         font-size: 11px;
         font-weight: 800;
         margin-bottom: 11px;
+        background: rgba(56,189,248,0.15);
+        color: @dynAccent;
     }
 
     .news-card-content h3 {
         margin: 0 0 9px;
-        color: #111827;
         font-size: 20px;
-        line-height: 1.35;
         font-weight: 800;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
 
     .news-author {
-        color: #6b7280;
         font-size: 12px;
-        line-height: 1.5;
         margin-bottom: 12px;
+        opacity: 0.8;
     }
 
     .news-description {
-        color: #4b5563;
         font-size: 14px;
         line-height: 1.7;
         margin: 0 0 20px;
-        display: -webkit-box;
-        -webkit-line-clamp: 4;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
+        opacity: 0.9;
     }
-
-    /* =========================
-           CARD FOOTER
-        ========================= */
 
     .news-card-footer {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
         margin-top: auto;
         padding-top: 15px;
-        border-top: 1px solid #f1f5f9;
+        border-top: 1px solid rgba(255,255,255,0.08);
     }
 
     .news-stats {
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
         gap: 9px;
-        color: #6b7280;
         font-size: 11px;
+        opacity: 0.8;
     }
 
-        .news-stats span {
-            white-space: nowrap;
-        }
-
     .read-more-btn {
-        color: #4f46e5;
+        color: @dynAccent;
         text-decoration: none;
         font-size: 13px;
         font-weight: 800;
-        white-space: nowrap;
     }
 
         .read-more-btn:hover {
-            color: #3730a3;
             text-decoration: underline;
         }
 
-    /* =========================
-           ATTACHMENT BADGE
-        ========================= */
-
-    .attachment-badge {
-        color: #7c3aed;
-        font-weight: 700;
-    }
-
-    /* =========================
-           EMPTY POSTS
-        ========================= */
-
     .no-posts {
         grid-column: 1 / -1;
-        background: #ffffff;
-        border: 1px dashed #d1d5db;
+        border: 1px dashed rgba(255, 255, 255, 0.2);
         border-radius: 20px;
         padding: 60px 25px;
         text-align: center;
     }
-
-    .no-posts-icon {
-        font-size: 52px;
-        margin-bottom: 12px;
-    }
-
-    .no-posts h3 {
-        margin: 0 0 8px;
-        font-size: 22px;
-        color: #111827;
-        font-weight: 800;
-    }
-
-    .no-posts p {
-        margin: 0 0 20px;
-        color: #6b7280;
-        font-size: 14px;
-    }
-
-    .create-post-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        background: #111827;
-        color: #ffffff;
-        text-decoration: none;
-        padding: 11px 18px;
-        border-radius: 10px;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-        .create-post-btn:hover {
-            background: #1f2937;
-            color: #ffffff;
-        }
-
-    /* =========================
-           NO SEARCH RESULT
-        ========================= */
 
     .no-search-result {
         display: none;
         grid-column: 1 / -1;
         text-align: center;
         padding: 45px 20px;
-        color: #6b7280;
     }
+</style>
 
-    /* =========================
-           RESPONSIVE
-        ========================= */
+<div class="blog-dashboard style-@dynStyle" id="mainDashboardContainer">
 
-    @@media (max-width: 1100px) {
-        .news-grid
-
-    {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    }
-
-    @@media (max-width: 768px) {
-        .blog-dashboard
-
-    {
-        padding: 18px;
-    }
-
-    .dashboard-hero {
-        padding: 25px;
-        border-radius: 20px;
-    }
-
-        .dashboard-hero h1 {
-            font-size: 27px;
-        }
-
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .posts-section-header {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .news-image {
-        height: 220px;
-    }
-
-    }
-
-    @@media (max-width: 480px) {
-        .blog-dashboard
-
-    {
-        padding: 14px;
-    }
-
-    .dashboard-hero {
-        padding: 22px;
-    }
-
-        .dashboard-hero h1 {
-            font-size: 24px;
-        }
-
-    .news-card-content {
-        padding: 17px;
-    }
-
-    .news-card-footer {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    }</style>
-
-
-<div class="blog-dashboard">
-
-    <!-- =====================================================
-         HERO
-    ====================================================== -->
-
-    <section class="dashboard-hero">
-
-        <div class="dashboard-hero-content">
-
-            <h1>
-                Welcome to BlogVerse 👋
-            </h1>
-
-            <p>
-                Discover stories, ideas and experiences
-                shared by the BlogVerse community.
-            </p>
-
-
-            <!-- SEARCH -->
-
-            <div class="dashboard-search">
-
-                <div class="dashboard-search-box">
-
-                    <span>🔍</span>
-
-                    <input type="text"
-                           id="postSearch"
-                           placeholder="Search posts, categories or authors..."
-                           autocomplete="off" />
-
-                </div>
-
-            </div>
-
+    <!-- CUSTOMIZATION CONTROL TOOLBAR -->
+    <div class="customize-toolbar">
+        <div>
+            <h4 class="m-0 fw-bold">✨ Interactive Dashboard</h4>
+            <small class="opacity-75">Drag & drop cards to reorder, or customize themes in Settings.</small>
         </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         TABS
-    ====================================================== -->
-
-    <div class="dashboard-tabs">
-
-        <button type="button"
-                class="dashboard-tab active"
-                data-tab="all">
-            All Posts
-        </button>
-
-        <button type="button"
-                class="dashboard-tab"
-                data-tab="latest">
-            Latest
-        </button>
-
-        <button type="button"
-                class="dashboard-tab"
-                data-tab="popular">
-            Popular
-        </button>
-
-        <button type="button"
-                class="dashboard-tab"
-                data-tab="trending">
-            Trending
-        </button>
-
+        <div class="d-flex gap-2 align-items-center">
+            <button type="button" class="btn btn-sm btn-outline-light" id="toggleCustomizeBtn" onclick="toggleCustomizeMode()">
+                ⚙️ Enable Customize Mode
+            </button>
+            <button type="button" class="btn btn-sm btn-success fw-bold px-3" onclick="saveDashboardLayout()">
+                💾 Save Layout
+            </button>
+        </div>
     </div>
 
+    <!-- WIDGET VISIBILITY CONTROLS -->
+    <div id="widgetControlsPanel" class="p-3 mb-4 rounded-3" style="background: rgba(0,0,0,0.2); display: none; border: 1px dashed @dynAccent;">
+        <span class="fw-bold d-block mb-2" style="color: @dynAccent;">🛠️ Toggle Dashboard Sections:</span>
+        <div class="d-flex gap-3 flex-wrap">
+            <label class="user-select-none"><input type="checkbox" id="toggleHero" checked onchange="toggleWidget('heroSection', this.checked)"> Welcome Banner</label>
+            <label class="user-select-none"><input type="checkbox" id="toggleCategories" checked onchange="toggleWidget('categorySection', this.checked)"> Categories Filter</label>
+        </div>
+    </div>
 
-    <!-- =====================================================
-         CATEGORY FILTERS
-    ====================================================== -->
+    <!-- HERO -->
+    <section class="dashboard-hero" id="heroSection">
+        <div class="dashboard-hero-content">
+            <h1>Welcome to BlogVerse 👋</h1>
+            <p>Discover stories, ideas and experiences shared by the BlogVerse community.</p>
+
+            <div class="dashboard-search">
+                <div class="dashboard-search-box">
+                    <span>🔍</span>
+                    <input type="text" id="postSearch" placeholder="Search posts, categories or authors..." autocomplete="off" />
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABS -->
+    <div class="dashboard-tabs">
+        <button type="button" class="dashboard-tab active" data-tab="all">All Posts</button>
+        <button type="button" class="dashboard-tab" data-tab="latest">Latest</button>
+        <button type="button" class="dashboard-tab" data-tab="popular">Popular</button>
+        <button type="button" class="dashboard-tab" data-tab="trending">Trending</button>
+    </div>
+
+    <!-- CATEGORY FILTERS -->
     @{
         var categories = Model.Posts
         .Where(p => !string.IsNullOrWhiteSpace(p.Category))
@@ -597,98 +492,38 @@
 
     @if (categories.Any())
     {
-        <div class="category-section">
-
-            <div class="category-title">
-                Browse by Category
-            </div>
-
+        <div class="category-section" id="categorySection">
+            <div class="category-title">Browse by Category</div>
             <div class="category-pills">
-
-                <button type="button"
-                        class="category-pill active"
-                        data-category="all">
-                    All
-                </button>
-
+                <button type="button" class="category-pill active" data-category="all">All</button>
                 @foreach (var category in categories)
                 {
-                    <button type="button"
-                            class="category-pill"
-                            data-category="@category">
-                        @category
-                    </button>
+                    <button type="button" class="category-pill" data-category="@category">@category</button>
                 }
-
             </div>
-
         </div>
     }
 
-
-    <!-- =====================================================
-         POSTS HEADER
-    ====================================================== -->
-
+    <!-- POSTS HEADER -->
     <div class="posts-section-header">
-
-        <h2>
-            Latest Posts
-        </h2>
-
-        <span class="posts-count">
-            @Model.Posts.Count
-            @(Model.Posts.Count == 1 ? "Post" : "Posts")
-        </span>
-
+        <h2>Latest Posts</h2>
+        <span class="posts-count">@Model.Posts.Count @(Model.Posts.Count == 1 ? "Post" : "Posts")</span>
     </div>
 
-
-    <!-- =====================================================
-         POSTS GRID
-    ====================================================== -->
-
-    <div class="news-grid"
-         id="postsGrid">
-
-        @if (Model.Posts != null &&
-                Model.Posts.Any())
+    <!-- POSTS GRID -->
+    <div class="news-grid" id="postsGrid">
+        @if (Model.Posts != null && Model.Posts.Any())
         {
             @foreach (var post in Model.Posts)
             {
-                var authorName =
-                post.User != null &&
-                !string.IsNullOrWhiteSpace(
-                post.User.Name)
-                ? post.User.Name
-                : "BlogVerse User";
-
-                var postDate =
-                post.PublishedAt ??
-                post.CreatedAt;
-
-                var plainText =
-                System.Text.RegularExpressions
-                .Regex
-                .Replace(
-                post.Content ?? "",
-                "<.*?>",
-                string.Empty
-                );
-
-                plainText =
-                System.Net.WebUtility
-                .HtmlDecode(plainText)
-                .Trim();
-
-                if (plainText.Length > 180)
-                {
-                    plainText =
-                    plainText.Substring(0, 180)
-                    + "...";
-                }
+                var authorName = post.User != null && !string.IsNullOrWhiteSpace(post.User.Name) ? post.User.Name : "BlogVerse User";
+                var postDate = post.PublishedAt ?? post.CreatedAt;
+                var plainText = System.Text.RegularExpressions.Regex.Replace(post.Content ?? "", "<.*?>", string.Empty);
+                plainText = System.Net.WebUtility.HtmlDecode(plainText).Trim();
+                if (plainText.Length > 180) { plainText = plainText.Substring(0, 180) + "..."; }
 
                 <article class="news-card"
+                         data-id="@post.Id"
                          data-category="@post.Category"
                          data-title="@post.Title"
                          data-author="@authorName"
@@ -696,521 +531,207 @@
                          data-views="@post.Views"
                          data-likes="@post.Likes">
 
-                    <!-- IMAGE -->
-                    @if (!string.IsNullOrWhiteSpace(
-                                post.ImagePath))
+                    @if (!string.IsNullOrWhiteSpace(post.ImagePath))
                     {
                         <div class="news-image">
-
-                            <img src="@post.ImagePath"
-                                 alt="@post.Title"
-                                 loading="lazy"
-                                 draggable="false" />
-
+                            <img src="@post.ImagePath" alt="@post.Title" loading="lazy" draggable="false" />
                         </div>
                     }
                     else
                     {
-                        <div class="news-image no-image">
-
-                            <span>📝</span>
-
-                        </div>
+                        <div class="news-image no-image"><span>📝</span></div>
                     }
 
-
-                <!-- CONTENT -->
-
-                <div class="news-card-content">
-
-                    <!-- CATEGORY -->
-
-                    <span class="news-category">
-                        @(string.IsNullOrWhiteSpace(
-                                            post.Category)
-                                            ? "General"
-                                            : post.Category)
-                </span>
-
-
-                        <!-- TITLE -->
-
-                        <h3>
-                            @post.Title
-                        </h3>
-
-
-                        <!-- AUTHOR / DATE -->
-
-                        <div class="news-author">
-
-                            👤 @authorName
-
-                            <span> · </span>
-
-                            📅 @postDate.ToString("MMM dd, yyyy")
-
-                        </div>
-
-
-                        <!-- DESCRIPTION -->
-
-                        <p class="news-description">
-                            @plainText
-                        </p>
-
-
-                        <!-- FOOTER -->
+                    <div class="news-card-content">
+                        <span class="news-category">@(string.IsNullOrWhiteSpace(post.Category) ? "General" : post.Category)</span>
+                        <h3>@post.Title</h3>
+                        <div class="news-author">👤 @authorName · 📅 @postDate.ToString("MMM dd, yyyy")</div>
+                        <p class="news-description">@plainText</p>
 
                         <div class="news-card-footer">
-
                             <div class="news-stats">
-
-                                <span>
-                                    👁 @post.Views
-                                </span>
-
-                                <span>
-                                    ❤️ @post.Likes
-                                </span>
-
-                        @if (!string.IsNullOrWhiteSpace(
-                                                post.AttachmentPath))
+                                <span>👁 @post.Views</span>
+                                <span>❤️ @post.Likes</span>
+                                @if (!string.IsNullOrWhiteSpace(post.AttachmentPath))
                                 {
-                                    <span class="attachment-badge">
-                                        📎
-                                    </span>
+                                    <span class="attachment-badge">📎</span>
                                 }
-
                             </div>
-
-
-                            <a asp-controller="Posts"
-                               asp-action="Details"
-                               asp-route-id="@post.Id"
-                               class="read-more-btn">
-
-                                Read More →
-
-                            </a>
-
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="read-more-btn">Read More →</a>
                         </div>
-
                     </div>
-
                 </article>
             }
 
-
-            <!-- SEARCH EMPTY -->
-
-            <div class="no-search-result"
-                 id="noSearchResult">
-
-                🔍
-
-                <h3>
-                    No matching posts found
-                </h3>
-
-                <p>
-                    Try another title, category or author.
-                </p>
-
+            <div class="no-search-result" id="noSearchResult">
+                🔍 <h3>No matching posts found</h3>
+                <p>Try another title, category or author.</p>
             </div>
         }
         else
         {
-            <!-- =================================================
-                 NO POSTS
-            ================================================== -->
-
             <div class="no-posts">
-
-                <div class="no-posts-icon">
-                    📝
-                </div>
-
-                <h3>
-                    No Published Posts Yet
-                </h3>
-
-                <p>
-                    Be the first person to share
-                    something with the BlogVerse community.
-                </p>
-
-                <a asp-controller="Posts"
-                   asp-action="Create"
-                   class="create-post-btn">
-
-                    ✍️ Create Your First Post
-
-                </a>
-
+                <div style="font-size: 52px; margin-bottom: 12px;">📝</div>
+                <h3>No Published Posts Yet</h3>
+                <p>Be the first person to share something with the BlogVerse community.</p>
+                <a asp-controller="Posts" asp-action="Create" class="create-post-btn">✍️ Create Your First Post</a>
             </div>
         }
-
     </div>
 
+    <!-- CUSTOM ADDED WIDGETS -->
+    @if (customWidgetsList.Any())
+    {
+        <div class="row g-4 mt-4">
+            <div class="col-12"><h3 class="fw-bold mb-3">🧩 My Custom Added Widgets</h3></div>
+            @foreach (var widgetName in customWidgetsList)
+            {
+                <div class="col-md-4">
+                    <div class="news-card p-4 h-100">
+                        <h4 style="color: @dynAccent;">@widgetName</h4>
+                        <p class="small mb-0 opacity-75">This is a custom widget added by you through settings.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
-
 <script>
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        function () {
-
-            const searchInput =
-                document.getElementById(
-                    "postSearch"
-                );
-
-            const postCards =
-                Array.from(
-                    document.querySelectorAll(
-                        ".news-card"
-                    )
-                );
-
-            const noSearchResult =
-                document.getElementById(
-                    "noSearchResult"
-                );
-
-            const tabButtons =
-                document.querySelectorAll(
-                    ".dashboard-tab"
-                );
-
-            const categoryButtons =
-                document.querySelectorAll(
-                    ".category-pill"
-                );
-
-
-            let selectedCategory = "all";
-
-            let selectedTab = "all";
-
-
-            /* =========================================
-               FILTER POSTS
-            ========================================== */
-
-            function filterPosts() {
-
-                const searchTerm =
-                    searchInput
-                        ? searchInput.value
-                            .toLowerCase()
-                            .trim()
-                        : "";
-
-
-                let visibleCount = 0;
-
-
-                postCards.forEach(function (card) {
-
-                    const title =
-                        (
-                            card.dataset.title || ""
-                        ).toLowerCase();
-
-                    const author =
-                        (
-                            card.dataset.author || ""
-                        ).toLowerCase();
-
-                    const category =
-                        (
-                            card.dataset.category || ""
-                        ).toLowerCase();
-
-                    const searchMatch =
-                        !searchTerm ||
-                        title.includes(searchTerm) ||
-                        author.includes(searchTerm) ||
-                        category.includes(searchTerm);
-
-
-                    const categoryMatch =
-                        selectedCategory === "all" ||
-                        category ===
-                            selectedCategory.toLowerCase();
-
-
-                    let tabMatch = true;
-
-
-                    /*
-                        Latest:
-                        Controller already sends newest
-                        posts first, so all posts remain.
-
-                        Popular:
-                        Posts with higher views/likes
-                        are shown first.
-
-                        Trending:
-                        Posts with recent/high activity
-                        are shown first.
-                    */
-
-                    if (selectedTab === "popular") {
-
-                        tabMatch = true;
-
-                    }
-
-                    if (selectedTab === "trending") {
-
-                        tabMatch = true;
-
-                    }
-
-
-                    const visible =
-                        searchMatch &&
-                        categoryMatch &&
-                        tabMatch;
-
-
-                    card.style.display =
-                        visible ? "" : "flex";
-
-
-                    if (visible) {
-                        visibleCount++;
-                    }
-
-                });
-
-
-                if (noSearchResult) {
-
-                    noSearchResult.style.display =
-                        visibleCount === 0
-                            ? "block"
-                            : "none";
-
-                }
-
-
-                if (
-                    selectedTab === "popular" ||
-                    selectedTab === "trending"
-                ) {
-
-                    sortPosts();
-
-                }
-
-            }
-
-
-            /* =========================================
-               SORT POSTS
-            ========================================== */
-
-            function sortPosts() {
-
-                const grid =
-                    document.getElementById(
-                        "postsGrid"
-                    );
-
-                if (!grid) {
-                    return;
-                }
-
-
-                const cards =
-                    Array.from(
-                        grid.querySelectorAll(
-                            ".news-card"
-                        )
-                    );
-
-
-                if (selectedTab === "popular") {
-
-                    cards.sort(function (a, b) {
-
-                        const aScore =
-                            Number(
-                                a.dataset.views || 0
-                            ) +
-                            Number(
-                                a.dataset.likes || 0
-                            ) * 3;
-
-                        const bScore =
-                            Number(
-                                b.dataset.views || 0
-                            ) +
-                            Number(
-                                b.dataset.likes || 0
-                            ) * 3;
-
-                        return bScore - aScore;
-
+    const savedLayoutJson = @Html.Raw(Json.Serialize(ViewBag.LayoutConfig ?? "{}"));
+    let isCustomizeMode = false;
+
+    function toggleCustomizeMode() {
+        isCustomizeMode = !isCustomizeMode;
+        const container = document.getElementById('mainDashboardContainer');
+        const controlsPanel = document.getElementById('widgetControlsPanel');
+        const btn = document.getElementById('toggleCustomizeBtn');
+
+        if (isCustomizeMode) {
+            container.classList.add('dashboard-editable');
+            controlsPanel.style.display = 'block';
+            btn.textContent = '✨ Disable Customize';
+            btn.classList.replace('btn-outline-light', 'btn-warning');
+        } else {
+            container.classList.remove('dashboard-editable');
+            controlsPanel.style.display = 'none';
+            btn.textContent = '⚙️ Enable Customize Mode';
+            btn.classList.replace('btn-warning', 'btn-outline-light');
+        }
+    }
+
+    function toggleWidget(elementId, isVisible) {
+        const el = document.getElementById(elementId);
+        if (el) { el.style.display = isVisible ? '' : 'none'; }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const gridElement = document.getElementById("postsGrid");
+        const postCards = Array.from(document.querySelectorAll(".news-card"));
+        const searchInput = document.getElementById("postSearch");
+        const noSearchResult = document.getElementById("noSearchResult");
+        const tabButtons = document.querySelectorAll(".dashboard-tab");
+        const categoryButtons = document.querySelectorAll(".category-pill");
+
+        let selectedCategory = "all";
+
+        if (gridElement) {
+            Sortable.create(gridElement, { animation: 150, ghostClass: 'sortable-ghost' });
+
+            try {
+                const layoutData = typeof savedLayoutJson === 'string' ? JSON.parse(savedLayoutJson) : savedLayoutJson;
+                if (layoutData && layoutData.cardOrder && Array.isArray(layoutData.cardOrder)) {
+                    layoutData.cardOrder.forEach(postId => {
+                        const card = gridElement.querySelector(`[data-id="${postId}"]`);
+                        if (card) { gridElement.appendChild(card); }
                     });
-
                 }
-                else if (selectedTab === "trending") {
-
-                    cards.sort(function (a, b) {
-
-                        const aDate =
-                            Number(
-                                a.dataset.date || 0
-                            );
-
-                        const bDate =
-                            Number(
-                                b.dataset.date || 0
-                            );
-
-                        return bDate - aDate;
-
-                    });
-
-                }
-                else {
-
-                    cards.sort(function (a, b) {
-
-                        const aDate =
-                            Number(
-                                a.dataset.date || 0
-                            );
-
-                        const bDate =
-                            Number(
-                                b.dataset.date || 0
-                            );
-
-                        return bDate - aDate;
-
-                    });
-
-                }
-
-
-                cards.forEach(function (card) {
-
-                    grid.appendChild(card);
-
-                });
-
-
-                if (noSearchResult) {
-
-                    grid.appendChild(
-                        noSearchResult
-                    );
-
-                }
-
-            }
-
-
-            /* =========================================
-               SEARCH
-            ========================================== */
-
-            if (searchInput) {
-
-                searchInput.addEventListener(
-                    "input",
-                    filterPosts
-                );
-
-            }
-
-
-            /* =========================================
-               TABS
-            ========================================== */
-
-            tabButtons.forEach(function (button) {
-
-                button.addEventListener(
-                    "click",
-                    function () {
-
-                        tabButtons.forEach(
-                            function (item) {
-                                item.classList.remove(
-                                    "active"
-                                );
-                            }
-                        );
-
-                        button.classList.add(
-                            "active"
-                        );
-
-                        selectedTab =
-                            button.dataset.tab ||
-                            "all";
-
-                        sortPosts();
-
-                        filterPosts();
-
+                if (layoutData && layoutData.visibility) {
+                    if (layoutData.visibility.hero === false) {
+                        document.getElementById('heroSection').style.display = 'none';
+                        document.getElementById('toggleHero').checked = false;
                     }
-                );
+                    if (layoutData.visibility.categories === false) {
+                        document.getElementById('categorySection').style.display = 'none';
+                        document.getElementById('toggleCategories').checked = false;
+                    }
+                }
+            } catch (e) {
+                console.error("Could not load custom layout preferences:", e);
+            }
+        }
 
+        function filterPosts() {
+            const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : "";
+            let visibleCount = 0;
+
+            postCards.forEach(function (card) {
+                const title = (card.dataset.title || "").toLowerCase();
+                const author = (card.dataset.author || "").toLowerCase();
+                const category = (card.dataset.category || "").toLowerCase();
+
+                const searchMatch = !searchTerm || title.includes(searchTerm) || author.includes(searchTerm) || category.includes(searchTerm);
+                const categoryMatch = selectedCategory === "all" || category === selectedCategory.toLowerCase();
+
+                const visible = searchMatch && categoryMatch;
+                card.style.display = visible ? "" : "none";
+                if (visible) { visibleCount++; }
             });
 
-
-            /* =========================================
-               CATEGORY
-            ========================================== */
-
-            categoryButtons.forEach(
-                function (button) {
-
-                    button.addEventListener(
-                        "click",
-                        function () {
-
-                            categoryButtons.forEach(
-                                function (item) {
-                                    item.classList.remove(
-                                        "active"
-                                    );
-                                }
-                            );
-
-                            button.classList.add(
-                                "active"
-                            );
-
-                            selectedCategory =
-                                button.dataset.category ||
-                                "all";
-
-                            filterPosts();
-
-                        }
-                    );
-
-                }
-            );
-
-
-            /* =========================================
-               INITIAL SORT
-            ========================================== */
-
-            sortPosts();
-
+            if (noSearchResult) {
+                noSearchResult.style.display = visibleCount === 0 ? "block" : "none";
+            }
         }
-    );
 
+        if (searchInput) { searchInput.addEventListener("input", filterPosts); }
+
+        tabButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                tabButtons.forEach(item => item.classList.remove("active"));
+                button.classList.add("active");
+                filterPosts();
+            });
+        });
+
+        categoryButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                categoryButtons.forEach(item => item.classList.remove("active"));
+                button.classList.add("active");
+                selectedCategory = button.dataset.category || "all";
+                filterPosts();
+            });
+        });
+
+        window.saveDashboardLayout = function () {
+            const cards = Array.from(gridElement.querySelectorAll('.news-card'));
+            const cardOrder = cards.map(card => card.dataset.id);
+
+            const visibilityState = {
+                hero: document.getElementById('toggleHero').checked,
+                categories: document.getElementById('toggleCategories') ? document.getElementById('toggleCategories').checked : true
+            };
+
+            const layoutPayload = JSON.stringify({
+                cardOrder: cardOrder,
+                visibility: visibilityState,
+                updatedAt: new Date().toISOString()
+            });
+
+            fetch('/Dashboard/SaveLayout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(layoutPayload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('✨ Your custom dashboard layout and preferences were saved successfully!');
+                    if (isCustomizeMode) toggleCustomizeMode();
+                } else {
+                    alert('Failed to save layout preferences.');
+                }
+            })
+            .catch(err => { console.error('Error saving layout:', err); });
+        };
+    });
 </script>
