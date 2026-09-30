@@ -1,32 +1,119 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@ViewData["Title"] - BlogVerse</title>
+    <meta charset="UTF-8" />
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/dashboard.css" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0" />
+
+    <title>
+        @ViewData["Title"] - BlogVerse
+    </title>
+
+
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <link rel="stylesheet"
+          href="~/css/dashboard.css" />
+
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
+
     @RenderSection("Styles", required: false)
+
 
     <style>
 
-        /* =========================================
-                   SIDEBAR LOGO FIX
-                ========================================= */
+        /* =====================================================
+                   GLOBAL LIQUID GLASS
+                   ===================================================== */
 
-        .sidebar-logo {
-            width: 125px !important;
-            height: 125px !important;
-            object-fit: contain;
-            display: block;
-            margin: 0 auto;
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+            background: radial-gradient(circle at 10% 10%, #ffffff 0%, transparent 28%), radial-gradient(circle at 90% 10%, #e8ecef 0%, transparent 30%), linear-gradient(135deg, #eef1f4, #dce1e5);
+            color: #1f2937;
         }
+
+
+        body {
+            overflow-x: hidden;
+        }
+
+
+        /* =====================================================
+                   MAIN CONTAINER
+                   ===================================================== */
+
+        .dashboard-container {
+            min-height: 100vh;
+            display: flex;
+            background: radial-gradient( circle at 30% 20%, rgba(255,255,255,.45), transparent 30% );
+            gap: 0;
+        }
+
+
+        /* =====================================================
+                   HAMBURGER
+                   ===================================================== */
+
+        .hamburger-btn {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            width: 45px;
+            height: 45px;
+            z-index: 1000;
+            border: 1px solid rgba(255,255,255,.75);
+            border-radius: 15px;
+            background: rgba(255,255,255,.55);
+            color: #1f2937;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 10px 25px rgba(31,41,55,.10), inset 0 1px 0 rgba(255,255,255,.9);
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+
+            .hamburger-btn:hover {
+                transform: translateY(-2px);
+                background: rgba(255,255,255,.75);
+            }
+
+
+        /* =====================================================
+                   SIDEBAR
+                   ===================================================== */
+
+        .sidebar {
+            width: 260px !important;
+            min-width: 260px;
+            min-height: 100vh;
+            padding: 25px 18px !important;
+            position: relative;
+            background: linear-gradient( 180deg, rgba(255,255,255,.62), rgba(255,255,255,.34) ) !important;
+            color: #1f2937 !important;
+            border-right: 1px solid rgba(255,255,255,.75);
+            box-shadow: 10px 0 35px rgba(31,41,55,.07), inset -1px 0 0 rgba(255,255,255,.55);
+            backdrop-filter: blur(28px) saturate(130%);
+            -webkit-backdrop-filter: blur(28px) saturate(130%);
+            overflow-y: auto;
+            overflow-x: hidden;
+            transition: transform .3s ease, width .3s ease;
+        }
+
+
+        /* =====================================================
+                   LOGO
+                   ===================================================== */
 
         .sidebar-logo-container {
             height: 145px;
@@ -38,95 +125,342 @@
         }
 
 
-        /* =========================================
-                   SIDEBAR
-                ========================================= */
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            overflow-x: hidden;
+        .sidebar-logo {
+            width: 125px !important;
+            height: 125px !important;
+            object-fit: contain;
+            display: block;
         }
 
 
-            /* =========================================
+        /* =====================================================
                    NAVIGATION
-                ========================================= */
+                   ===================================================== */
 
-            .sidebar nav {
-                flex-shrink: 0;
+        .sidebar nav {
+            flex-shrink: 0;
+        }
+
+
+        .sidebar .nav {
+            gap: 5px;
+        }
+
+
+        .sidebar .nav-link {
+            min-height: 44px;
+            display: flex !important;
+            align-items: center;
+            padding: 10px 13px !important;
+            border-radius: 15px;
+            color: #374151 !important;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+        }
+
+
+            .sidebar .nav-link i {
+                width: 21px;
+                color: #6b7280;
+                transition: color .25s ease;
             }
 
-            .sidebar .nav-link {
-                min-height: 42px;
+
+            .sidebar .nav-link:hover {
+                background: rgba(255,255,255,.58);
+                border-color: rgba(255,255,255,.72);
+                box-shadow: 0 7px 20px rgba(31,41,55,.06);
+                transform: translateX(3px);
             }
 
 
-        /* =========================================
-                   FOLLOWING SECTION
-                ========================================= */
+                .sidebar .nav-link:hover i {
+                    color: #374151;
+                }
+
+
+        /* =====================================================
+                   FOLLOWING
+                   ===================================================== */
 
         .following-section {
             flex-shrink: 0;
         }
 
 
-        /* =========================================
+            .following-section hr,
+            .sidebar > hr {
+                border-color: rgba(75,85,99,.16);
+                opacity: 1;
+            }
+
+
+            .following-section h6 {
+                color: #374151 !important;
+                padding-left: 10px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+
+            .following-section .nav-link {
+                color: #6b7280 !important;
+                cursor: default;
+                background: transparent !important;
+                box-shadow: none !important;
+                transform: none !important;
+            }
+
+
+        /* =====================================================
+                   CREATE POST
+                   ===================================================== */
+
+        .sidebar .btn-primary {
+            border: 1px solid rgba(255,255,255,.8) !important;
+            border-radius: 15px !important;
+            background: rgba(255,255,255,.65) !important;
+            color: #1f2937 !important;
+            font-weight: 750;
+            padding: 11px 14px;
+            box-shadow: 0 10px 25px rgba(31,41,55,.08), inset 0 1px 0 rgba(255,255,255,.9);
+            transition: all .25s ease;
+        }
+
+
+            .sidebar .btn-primary:hover {
+                transform: translateY(-2px);
+                background: rgba(255,255,255,.82) !important;
+                color: #111827 !important;
+            }
+
+
+        /* =====================================================
+                   LOGOUT
+                   ===================================================== */
+
+        .sidebar .text-danger {
+            color: #6b4f55 !important;
+        }
+
+
+        .sidebar form .nav-link:hover {
+            color: #8b3f4a !important;
+        }
+
+
+        /* =====================================================
+                   MAIN CONTENT
+                   ===================================================== */
+
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            min-height: 100vh;
+            background: transparent;
+            overflow: hidden;
+            transition: all .3s ease;
+        }
+
+
+        /* =====================================================
+                   RIGHT SIDEBAR
+                   ===================================================== */
+
+        .right-sidebar {
+            width: 315px;
+            min-width: 315px;
+            min-height: 100vh;
+            padding: 20px !important;
+            background: linear-gradient( 180deg, rgba(255,255,255,.56), rgba(255,255,255,.32) ) !important;
+            border-left: 1px solid rgba(255,255,255,.75);
+            box-shadow: -10px 0 35px rgba(31,41,55,.06), inset 1px 0 0 rgba(255,255,255,.6);
+            backdrop-filter: blur(28px) saturate(130%);
+            -webkit-backdrop-filter: blur(28px) saturate(130%);
+            color: #1f2937;
+        }
+
+
+            /* Right sidebar hero image */
+
+            .right-sidebar > div:first-child {
+                height: 500px !important;
+                border-radius: 24px;
+                overflow: hidden;
+                border: 1px solid rgba(255,255,255,.78);
+                box-shadow: 0 18px 40px rgba(31,41,55,.10), inset 0 1px 0 rgba(255,255,255,.8);
+            }
+
+
+            .right-sidebar h5 {
+                margin-top: 15px;
+                color: #111827;
+                font-weight: 800;
+            }
+
+
+            .right-sidebar .d-flex {
+                padding: 9px;
+                border-radius: 17px;
+                background: rgba(255,255,255,.30);
+                border: 1px solid transparent;
+                transition: all .25s ease;
+            }
+
+
+                .right-sidebar .d-flex:hover {
+                    background: rgba(255,255,255,.62);
+                    border-color: rgba(255,255,255,.7);
+                    transform: translateX(-3px);
+                    box-shadow: 0 8px 20px rgba(31,41,55,.06);
+                }
+
+
+            .right-sidebar h6 {
+                color: #1f2937;
+                font-weight: 750;
+            }
+
+
+            .right-sidebar .text-muted {
+                color: #6b7280 !important;
+            }
+
+
+        /* =====================================================
+                   SIDEBAR HIDDEN
+                   ===================================================== */
+
+        .sidebar.sidebar-hidden {
+            transform: translateX(-100%);
+            margin-left: -260px;
+        }
+
+
+        .main-content.full-width {
+            width: 100%;
+        }
+
+
+        /* =====================================================
+                   SCROLLBAR
+                   ===================================================== */
+
+        .sidebar::-webkit-scrollbar {
+            width: 5px;
+        }
+
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(107,114,128,.25);
+            border-radius: 20px;
+        }
+
+
+        /* =====================================================
                    MOBILE
-                ========================================= */
+                   ===================================================== */
+
+        @@media (max-width: 1100px) {
+
+            .right-sidebar {
+                display: none;
+            }
+        }
+
 
         @@media (max-width: 768px) {
+
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                z-index: 999;
+                height: 100vh;
+                transform: translateX(-100%);
+                margin-left: 0 !important;
+                box-shadow: 15px 0 40px rgba(31,41,55,.15);
+            }
+
+
+                .sidebar:not(.sidebar-hidden) {
+                    transform: translateX(0);
+                }
+
+
+                .sidebar.sidebar-hidden {
+                    transform: translateX(-100%);
+                    margin-left: 0;
+                }
+
+
+            .main-content {
+                width: 100%;
+            }
+
 
             .sidebar-logo {
                 width: 100px !important;
                 height: 100px !important;
             }
 
+
             .sidebar-logo-container {
-                height: 115px;
+                height: 120px;
             }
         }
+
+
+        @@media (max-width: 480px) {
+
+            .hamburger-btn {
+                top: 12px;
+                left: 12px;
+                width: 42px;
+                height: 42px;
+            }
+        }
+
     </style>
 
 </head>
 
-<body style="background-color: #F4EAF1;">
+
+<body>
 
     <div class="dashboard-container">
 
 
-        <!-- =========================================
-             HAMBURGER BUTTON
-        ========================================== -->
+        <!-- =====================================================
+             HAMBURGER
+             ===================================================== -->
 
         <button class="hamburger-btn"
                 type="button"
-                onclick="toggleSidebar()">
+                onclick="toggleSidebar()"
+                aria-label="Toggle navigation">
 
             <i class="fas fa-bars"></i>
 
         </button>
 
 
-
-        <!-- =========================================
+        <!-- =====================================================
              LEFT SIDEBAR
-        ========================================== -->
+             ===================================================== -->
 
-        <aside class="sidebar p-4"
-               style="
-                    background-color: #B9B1CD;
-                    color: white;
-                    width: 260px;
-                    margin-left: 0;
-                    flex-shrink: 0;
-               ">
+        <aside class="sidebar">
 
 
-            <!-- =====================================
-                 LOGO
-            ====================================== -->
+            <!-- LOGO -->
 
             <div class="sidebar-logo-container">
 
@@ -137,10 +471,7 @@
             </div>
 
 
-
-            <!-- =====================================
-                 MAIN NAVIGATION
-            ====================================== -->
+            <!-- MAIN NAVIGATION -->
 
             <nav>
 
@@ -163,7 +494,6 @@
                     </li>
 
 
-
                     <!-- BREAKING NEWS -->
 
                     <li class="nav-item">
@@ -178,7 +508,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- TRENDING -->
@@ -197,7 +526,6 @@
                     </li>
 
 
-
                     <!-- COMMUNITY -->
 
                     <li class="nav-item">
@@ -212,7 +540,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- CATEGORY -->
@@ -231,7 +558,6 @@
                     </li>
 
 
-
                     <!-- HISTORY -->
 
                     <li class="nav-item">
@@ -246,7 +572,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- SAVED -->
@@ -265,7 +590,6 @@
                     </li>
 
 
-
                     <!-- COLLECTIONS -->
 
                     <li class="nav-item">
@@ -280,7 +604,6 @@
                         </a>
 
                     </li>
-
 
 
                     <!-- SETTINGS -->
@@ -299,15 +622,12 @@
                     </li>
 
 
-
-                    <!-- =================================
-                         ADMIN SECTION
-                    ================================== -->
+                    <!-- =================================================
+                         ADMIN
+                         ================================================= -->
                     @if (User.Identity?.IsAuthenticated == true &&
                                         User.IsInRole("Admin"))
                     {
-
-                        <!-- ADMIN DASHBOARD -->
 
                         <li class="nav-item">
 
@@ -323,9 +643,6 @@
                         </li>
 
 
-
-                        <!-- USER MANAGEMENT -->
-
                         <li class="nav-item">
 
                             <a class="nav-link"
@@ -340,7 +657,6 @@
                         </li>
 
                     }
-
 
 
                     <!-- ACCOUNT -->
@@ -363,28 +679,24 @@
             </nav>
 
 
-
-            <!-- =====================================
+            <!-- =====================================================
                  FOLLOWING
-            ====================================== -->
-            <!-- =====================================
-                 FOLLOWING
-            ====================================== -->
+                 ===================================================== -->
 
             <div class="following-section">
 
-                <hr class="my-3">
+                <hr class="my-3" />
 
-                <h6 style="color: black !important; padding-left: 10px;">
+                <h6>
                     Following
                 </h6>
+
 
                 <ul class="nav flex-column">
 
                     <li class="nav-item">
 
-                        <span class="nav-link"
-                              style="color: black !important;">
+                        <span class="nav-link">
 
                             <i class="fas fa-rss me-2"></i>
 
@@ -399,12 +711,10 @@
             </div>
 
 
+            <!-- CREATE POST -->
 
-            <!-- =====================================
-                 CREATE POST
-            ====================================== -->
+            <hr class="my-3" />
 
-            <hr class="my-3">
 
             <ul class="nav flex-column">
 
@@ -424,17 +734,13 @@
             </ul>
 
 
+            <!-- HELP + LOGOUT -->
 
-            <!-- =====================================
-                 HELP + LOGOUT
-            ====================================== -->
+            <hr class="my-3" />
 
-            <hr class="my-3">
 
             <ul class="nav flex-column">
 
-
-                <!-- HELP -->
 
                 <li class="nav-item">
 
@@ -450,25 +756,18 @@
                 </li>
 
 
-
-                <!-- LOGOUT -->
-
                 <li class="nav-item">
 
                     <form method="post"
                           action="@Url.Action("Logout", "Logout")"
-                          style="margin: 0;">
+                          style="margin:0;">
 
                         <button type="submit"
-                                class="nav-link text-danger btn btn-link"
+                                class="nav-link btn btn-link"
                                 style="
-                                    color: #dc3545 !important;
-                                    padding: 0.75rem 1rem;
-                                    text-decoration: none;
-                                    display: flex;
-                                    align-items: center;
-                                    width: 100%;
-                                    border: none;
+                                    width:100%;
+                                    border:none;
+                                    text-decoration:none;
                                 ">
 
                             <i class="fas fa-sign-out-alt me-2"></i>
@@ -486,10 +785,9 @@
         </aside>
 
 
-
-        <!-- =========================================
+        <!-- =====================================================
              MAIN CONTENT
-        ========================================== -->
+             ===================================================== -->
 
         <main class="main-content">
 
@@ -498,28 +796,24 @@
         </main>
 
 
-
-        <!-- =========================================
+        <!-- =====================================================
              RIGHT SIDEBAR
-        ========================================== -->
+             ===================================================== -->
 
-        <aside class="right-sidebar bg-light p-3">
+        <aside class="right-sidebar">
+
 
             <div style="
-                background-image: url('/images/png.png');
-                background-size: cover;
-                background-position: center;
-                height: 500px;
+                background-image:url('/images/png.png');
+                background-size:cover;
+                background-position:center;
             ">
             </div>
 
 
             <h5 class="mb-3">
-
                 Top Creator
-
             </h5>
-
 
 
             <!-- CREATOR 1 -->
@@ -530,26 +824,21 @@
                      alt="Anne Johnson"
                      class="rounded-circle me-3"
                      width="40"
-                     height="40">
+                     height="40" />
 
                 <div>
 
                     <h6 class="mb-0">
-
                         Anne Johnson
-
                     </h6>
 
                     <small class="text-muted">
-
                         10.5k Followers
-
                     </small>
 
                 </div>
 
             </div>
-
 
 
             <!-- CREATOR 2 -->
@@ -560,26 +849,21 @@
                      alt="Jane Smith"
                      class="rounded-circle me-3"
                      width="40"
-                     height="40">
+                     height="40" />
 
                 <div>
 
                     <h6 class="mb-0">
-
                         Jane Smith
-
                     </h6>
 
                     <small class="text-muted">
-
                         7.8k Followers
-
                     </small>
 
                 </div>
 
             </div>
-
 
 
             <!-- CREATOR 3 -->
@@ -590,20 +874,16 @@
                      alt="Peter Jones"
                      class="rounded-circle me-3"
                      width="40"
-                     height="40">
+                     height="40" />
 
                 <div>
 
                     <h6 class="mb-0">
-
                         Peter Jones
-
                     </h6>
 
                     <small class="text-muted">
-
                         5.2k Followers
-
                     </small>
 
                 </div>
@@ -615,19 +895,23 @@
     </div>
 
 
-
-    <!-- =========================================
+    <!-- =====================================================
          SCRIPTS
-    ========================================== -->
+         ===================================================== -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js"
+            asp-append-version="true">
+    </script>
 
-    @await RenderSectionAsync("Scripts", required: false)
 
+    @await RenderSectionAsync(
+    "Scripts",
+        required: false
+        )
 
 
     <script>
@@ -635,23 +919,21 @@
         function toggleSidebar() {
 
             const sidebar =
-                document.querySelector('.sidebar');
+                document.querySelector(".sidebar");
 
-            const mainContent =
-                document.querySelector('.main-content');
-
-
-            if (sidebar && mainContent) {
-
-                sidebar.classList.toggle('sidebar-hidden');
-
-                mainContent.classList.toggle('full-width');
-
+            if (!sidebar) {
+                return;
             }
+
+
+            sidebar.classList.toggle(
+                "sidebar-hidden"
+            );
 
         }
 
     </script>
 
 </body>
+
 </html>

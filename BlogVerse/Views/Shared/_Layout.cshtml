@@ -3,133 +3,295 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>@ViewData["Title"] - BlogVerse</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/BlogVerse.styles.css" asp-append-version="true" />
 
-    <style>
-        :root {
-            --primary-bg: #F4EAF1;
-            --navbar-bg: #B9B1CD;
-            --footer-bg: #B6A8CA;
-            --text-color: white;
-            --link-color: #F4EAF1;
-            --blog-text-color: #333;
-        }
+    <link rel="stylesheet"
+          href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-        [data-theme="dark"] {
-            --primary-bg: #2D2D39;
-            --navbar-bg: #4A4A5E;
-            --footer-bg: #3A3A50;
-            --text-color: #E4E4F2;
-            --link-color: #C9C3DE;
-            --blog-text-color: #E4E4F2;
-        }
+    <link rel="stylesheet"
+          href="~/css/site.css"
+          asp-append-version="true" />
 
-        body {
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-        }
-
-        .navbar-custom {
-            background-color: var(--navbar-bg);
-        }
-
-        .navbar-brand img {
-            height: 40px;
-            margin-right: 10px;
-        }
-
-        .navbar-light .navbar-nav .nav-link {
-            color: var(--text-color);
-            font-weight: 500;
-        }
-
-        .navbar-light .navbar-brand {
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 1.4rem;
-        }
-
-        .footer {
-            background-color: var(--footer-bg);
-            color: var(--text-color);
-            padding: 1rem 0;
-            text-align: center;
-        }
-
-            .footer a {
-                color: var(--link-color);
-            }
-
-        #theme-toggle {
-            background-color: transparent;
-            border: none;
-            font-size: 1.2rem;
-            color: var(--text-color);
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet"
+          href="~/BlogVerse.styles.css"
+          asp-append-version="true" />
 </head>
+
 <body class="@ViewBag.PageClass">
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light navbar-custom shadow-sm">
-            <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/icon-quill-spark.png" alt="BlogVerse Logo" />
-                    BlogVerse
+
+    <!-- ==============================
+         GLASS NAVBAR
+         ============================== -->
+
+    <header class="bv-glass-header">
+
+        <nav class="bv-glass-navbar">
+
+            <div class="bv-nav-inner">
+
+                <!-- LOGO -->
+
+                <a class="bv-brand"
+                   asp-area=""
+                   asp-controller="Home"
+                   asp-action="Index">
+
+                    <span class="bv-brand-logo">
+                        <img src="~/images/icon-quill-spark.png"
+                             alt="BlogVerse" />
+                    </span>
+
+                    <span class="bv-brand-name">
+                        BlogVerse
+                    </span>
+
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
-                    <span class="navbar-toggler-icon"></span>
+
+
+                <!-- MOBILE BUTTON -->
+
+                <button class="bv-mobile-toggle"
+                        type="button"
+                        aria-label="Open navigation"
+                        aria-expanded="false">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end">
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Login</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-                        <li class="nav-item">
-                            <button id="theme-toggle" title="Toggle light/dark mode">🌓</button>
-                        </li>
-                    </ul>
+
+
+                <!-- NAVIGATION -->
+
+                <div class="bv-nav-menu">
+
+                    <a class="bv-nav-link"
+                       asp-area=""
+                       asp-controller="Home"
+                       asp-action="Index">
+
+                        <span>Home</span>
+
+                    </a>
+
+
+                    <a class="bv-nav-link"
+                       asp-area=""
+                       asp-controller="Home"
+                       asp-action="Privacy">
+
+                        <span>Privacy</span>
+
+                    </a>
+
+
+                    <a class="bv-nav-link"
+                       asp-area=""
+                       asp-controller="Account"
+                       asp-action="Login">
+
+                        <span>Login</span>
+
+                    </a>
+
+
+                    <a class="bv-nav-link"
+                       asp-area=""
+                       asp-controller="Account"
+                       asp-action="Register">
+
+                        <span>Register</span>
+
+                    </a>
+
+
+                    <!-- THEME BUTTON -->
+
+                    <button id="theme-toggle"
+                            class="bv-theme-button"
+                            type="button"
+                            title="Toggle appearance"
+                            aria-label="Toggle appearance">
+
+                        <span class="bv-theme-icon">◐</span>
+
+                    </button>
+
                 </div>
+
             </div>
+
         </nav>
+
     </header>
 
-    <div class="container mt-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+
+    <!-- ==============================
+         PAGE
+         ============================== -->
+
+    <main role="main" class="bv-page">
+
+        @RenderBody()
+
+    </main>
+
+
+    <!-- ==============================
+         SCRIPTS
+         ============================== -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
             integrity="sha512-Yc6vNteNsMSgn4Prd9zKdyYSlKZSn4U0D53+XNPKvE6De4v6e4Z7bHoKrDBafNcAjRHh+Ngf4V1nA83cQQuERA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"
             integrity="sha512-Wgdf3O44FhR9fyxqXjE/N7rzqMdOocT0VjylWYMB1IgcO4FhNq+UlKqPZSEz1cQmFUpuUKmVUq6l5ql5KXn9tA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"></script>
+
+
+    <!-- ==============================
+         GLASS NAVIGATION JS
+         ============================== -->
 
     <script>
-        const toggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme');
 
-        if (currentTheme) {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-        }
+        document.addEventListener("DOMContentLoaded", function () {
 
-        toggle?.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme') || 'light';
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+            const toggle =
+                document.getElementById("theme-toggle");
+
+            const mobileToggle =
+                document.querySelector(".bv-mobile-toggle");
+
+            const navMenu =
+                document.querySelector(".bv-nav-menu");
+
+
+            /* ==========================
+               THEME
+               ========================== */
+
+            const savedTheme =
+                localStorage.getItem("blogverse-theme");
+
+            if (savedTheme === "dark") {
+
+                document.documentElement
+                    .setAttribute("data-theme", "dark");
+
+            }
+            else {
+
+                document.documentElement
+                    .setAttribute("data-theme", "light");
+
+            }
+
+
+            toggle?.addEventListener("click", function () {
+
+                const current =
+                    document.documentElement
+                        .getAttribute("data-theme");
+
+                const next =
+                    current === "dark"
+                        ? "light"
+                        : "dark";
+
+                document.documentElement
+                    .setAttribute("data-theme", next);
+
+                localStorage.setItem(
+                    "blogverse-theme",
+                    next
+                );
+
+            });
+
+
+            /* ==========================
+               MOBILE NAV
+               ========================== */
+
+            mobileToggle?.addEventListener(
+                "click",
+                function () {
+
+                    navMenu.classList.toggle(
+                        "bv-nav-open"
+                    );
+
+                    const opened =
+                        navMenu.classList.contains(
+                            "bv-nav-open"
+                        );
+
+                    mobileToggle
+                        .setAttribute(
+                            "aria-expanded",
+                            opened
+                        );
+
+                }
+            );
+
+
+            /* ==========================
+               NAV SCROLL EFFECT
+               ========================== */
+
+            const header =
+                document.querySelector(
+                    ".bv-glass-header"
+                );
+
+
+            window.addEventListener(
+                "scroll",
+                function () {
+
+                    if (window.scrollY > 20) {
+
+                        header.classList.add(
+                            "bv-header-scrolled"
+                        );
+
+                    }
+                    else {
+
+                        header.classList.remove(
+                            "bv-header-scrolled"
+                        );
+
+                    }
+
+                }
+            );
+
         });
+
     </script>
 
-    @await RenderSectionAsync("Scripts", required: false)
+
+    @await RenderSectionAsync(
+    "Scripts",
+        required: false
+        )
+
 </body>
 </html>
