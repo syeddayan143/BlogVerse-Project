@@ -1,0 +1,323 @@
+﻿@model IEnumerable<BlogVerse.Models.Post>
+
+@{
+    ViewData["Title"] = "Trending";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .trending-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .trending-header {
+        margin-bottom: 28px;
+    }
+
+        .trending-header h1 {
+            font-size: 34px;
+            font-weight: 700;
+            color: #1f1f1f;
+            margin-bottom: 8px;
+            letter-spacing: -0.8px;
+        }
+
+        .trending-header p {
+            color: #777;
+            font-size: 15px;
+            margin: 0;
+        }
+
+    .trending-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .trending-card {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 24px;
+        padding: 22px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.07);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .trending-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, 0.11);
+        }
+
+    .post-number {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #f0f0f0;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .post-category {
+        display: inline-block;
+        background: #eeeeee;
+        color: #555;
+        border-radius: 30px;
+        padding: 6px 11px;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 13px;
+    }
+
+    .post-title {
+        color: #181818;
+        font-size: 21px;
+        font-weight: 700;
+        line-height: 1.35;
+        margin-bottom: 10px;
+    }
+
+        .post-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+            .post-title a:hover {
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+
+    .post-description {
+        color: #707070;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+    }
+
+    .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 14px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.07);
+        color: #777;
+        font-size: 13px;
+    }
+
+    .meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .meta-item strong {
+            color: #333;
+        }
+
+    .view-post-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 18px;
+        padding: 10px 18px;
+        border-radius: 14px;
+        background: #222;
+        color: white;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+        .view-post-btn:hover {
+            background: #000;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    .empty-state {
+        background: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 24px;
+        padding: 60px 25px;
+        text-align: center;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .empty-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 20px;
+        background: #eeeeee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        font-size: 28px;
+    }
+
+    .empty-state h3 {
+        color: #222;
+        font-size: 21px;
+        margin-bottom: 8px;
+    }
+
+    .empty-state p {
+        color: #777;
+        margin: 0;
+    }
+
+    @@media (max-width: 850px) {
+        .trending-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .trending-page {
+            padding: 18px;
+        }
+
+        .trending-header h1 {
+            font-size: 28px;
+        }
+
+        .trending-card {
+            padding: 18px;
+            border-radius: 20px;
+        }
+
+        .post-title {
+            font-size: 19px;
+        }
+    }
+</style>
+
+<div class="trending-page">
+
+    <div class="trending-header">
+        <h1>Trending</h1>
+        <p>Discover posts that are getting the most attention in the community.</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="trending-grid">
+
+            @{
+                var rank = 1;
+            }
+
+            @foreach (var post in Model)
+            {
+                <article class="trending-card">
+
+                    <div class="post-number">
+                        #@rank
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(post.Category))
+                    {
+                        <span class="post-category">
+                            @post.Category
+                        </span>
+                    }
+
+                    <h2 class="post-title">
+                        <a asp-controller="Posts"
+                           asp-action="Details"
+                           asp-route-id="@post.Id">
+                            @post.Title
+                        </a>
+                    </h2>
+
+                    <p class="post-description">
+                        @if (!string.IsNullOrWhiteSpace(post.Content))
+                        {
+                            var cleanContent = post.Content
+                            .Replace("<p>", " ")
+                            .Replace("</p>", " ")
+                            .Replace("<br>", " ")
+                            .Replace("<br/>", " ")
+                            .Replace("<br />", " ");
+
+                            if (cleanContent.Length > 180)
+                            {
+                                @cleanContent.Substring(0, 180)
+                                @:...
+                            }
+                            else
+                            {
+                                @cleanContent
+                            }
+                        }
+                </p>
+
+                <div class="post-meta">
+
+                    <span class="meta-item">
+                        👤
+                        <strong>
+                            @(post.User?.Name ?? "Unknown User")
+                        </strong>
+                    </span>
+
+                    <span class="meta-item">
+                        👁
+                        <strong>@post.Views</strong> views
+                    </span>
+
+                    <span class="meta-item">
+                        ♥
+                        <strong>@post.Likes</strong> likes
+                    </span>
+
+                    <span class="meta-item">
+                        📅
+                        @(post.PublishedAt?.ToString("dd MMM yyyy")
+                                            ?? post.CreatedAt.ToString("dd MMM yyyy"))
+                </span>
+
+                    </div>
+
+                    <a asp-controller="Posts"
+                       asp-action="Details"
+                       asp-route-id="@post.Id"
+                       class="view-post-btn">
+                        Read Post →
+                    </a>
+
+                </article>
+
+                rank++;
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ↗
+            </div>
+
+            <h3>No trending posts yet</h3>
+
+            <p>
+                There are no published posts available right now.
+            </p>
+
+        </div>
+    }
+
+</div>

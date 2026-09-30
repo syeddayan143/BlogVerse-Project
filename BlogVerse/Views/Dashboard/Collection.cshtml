@@ -1,0 +1,426 @@
+﻿@model BlogVerse.Models.PostCollection
+
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .collection-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .collection-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .collection-header-left {
+        min-width: 0;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 18px;
+        color: #666;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: color .2s ease;
+    }
+
+        .back-link:hover {
+            color: #222;
+        }
+
+    .collection-title {
+        margin: 0 0 8px;
+        color: #1f1f1f;
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: -0.8px;
+        word-break: break-word;
+    }
+
+    .collection-subtitle {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .collection-count {
+        flex-shrink: 0;
+        padding: 10px 15px;
+        border-radius: 14px;
+        background: rgba(255, 255, 255, .72);
+        border: 1px solid rgba(0, 0, 0, .08);
+        color: #444;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .05);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .posts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .post-card {
+        overflow: hidden;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+        .post-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, .09);
+        }
+
+    .post-image-wrapper {
+        width: 100%;
+        height: 190px;
+        background: #eeeeee;
+        overflow: hidden;
+    }
+
+    .post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .post-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #777;
+        font-size: 35px;
+        background: #eeeeee;
+    }
+
+    .post-content {
+        padding: 20px;
+    }
+
+    .post-category {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+        background: #eeeeee;
+        color: #555;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .post-title {
+        margin: 0 0 9px;
+        color: #1d1d1d;
+        font-size: 19px;
+        line-height: 1.35;
+        font-weight: 700;
+        word-break: break-word;
+    }
+
+    .post-author {
+        margin: 0 0 15px;
+        color: #888;
+        font-size: 12px;
+    }
+
+    .post-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        flex-wrap: wrap;
+    }
+
+    .read-post {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
+
+        .read-post:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .remove-post {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 13px;
+        border-radius: 13px;
+        border: 1px solid rgba(0, 0, 0, .10);
+        background: rgba(255, 255, 255, .65);
+        color: #444;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .remove-post:hover {
+            background: #eeeeee;
+        }
+
+    .empty-state {
+        padding: 65px 25px;
+        text-align: center;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .72);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .empty-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin: 0 0 20px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+        .back-button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    @@media (max-width: 950px) {
+        .posts-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .collection-page {
+            padding: 18px;
+        }
+
+        .collection-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .collection-title {
+            font-size: 28px;
+        }
+
+        .collection-count {
+            width: fit-content;
+        }
+
+        .posts-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .post-card {
+            border-radius: 19px;
+        }
+
+        .post-image-wrapper {
+            height: 210px;
+        }
+    }
+</style>
+
+<div class="collection-page">
+
+    <div class="collection-header">
+
+        <div class="collection-header-left">
+
+            <a asp-controller="Dashboard"
+               asp-action="Collections"
+               class="back-link">
+                ← Back to Collections
+            </a>
+
+            <h1 class="collection-title">
+                @Model.Name
+            </h1>
+
+            <p class="collection-subtitle">
+                Posts saved in this collection.
+            </p>
+
+        </div>
+
+        <div class="collection-count">
+            @Model.Posts.Count @(Model.Posts.Count == 1 ? "Post" : "Posts")
+        </div>
+
+    </div>
+
+
+    @if (Model.Posts != null && Model.Posts.Count > 0)
+    {
+        <div class="posts-grid">
+
+            @foreach (var item in Model.Posts)
+            {
+                var post = item.Post;
+
+                if (post != null)
+                {
+                    <article class="post-card">
+
+                        <div class="post-image-wrapper">
+
+                            @if (!string.IsNullOrWhiteSpace(post.ImagePath))
+                            {
+                                <img src="@post.ImagePath"
+                                     alt="@post.Title"
+                                     class="post-image" />
+                            }
+                            else
+                            {
+                                <div class="post-image-placeholder">
+                                    ▤
+                                </div>
+                            }
+
+                        </div>
+
+                        <div class="post-content">
+
+                            @if (!string.IsNullOrWhiteSpace(post.Category))
+                            {
+                                <div class="post-category">
+                                    @post.Category
+                                </div>
+                            }
+
+                            <h2 class="post-title">
+                                @post.Title
+                            </h2>
+
+                            <p class="post-author">
+                                By @(post.User?.Name ?? "Unknown Author")
+                            </p>
+
+                            <div class="post-actions">
+
+                                <a asp-controller="Posts"
+                                   asp-action="Details"
+                                   asp-route-id="@post.Id"
+                                   class="read-post">
+                                    Read Post →
+                                </a>
+
+                                <form asp-controller="Dashboard"
+                                      asp-action="RemoveFromCollection"
+                                      method="post"
+                                      onsubmit="return confirm('Remove this post from the collection?');">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="collectionId"
+                                           value="@Model.Id" />
+
+                                    <input type="hidden"
+                                           name="postId"
+                                           value="@post.Id" />
+
+                                    <button type="submit"
+                                            class="remove-post">
+                                        Remove
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+                }
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ▦
+            </div>
+
+            <h3>No posts in this collection</h3>
+
+            <p>
+                Add posts to this collection and they will appear here.
+            </p>
+
+            <a asp-controller="Dashboard"
+               asp-action="Collections"
+               class="back-button">
+                Back to Collections
+            </a>
+
+        </div>
+    }
+
+</div>

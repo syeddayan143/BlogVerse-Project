@@ -1,48 +1,352 @@
 ﻿@{
     ViewData["Title"] = "Community";
-    var availableCommunities = ViewBag.AvailableCommunities as List<BlogVerse.Models.CommunityModel>;
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var availableCommunities =
+        ViewBag.AvailableCommunities as List<BlogVerse.Models.CommunityModel>
+        ?? new List<BlogVerse.Models.CommunityModel>();
 }
 
-<div class="container mt-4">
-    <h1 style="color: black;">Explore Communities</h1>
-    <hr class="mb-4" />
+<style>
+    .community-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .community-header {
+        margin-bottom: 28px;
+    }
+
+        .community-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .community-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+    .message-box {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 22px;
+        padding: 14px 17px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, .72);
+        border: 1px solid rgba(0, 0, 0, .08);
+        color: #444;
+        font-size: 13px;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .04);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+    }
+
+    .message-close {
+        width: 30px;
+        height: 30px;
+        border: 0;
+        border-radius: 9px;
+        background: #eeeeee;
+        color: #555;
+        cursor: pointer;
+        font-size: 17px;
+        line-height: 1;
+    }
+
+        .message-close:hover {
+            background: #e2e2e2;
+        }
+
+    .community-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .community-card {
+        overflow: hidden;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+        .community-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, .09);
+        }
+
+    .community-image-wrapper {
+        width: 100%;
+        height: 175px;
+        overflow: hidden;
+        background: #eeeeee;
+    }
+
+    .community-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        transition: transform .35s ease;
+    }
+
+    .community-card:hover .community-image {
+        transform: scale(1.03);
+    }
+
+    .community-image-placeholder {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #666;
+        font-size: 38px;
+    }
+
+    .community-body {
+        padding: 21px;
+    }
+
+    .community-name {
+        margin: 0 0 9px;
+        color: #1d1d1d;
+        font-size: 19px;
+        line-height: 1.35;
+        font-weight: 700;
+    }
+
+    .community-description {
+        min-height: 62px;
+        margin: 0 0 14px;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.55;
+    }
+
+    .community-members {
+        margin: 0 0 17px;
+        color: #999;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .join-button {
+        width: 100%;
+        min-height: 42px;
+        border: 0;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .join-button:hover {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+    .empty-state {
+        padding: 65px 25px;
+        text-align: center;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .72);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .empty-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    @@media (max-width: 1000px) {
+        .community-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .community-page {
+            padding: 18px;
+        }
+
+        .community-header h1 {
+            font-size: 28px;
+        }
+
+        .community-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .community-card {
+            border-radius: 19px;
+        }
+
+        .community-image-wrapper {
+            height: 200px;
+        }
+
+        .community-body {
+            padding: 18px;
+        }
+
+        .community-description {
+            min-height: auto;
+        }
+    }
+</style>
+
+<div class="community-page">
+
+    <div class="community-header">
+        <h1>Community</h1>
+
+        <p>
+            Explore communities, discover new interests,
+            and connect with people.
+        </p>
+    </div>
+
 
     @if (TempData["JoinMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["JoinMessage"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="message-box" id="joinMessage">
+
+            <span>
+                @TempData["JoinMessage"]
+            </span>
+
+            <button type="button"
+                    class="message-close"
+                    onclick="document.getElementById('joinMessage').remove()"
+                    aria-label="Close">
+                ×
+            </button>
+
         </div>
     }
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-        @if (availableCommunities != null && availableCommunities.Any())
-        {
+
+    @if (availableCommunities.Any())
+    {
+        <div class="community-grid">
+
             @foreach (var community in availableCommunities)
             {
-                <div class="col">
-                    <div class="card shadow-sm h-100">
-                        @if (!string.IsNullOrEmpty(community.ImageUrl))
+                <article class="community-card">
+
+                    <div class="community-image-wrapper">
+
+                        @if (!string.IsNullOrWhiteSpace(community.ImageUrl))
                         {
-                            <img src="@Url.Content(community.ImageUrl)" class="card-img-top" alt="@community.Name" style="height: 150px; object-fit: cover;">
+                            <img src="@Url.Content(community.ImageUrl)"
+                                 class="community-image"
+                                 alt="@community.Name" />
                         }
-                        <div class="card-body">
-                            <h5 class="card-title" style="color: black;">@community.Name</h5>
-                            <p class="card-text" style="color: black;">@community.Description</p>
-                            <p class="card-text"><small class="text-muted">@community.MemberCount Members</small></p>
-                            <form method="post" asp-action="JoinCommunity" asp-route-communityId="@community.Id">
-                                <button type="submit" class="btn btn-primary btn-sm">Join</button>
-                            </form>
-                        </div>
+                        else
+                        {
+                            <div class="community-image-placeholder">
+                                ◎
+                            </div>
+                        }
+
                     </div>
-                </div>
+
+
+                    <div class="community-body">
+
+                        <h2 class="community-name">
+                            @community.Name
+                        </h2>
+
+                        <p class="community-description">
+                            @community.Description
+                        </p>
+
+                        <p class="community-members">
+                            @community.MemberCount members
+                        </p>
+
+
+                        <form asp-controller="Dashboard"
+                              asp-action="JoinCommunity"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="communityId"
+                                   value="@community.Id" />
+
+                            <button type="submit"
+                                    class="join-button">
+                                Join Community
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
             }
-        }
-        else
-        {
-            <div class="col">
-                <p style="color: black;">No communities available yet.</p>
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ◎
             </div>
-        }
-    </div>
+
+            <h3>No communities available</h3>
+
+            <p>
+                There are currently no communities to display.
+            </p>
+
+        </div>
+    }
+
 </div>

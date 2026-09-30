@@ -1,0 +1,412 @@
+﻿@model IEnumerable<BlogVerse.Models.Post>
+
+@{
+    ViewData["Title"] = "Category";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+
+    var categories = ViewBag.Categories as IEnumerable<string>
+                     ?? Enumerable.Empty<string>();
+
+    var selectedCategory = ViewBag.SelectedCategory as string;
+}
+
+<style>
+    .category-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .category-header {
+        margin-bottom: 26px;
+    }
+
+        .category-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .category-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+        }
+
+    .category-filter {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 28px;
+    }
+
+    .category-pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 9px 17px;
+        border-radius: 999px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        background: rgba(255, 255, 255, 0.72);
+        color: #444;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        transition: all 0.2s ease;
+    }
+
+        .category-pill:hover {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+        .category-pill.active {
+            background: #222;
+            color: #fff;
+            border-color: #222;
+        }
+
+    .category-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 18px;
+    }
+
+        .category-title h2 {
+            margin: 0;
+            color: #222;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+    .post-count {
+        color: #777;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .category-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .category-card {
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 23px;
+        padding: 21px;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.07);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .category-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+        }
+
+    .post-category {
+        display: inline-block;
+        padding: 6px 11px;
+        border-radius: 999px;
+        background: #eeeeee;
+        color: #555;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .post-title {
+        margin: 0 0 10px;
+        color: #191919;
+        font-size: 20px;
+        line-height: 1.4;
+        font-weight: 700;
+    }
+
+        .post-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+            .post-title a:hover {
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+
+    .post-content {
+        color: #707070;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 18px;
+    }
+
+    .post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 13px;
+        padding-top: 14px;
+        border-top: 1px solid rgba(0, 0, 0, 0.07);
+        color: #777;
+        font-size: 12px;
+    }
+
+    .meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+        .meta-item strong {
+            color: #333;
+        }
+
+    .read-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 17px;
+        padding: 10px 17px;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .read-btn:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+    .empty-state {
+        padding: 60px 25px;
+        text-align: center;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .empty-icon {
+        width: 62px;
+        height: 62px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 18px;
+        border-radius: 19px;
+        background: #eeeeee;
+        color: #333;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    @@media (max-width: 850px) {
+        .category-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .category-page {
+            padding: 18px;
+        }
+
+        .category-header h1 {
+            font-size: 28px;
+        }
+
+        .category-title {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .category-card {
+            padding: 18px;
+            border-radius: 20px;
+        }
+
+        .post-title {
+            font-size: 18px;
+        }
+    }
+</style>
+
+<div class="category-page">
+
+    <!-- HEADER -->
+    <div class="category-header">
+        <h1>Categories</h1>
+        <p>Explore published posts by category.</p>
+    </div>
+
+    <!-- CATEGORY FILTER -->
+    <div class="category-filter">
+
+        <a asp-controller="Dashboard"
+           asp-action="Category"
+           class="category-pill @(string.IsNullOrWhiteSpace(selectedCategory) ? "active" : "")">
+            All
+        </a>
+
+        @foreach (var category in categories)
+        {
+            <a asp-controller="Dashboard"
+               asp-action="Category"
+               asp-route-name="@category"
+               class="category-pill @(selectedCategory == category ? "active" : "")">
+                @category
+            </a>
+        }
+
+    </div>
+
+    <!-- CURRENT CATEGORY -->
+    <div class="category-title">
+
+        <h2>
+            @(string.IsNullOrWhiteSpace(selectedCategory)
+                        ? "All Posts"
+                        : selectedCategory)
+        </h2>
+
+        <span class="post-count">
+            @(Model?.Count() ?? 0) post(s)
+        </span>
+
+    </div>
+
+    <!-- POSTS -->
+    @if (Model != null && Model.Any())
+    {
+        <div class="category-grid">
+
+            @foreach (var post in Model)
+            {
+                <article class="category-card">
+
+                    @if (!string.IsNullOrWhiteSpace(post.Category))
+                    {
+                        <span class="post-category">
+                            @post.Category
+                        </span>
+                    }
+
+                    <h3 class="post-title">
+
+                        <a asp-controller="Posts"
+                           asp-action="Details"
+                           asp-route-id="@post.Id">
+                            @post.Title
+                        </a>
+
+                    </h3>
+
+                    <div class="post-content">
+
+                        @if (!string.IsNullOrWhiteSpace(post.Content))
+                        {
+                            var cleanContent = post.Content
+                            .Replace("<p>", " ")
+                            .Replace("</p>", " ")
+                            .Replace("<br>", " ")
+                            .Replace("<br/>", " ")
+                            .Replace("<br />", " ");
+
+                            if (cleanContent.Length > 170)
+                            {
+                                @cleanContent.Substring(0, 170)
+                                @:...
+                            }
+                            else
+                            {
+                                @cleanContent
+                            }
+                        }
+
+                </div>
+
+                <div class="post-meta">
+
+                    <span class="meta-item">
+                        👤
+                        <strong>
+                            @(post.User?.Name ?? "Unknown User")
+                        </strong>
+                    </span>
+
+                    <span class="meta-item">
+                        👁
+                        <strong>@post.Views</strong>
+                    </span>
+
+                    <span class="meta-item">
+                        ♥
+                        <strong>@post.Likes</strong>
+                    </span>
+
+                    <span class="meta-item">
+                        📅
+                        @(post.PublishedAt?.ToString("dd MMM yyyy")
+                                            ?? post.CreatedAt.ToString("dd MMM yyyy"))
+                </span>
+
+                    </div>
+
+                    <a asp-controller="Posts"
+                       asp-action="Details"
+                       asp-route-id="@post.Id"
+                       class="read-btn">
+                        Read Post →
+                    </a>
+
+                </article>
+                }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ◌
+            </div>
+
+            <h3>No posts found</h3>
+
+            <p>
+                There are no published posts in this category yet.
+            </p>
+
+        </div>
+    }
+
+</div>

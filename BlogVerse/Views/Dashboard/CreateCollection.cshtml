@@ -1,0 +1,262 @@
+﻿@{
+    ViewData["Title"] = "Create Collection";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .create-collection-page {
+        min-height: calc(100vh - 80px);
+        padding: 40px 28px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .create-collection-card {
+        width: 100%;
+        max-width: 620px;
+        padding: 32px;
+        border-radius: 26px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, .07);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        margin-bottom: 25px;
+        color: #666;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: color .2s ease;
+    }
+
+        .back-link:hover {
+            color: #222;
+        }
+
+    .collection-icon {
+        width: 62px;
+        height: 62px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eeeeee;
+        color: #333;
+        font-size: 28px;
+    }
+
+    .create-title {
+        margin: 0 0 9px;
+        color: #1f1f1f;
+        font-size: 31px;
+        font-weight: 700;
+        letter-spacing: -.7px;
+    }
+
+    .create-description {
+        margin: 0 0 28px;
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 9px;
+        color: #333;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .collection-input {
+        width: 100%;
+        min-height: 50px;
+        padding: 13px 15px;
+        border-radius: 15px;
+        border: 1px solid rgba(0, 0, 0, .10);
+        background: rgba(255, 255, 255, .72);
+        color: #222;
+        outline: none;
+        font-family: inherit;
+        font-size: 14px;
+        box-sizing: border-box;
+        transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+        .collection-input::placeholder {
+            color: #999;
+        }
+
+        .collection-input:focus {
+            border-color: rgba(0, 0, 0, .25);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, .05);
+        }
+
+    .input-hint {
+        margin-top: 8px;
+        color: #999;
+        font-size: 11px;
+    }
+
+    .form-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 28px;
+        flex-wrap: wrap;
+    }
+
+    .create-button {
+        min-height: 45px;
+        padding: 11px 18px;
+        border: 0;
+        border-radius: 14px;
+        background: #222;
+        color: #fff;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .create-button:hover {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+    .cancel-button {
+        min-height: 45px;
+        padding: 10px 17px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        border: 1px solid rgba(0, 0, 0, .10);
+        background: rgba(255, 255, 255, .65);
+        color: #444;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all .2s ease;
+    }
+
+        .cancel-button:hover {
+            background: #eeeeee;
+            color: #222;
+        }
+
+    @@media (max-width: 650px) {
+        .create-collection-page {
+            padding: 22px 18px;
+        }
+
+        .create-collection-card {
+            padding: 24px 20px;
+            border-radius: 21px;
+        }
+
+        .create-title {
+            font-size: 27px;
+        }
+
+        .form-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .create-button,
+        .cancel-button {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="create-collection-page">
+
+    <div class="create-collection-card">
+
+        <a asp-controller="Dashboard"
+           asp-action="Collections"
+           class="back-link">
+            ← Back to Collections
+        </a>
+
+        <div class="collection-icon">
+            ▦
+        </div>
+
+        <h1 class="create-title">
+            Create Collection
+        </h1>
+
+        <p class="create-description">
+            Create a collection to organize your favorite
+            posts in one place.
+        </p>
+
+        <form asp-controller="Dashboard"
+              asp-action="CreateCollection"
+              method="post">
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+
+                <label for="name"
+                       class="form-label">
+                    Collection Name
+                </label>
+
+                <input type="text"
+                       id="name"
+                       name="name"
+                       class="collection-input"
+                       placeholder="e.g. Web Development Ideas"
+                       maxlength="100"
+                       required
+                       autocomplete="off" />
+
+                <div class="input-hint">
+                    Maximum 100 characters.
+                </div>
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit"
+                        class="create-button">
+                    Create Collection
+                </button>
+
+                <a asp-controller="Dashboard"
+                   asp-action="Collections"
+                   class="cancel-button">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

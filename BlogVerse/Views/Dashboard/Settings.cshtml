@@ -1,315 +1,929 @@
-﻿@* Views/Dashboard/Settings.cshtml *@
-
-@{
+﻿@{
     ViewData["Title"] = "Settings";
-
-    string profileImage =
-        ViewBag.ProfileImagePath as string
-        ?? "/images/default-profile.png";
-
-    var prefs = ViewBag.UserPreferences as BlogVerse.Models.UserDashboardPreference;
-    var currentTheme = prefs?.ThemeColor ?? "#0f172a";
-    var currentAccent = prefs?.AccentColor ?? "#38bdf8";
-    var currentFont = prefs?.FontFamily ?? "Segoe UI";
-    var currentStyle = prefs?.DashboardStyle ?? "glassmorphism";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
 <style>
-    :root {
-        --primary-bg: #F4EAF1;
-        --navbar-bg: #B9B1CD;
-        --footer-bg: #B6A8CA;
-        --text-color: #000000;
-        --link-color: #007bff;
+    .settings-page {
+        padding: 30px;
+        color: #202124;
     }
 
-    .card-header {
-        background-color: var(--navbar-bg) !important;
-        color: var(--text-color) !important;
-        border-bottom: 1px solid #ddd;
+    .settings-container {
+        max-width: 1000px;
+        margin: 0 auto;
     }
 
-    .card-body {
-        background-color: var(--primary-bg) !important;
-        color: var(--text-color) !important;
+    /* HEADER */
+
+    .settings-header {
+        margin-bottom: 28px;
     }
 
-    h2, h5, label, .form-check-label {
-        color: var(--text-color) !important;
+        .settings-header h1 {
+            margin: 0 0 7px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .settings-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+
+    /* ALERT */
+
+    .glass-alert {
+        display: flex;
+        align-items: center;
+        padding: 14px 17px;
+        margin-bottom: 20px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, .72);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .04);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        font-size: 13px;
     }
 
-    .profile-section {
+        .glass-alert.success {
+            color: #246b3c;
+        }
+
+        .glass-alert.error {
+            color: #a32130;
+        }
+
+
+    /* GLASS CARD */
+
+    .glass-card {
+        padding: 28px;
+        margin-bottom: 22px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 17px 42px rgba(0, 0, 0, .08);
+        }
+
+
+    /* SECTION HEADER */
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 23px;
+    }
+
+    .section-icon {
+        width: 46px;
+        height: 46px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 15px;
+        background: #eeeeee;
+        color: #333;
+        font-size: 18px;
+    }
+
+    .section-header h3 {
+        margin: 0 0 4px;
+        color: #222;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .section-header p {
+        margin: 0;
+        color: #777;
+        font-size: 13px;
+    }
+
+
+    /* PROFILE */
+
+    .profile-area {
         display: flex;
         align-items: center;
         gap: 25px;
-        padding: 20px;
-        background: rgba(255,255,255,0.55);
-        border-radius: 15px;
-        margin-bottom: 25px;
+        flex-wrap: wrap;
     }
 
     .profile-image-wrapper {
-        position: relative;
         flex-shrink: 0;
     }
 
     .profile-image {
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
+        width: 115px;
+        height: 115px;
+        display: block;
         object-fit: cover;
-        border: 4px solid white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        border-radius: 50%;
+        border: 4px solid rgba(255, 255, 255, .9);
+        background: #eeeeee;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, .10);
     }
 
-    .profile-info h4 {
-        margin-bottom: 5px;
-        font-weight: 700;
+    .profile-info {
+        flex: 1;
+        min-width: 220px;
     }
 
-    .profile-info p {
-        margin-bottom: 12px;
-        color: #666;
-    }
-
-    .profile-upload {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        align-items: center;
-    }
-
-        .profile-upload input[type="file"] {
-            max-width: 100%;
+        .profile-info h4 {
+            margin: 0 0 5px;
+            color: #222;
+            font-size: 22px;
+            font-weight: 700;
         }
 
-    .btn-primary {
-        background-color: var(--link-color) !important;
-        border-color: var(--link-color) !important;
-        color: white !important;
+    .profile-email {
+        margin-bottom: 18px;
+        color: #777;
+        font-size: 14px;
     }
 
-    .btn-secondary {
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
-        color: white !important;
+
+    /* INPUT */
+
+    .glass-input {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 12px 15px;
+        border: 1px solid rgba(0, 0, 0, .09);
+        border-radius: 13px;
+        outline: none;
+        background: rgba(245, 245, 245, .72);
+        color: #222;
+        font-family: inherit;
+        font-size: 13px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, .03);
+        transition: all .2s ease;
     }
 
-    .btn-danger {
-        color: white !important;
+        .glass-input:focus {
+            background: #fff;
+            border-color: rgba(0, 0, 0, .20);
+            box-shadow: 0 0 0 4px rgba(0, 0, 0, .04);
+        }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #444;
+        font-size: 13px;
+        font-weight: 600;
     }
 
-    .alert {
-        border-radius: 10px;
+
+    /* UPLOAD */
+
+    .upload-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
     }
 
-    @@media (max-width: 576px) {
-        .profile-section {
+        .upload-row input[type="file"] {
+            max-width: 100%;
+            padding: 8px;
+            border: 1px solid rgba(0, 0, 0, .08);
+            border-radius: 12px;
+            background: rgba(245, 245, 245, .72);
+            color: #555;
+            font-size: 12px;
+        }
+
+
+    /* BUTTONS */
+
+    .glass-btn {
+        min-height: 42px;
+        padding: 10px 17px;
+        border: 1px solid rgba(0, 0, 0, .07);
+        border-radius: 13px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .glass-btn:hover {
+            transform: translateY(-1px);
+        }
+
+    .glass-btn-dark {
+        background: #222;
+        color: #fff;
+    }
+
+        .glass-btn-dark:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .glass-btn-light {
+        background: #eeeeee;
+        color: #333;
+    }
+
+        .glass-btn-light:hover {
+            background: #e2e2e2;
+            color: #222;
+        }
+
+    .glass-btn-danger {
+        background: rgba(220, 53, 69, .08);
+        color: #a32130;
+        border-color: rgba(220, 53, 69, .12);
+    }
+
+        .glass-btn-danger:hover {
+            background: rgba(220, 53, 69, .14);
+            color: #8e1826;
+        }
+
+
+    /* SETTING ROW */
+
+    .setting-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 16px 0;
+        border-bottom: 1px solid rgba(0, 0, 0, .06);
+    }
+
+        .setting-row:last-child {
+            border-bottom: none;
+        }
+
+    .setting-info {
+        min-width: 0;
+    }
+
+        .setting-info h5 {
+            margin: 0 0 4px;
+            color: #333;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .setting-info p {
+            margin: 0;
+            color: #777;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+
+    /* IOS TOGGLE */
+
+    .ios-switch {
+        position: relative;
+        width: 50px;
+        height: 30px;
+        flex-shrink: 0;
+    }
+
+        .ios-switch input {
+            width: 0;
+            height: 0;
+            opacity: 0;
+        }
+
+    .ios-slider {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: rgba(120, 120, 120, .28);
+        cursor: pointer;
+        transition: .25s;
+    }
+
+        .ios-slider::before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            top: 3px;
+            left: 3px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .20);
+            transition: .25s;
+        }
+
+    .ios-switch input:checked + .ios-slider {
+        background: #222;
+    }
+
+        .ios-switch input:checked + .ios-slider::before {
+            transform: translateX(20px);
+        }
+
+
+    /* ACCOUNT STATUS */
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 7px 13px;
+        border-radius: 999px;
+        background: #eeeeee;
+        color: #333;
+        font-size: 11px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .verified-icon {
+        color: #333;
+        font-size: 17px;
+    }
+
+
+    /* SAVE */
+
+    .save-area {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+
+    /* RESPONSIVE */
+
+    @@media (max-width: 768px) {
+
+        .settings-page {
+            padding: 20px;
+        }
+
+        .glass-card {
+            padding: 22px;
+            border-radius: 21px;
+        }
+
+        .settings-header h1 {
+            font-size: 28px;
+        }
+
+        .profile-area {
             flex-direction: column;
+            align-items: center;
             text-align: center;
         }
 
-        .profile-upload {
+        .profile-info {
+            width: 100%;
+        }
+
+        .upload-row {
             justify-content: center;
         }
 
-            .profile-upload input[type="file"] {
+        .save-area {
+            flex-direction: column;
+        }
+
+            .save-area .glass-btn {
                 width: 100%;
             }
     }
+
+
+    @@media (max-width: 480px) {
+
+        .settings-page {
+            padding: 14px;
+        }
+
+        .glass-card {
+            padding: 18px;
+        }
+
+        .profile-image {
+            width: 95px;
+            height: 95px;
+        }
+
+        .setting-row {
+            align-items: flex-start;
+        }
+
+        .section-header {
+            align-items: flex-start;
+        }
+    }
 </style>
 
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
 
-            <div class="card shadow-sm mb-4">
-                <div class="card-header">
-                    <h2 class="mb-0">Account Settings</h2>
+<div class="settings-page">
+
+    <div class="settings-container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="settings-header">
+
+            <h1>Settings</h1>
+
+            <p>
+                Manage your BlogVerse profile and account preferences.
+            </p>
+
+        </div>
+
+
+        <!-- SUCCESS MESSAGE -->
+        @if (TempData["Success"] != null)
+        {
+            <div class="glass-alert success">
+
+                <i class="fas fa-circle-check me-2"></i>
+
+                @TempData["Success"]
+
+            </div>
+        }
+
+
+        <!-- ERROR MESSAGE -->
+        @if (TempData["Error"] != null)
+        {
+            <div class="glass-alert error">
+
+                <i class="fas fa-circle-exclamation me-2"></i>
+
+                @TempData["Error"]
+
+            </div>
+        }
+
+
+        <!-- PROFILE -->
+
+        <div class="glass-card">
+
+            <div class="section-header">
+
+                <div class="section-icon">
+                    <i class="fas fa-user"></i>
                 </div>
 
-                <div class="card-body">
+                <div>
 
-                    @* SUCCESS MESSAGE *@
-                    @if (TempData["Success"] != null)
-                    {
-                        <div class="alert alert-success">
-                            @TempData["Success"]
-                        </div>
-                    }
+                    <h3>Profile</h3>
 
-                    @* ERROR MESSAGE *@
-                    @if (TempData["Error"] != null)
-                    {
-                        <div class="alert alert-danger">
-                            @TempData["Error"]
-                        </div>
-                    }
+                    <p>
+                        Manage your profile information and photo.
+                    </p>
 
-                    <!-- ======================================
-                         PROFILE PHOTO
-                    ======================================= -->
-                    <h5 class="mb-3">Profile Photo</h5>
-                    <div class="profile-section">
-                        <div class="profile-image-wrapper">
-                            <img src="@profileImage" alt="Profile Photo" class="profile-image" />
-                        </div>
-                        <div class="profile-info">
-                            <h4>@ViewBag.UserName</h4>
-                            <p>@ViewBag.UserEmail</p>
+                </div>
 
-                            <!-- UPLOAD PHOTO -->
-                            <form asp-controller="Dashboard"
-                                  asp-action="UploadProfilePhoto"
-                                  method="post"
-                                  enctype="multipart/form-data">
-                                @Html.AntiForgeryToken()
-                                <div class="profile-upload">
-                                    <input type="file"
-                                           name="ProfilePhoto"
-                                           class="form-control"
-                                           accept=".jpg,.jpeg,.png,.gif,.webp"
-                                           required />
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-camera me-2"></i> Upload Photo
-                                    </button>
-                                </div>
-                            </form>
+            </div>
 
-                            <!-- REMOVE PHOTO -->
-                            @if (!string.IsNullOrWhiteSpace(ViewBag.ProfileImagePath))
-                            {
-                                <form asp-controller="Dashboard"
-                                      asp-action="RemoveProfilePhoto"
-                                      method="post"
-                                      class="mt-2">
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash me-2"></i> Remove Photo
-                                    </button>
-                                </form>
-                            }
-                        </div>
+
+            <div class="profile-area">
+
+                <div class="profile-image-wrapper">
+
+                    <img src="@(ViewBag.ProfileImagePath ?? "/images/default-profile.png")"
+                         alt="Profile Photo"
+                         class="profile-image" />
+
+                </div>
+
+
+                <div class="profile-info">
+
+                    <h4>
+                        @(ViewBag.UserName ?? "BlogVerse User")
+                    </h4>
+
+                    <div class="profile-email">
+                        @(ViewBag.UserEmail ?? "No email available")
                     </div>
 
-                    <hr class="my-4">
 
-                    <!-- ======================================
-                         [NEW] DASHBOARD CUSTOMIZATION & 10 MORPHISM STYLES
-                    ======================================= -->
-                    <h5 class="mb-3">🎨 Dashboard Customization & 10 Morphism Styles</h5>
-                    <p class="text-muted small mb-3">Customize your dashboard look and feel. Your preferences are saved to your profile.</p>
+                    <!-- UPLOAD PHOTO -->
 
-                    <form asp-action="SaveCustomizationSettings" method="post">
+                    <form asp-controller="Dashboard"
+                          asp-action="UploadProfilePhoto"
+                          method="post"
+                          enctype="multipart/form-data">
+
                         @Html.AntiForgeryToken()
 
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small">Base Background Color</label>
-                                <input type="color" name="themeColor" value="@currentTheme" class="form-control form-control-color w-100" />
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold small">Accent / Highlight Color</label>
-                                <input type="color" name="accentColor" value="@currentAccent" class="form-control form-control-color w-100" />
-                            </div>
+                        <div class="upload-row">
+
+                            <input type="file"
+                                   name="ProfilePhoto"
+                                   accept=".jpg,.jpeg,.png,.gif,.webp"
+                                   required />
+
+                            <button type="submit"
+                                    class="glass-btn glass-btn-dark">
+
+                                <i class="fas fa-camera"></i>
+
+                                Upload Photo
+
+                            </button>
+
                         </div>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">✨ Dashboard Design System (Morphism Styles)</label>
-                            <select name="dashboardStyle" class="form-select">
-                                <option value="glassmorphism" selected="@(currentStyle == "glassmorphism")">1. Glassmorphism (Frosted Glass & Blur)</option>
-                                <option value="neumorphism" selected="@(currentStyle == "neumorphism")">2. Neumorphism (Soft Extruded Shadows)</option>
-                                <option value="claymorphism" selected="@(currentStyle == "claymorphism")">3. Claymorphism (Soft 3D Rounded Bulky Cards)</option>
-                                <option value="auroramorphism" selected="@(currentStyle == "auroramorphism")">4. Auroramorphism (Northern Lights Glowing Gradients)</option>
-                                <option value="skeuomorphism" selected="@(currentStyle == "skeuomorphism")">5. Skeuomorphism (Realistic Tactile Textures & Gloss)</option>
-                                <option value="skeuominimalism" selected="@(currentStyle == "skeuominimalism")">6. Skeuominimalism (Clean Minimal with Subtle Realism)</option>
-                                <option value="genmorphism" selected="@(currentStyle == "genmorphism")">7. Genmorphism (Vibrant Gen-Z Neo-Brutalism)</option>
-                                <option value="woodmorphism" selected="@(currentStyle == "woodmorphism")">8. Woodmorphism (Warm Timber & Carved Wood Tone)</option>
-                                <option value="metalmorphism" selected="@(currentStyle == "metalmorphism")">9. Metalmorphism (Brushed Steel & Chrome Metallic)</option>
-                                <option value="papermorphism" selected="@(currentStyle == "papermorphism")">10. Papermorphism (Stacked Layered Cardstock Paper)</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">Dashboard Font Family</label>
-                            <select name="fontFamily" class="form-select">
-                                <option value="Segoe UI" selected="@(currentFont == "Segoe UI")">Segoe UI (Default)</option>
-                                <option value="Inter, sans-serif" selected="@(currentFont.Contains("Inter"))">Inter (Modern Sans)</option>
-                                <option value="Georgia, serif" selected="@(currentFont.Contains("Georgia"))">Georgia (Classic Serif)</option>
-                                <option value="Courier New, monospace" selected="@(currentFont.Contains("Courier"))">Courier New (Monospace)</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label fw-bold small">Add Custom Widget Title</label>
-                            <div class="input-group">
-                                <input type="text" name="customWidgetName" class="form-control" placeholder="e.g. My Notes, Quick Tasks..." />
-                                <button type="submit" class="btn btn-dark fw-bold">Add Widget</button>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 fw-bold mt-2 py-2">💾 Save Dashboard Customization</button>
                     </form>
 
-                    <hr class="my-4">
 
-                    <!-- ======================================
-                         PROFILE SETTINGS (Original)
-                    ======================================= -->
-                    <h5 class="mb-3">Profile Settings</h5>
-                    <div class="mb-3">
-                        <label for="displayName" class="form-label">Display Name</label>
-                        <input type="text" class="form-control" id="displayName" value="@ViewBag.UserName">
-                    </div>
-                    <div class="mb-3">
-                        <label for="bio" class="form-label">Bio</label>
-                        <textarea class="form-control" id="bio" rows="3">A short description about yourself.</textarea>
-                    </div>
+                    <!-- REMOVE PHOTO -->
+                    @if (!string.IsNullOrWhiteSpace(ViewBag.ProfileImagePath as string))
+                    {
+                        <form asp-controller="Dashboard"
+                              asp-action="RemoveProfilePhoto"
+                              method="post"
+                              class="mt-3">
 
-                    <hr class="my-4">
+                            @Html.AntiForgeryToken()
 
-                    <!-- ======================================
-                         EMAIL NOTIFICATIONS
-                    ======================================= -->
-                    <h5 class="mb-3">Email Notifications</h5>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="newFollower" checked>
-                        <label class="form-check-label" for="newFollower">Notify me when someone follows me</label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="checkbox" id="newComment">
-                        <label class="form-check-label" for="newComment">Notify me of new comments on my blogs</label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" id="blogUpdates" checked>
-                        <label class="form-check-label" for="blogUpdates">Receive updates about new blogs from followed channels</label>
-                    </div>
+                            <button type="submit"
+                                    class="glass-btn glass-btn-danger">
 
-                    <hr class="my-4">
+                                <i class="fas fa-trash"></i>
 
-                    <!-- ======================================
-                         PRIVACY SETTINGS
-                    ======================================= -->
-                    <h5 class="mb-3">Privacy Settings</h5>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="profileVisibility" id="public" value="public" checked>
-                        <label class="form-check-label" for="public">Public - Everyone can view my profile</label>
-                    </div>
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="radio" name="profileVisibility" id="private" value="private">
-                        <label class="form-check-label" for="private">Private - Only followers can view my profile</label>
-                    </div>
+                                Remove Photo
 
-                    <button class="btn btn-primary">
-                        <i class="fas fa-save me-2"></i> Save Changes
-                    </button>
-                    <button class="btn btn-secondary ms-2">
-                        <i class="fas fa-undo me-2"></i> Reset Settings
-                    </button>
+                            </button>
+
+                        </form>
+                    }
 
                 </div>
+
             </div>
 
         </div>
+
+
+        <!-- PROFILE INFORMATION -->
+
+        <div class="glass-card">
+
+            <div class="section-header">
+
+                <div class="section-icon">
+                    <i class="fas fa-id-card"></i>
+                </div>
+
+                <div>
+
+                    <h3>Profile Information</h3>
+
+                    <p>
+                        Basic information displayed on your profile.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Display Name
+                </label>
+
+                <input type="text"
+                       class="glass-input"
+                       value="@ViewBag.UserName"
+                       placeholder="Enter your name" />
+
+            </div>
+
+
+            <div class="mb-3">
+
+                <label class="form-label">
+                    Bio
+                </label>
+
+                <textarea class="glass-input"
+                          rows="4"
+                          placeholder="Write something about yourself...">A short description about yourself.</textarea>
+
+            </div>
+
+        </div>
+
+
+        <!-- NOTIFICATIONS -->
+
+        <div class="glass-card">
+
+            <div class="section-header">
+
+                <div class="section-icon">
+                    <i class="fas fa-bell"></i>
+                </div>
+
+                <div>
+
+                    <h3>Notifications</h3>
+
+                    <p>
+                        Choose which notifications you want to receive.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h5>New Followers</h5>
+
+                    <p>
+                        Notify me when someone follows me.
+                    </p>
+
+                </div>
+
+
+                <label class="ios-switch">
+
+                    <input type="checkbox"
+                           id="newFollower"
+                           checked />
+
+                    <span class="ios-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h5>New Comments</h5>
+
+                    <p>
+                        Notify me when someone comments on my posts.
+                    </p>
+
+                </div>
+
+
+                <label class="ios-switch">
+
+                    <input type="checkbox"
+                           id="newComment" />
+
+                    <span class="ios-slider"></span>
+
+                </label>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h5>Blog Updates</h5>
+
+                    <p>
+                        Receive updates about new blogs and content.
+                    </p>
+
+                </div>
+
+
+                <label class="ios-switch">
+
+                    <input type="checkbox"
+                           id="blogUpdates"
+                           checked />
+
+                    <span class="ios-slider"></span>
+
+                </label>
+
+            </div>
+
+        </div>
+
+
+        <!-- ACCOUNT -->
+
+        <div class="glass-card">
+
+            <div class="section-header">
+
+                <div class="section-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+
+                <div>
+
+                    <h3>Account</h3>
+
+                    <p>
+                        Manage your BlogVerse account information.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h5>Account Status</h5>
+
+                    <p>
+                        Your BlogVerse account is currently active.
+                    </p>
+
+                </div>
+
+                <span class="status-badge">
+                    Active
+                </span>
+
+            </div>
+
+
+            <div class="setting-row">
+
+                <div class="setting-info">
+
+                    <h5>Email Address</h5>
+
+                    <p>
+                        @ViewBag.UserEmail
+                    </p>
+
+                </div>
+
+                <span class="verified-icon">
+                    <i class="fas fa-check-circle"></i>
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- SAVE SETTINGS -->
+
+        <div class="glass-card">
+
+            <div class="section-header">
+
+                <div class="section-icon">
+                    <i class="fas fa-floppy-disk"></i>
+                </div>
+
+                <div>
+
+                    <h3>Save Settings</h3>
+
+                    <p>
+                        Save your current notification preferences.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="save-area">
+
+                <button type="button"
+                        class="glass-btn glass-btn-light"
+                        onclick="resetSettings()">
+
+                    <i class="fas fa-rotate-left"></i>
+
+                    Reset
+
+                </button>
+
+
+                <button type="button"
+                        id="saveSettingsButton"
+                        class="glass-btn glass-btn-dark"
+                        onclick="saveSettings(this)">
+
+                    <i class="fas fa-check"></i>
+
+                    Save Changes
+
+                </button>
+
+            </div>
+
+        </div>
+
+
     </div>
+
 </div>
+
+
+<script>
+
+    function saveSettings(button) {
+
+        if (!button) {
+            return;
+        }
+
+        const originalText = button.innerHTML;
+
+        button.innerHTML =
+            '<i class="fas fa-check"></i> Saved';
+
+        button.disabled = true;
+
+        setTimeout(function () {
+
+            button.innerHTML = originalText;
+
+            button.disabled = false;
+
+        }, 1800);
+    }
+
+
+    function resetSettings() {
+
+        const confirmReset =
+            confirm("Reset the visible settings to their default values?");
+
+        if (!confirmReset) {
+            return;
+        }
+
+
+        const newFollower =
+            document.getElementById("newFollower");
+
+        const newComment =
+            document.getElementById("newComment");
+
+        const blogUpdates =
+            document.getElementById("blogUpdates");
+
+
+        if (newFollower) {
+            newFollower.checked = true;
+        }
+
+        if (newComment) {
+            newComment.checked = false;
+        }
+
+        if (blogUpdates) {
+            blogUpdates.checked = true;
+        }
+
+    }
+
+</script>

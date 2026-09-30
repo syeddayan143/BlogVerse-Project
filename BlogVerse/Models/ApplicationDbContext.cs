@@ -12,16 +12,75 @@ namespace BlogVerse.Models
         {
         }
 
+        // =====================================================
+        // BLOG POST
+        // =====================================================
+
         public DbSet<Post> Posts { get; set; }
+
+
+        // =====================================================
+        // POST LIKE
+        // =====================================================
+
         public DbSet<PostLike> PostLikes { get; set; }
+
+
+        // =====================================================
+        // COMMENTS
+        // =====================================================
+
         public DbSet<Comment> Comments { get; set; }
-        public DbSet<UserDashboardPreference> DashboardPreferences { get; set; } // [NEW] Added for customizable dashboards
+
+
+        // =====================================================
+        // DASHBOARD PREFERENCES
+        // Existing functionality
+        // =====================================================
+
+        public DbSet<UserDashboardPreference> DashboardPreferences { get; set; }
+
+
+        // =====================================================
+        // POST VIEW HISTORY
+        // Used by History page
+        // =====================================================
+
+        public DbSet<PostView> PostViews { get; set; }
+
+
+        // =====================================================
+        // SAVED POSTS
+        // Used by Saved page
+        // =====================================================
+
+        public DbSet<SavedPost> SavedPosts { get; set; }
+
+
+        // =====================================================
+        // POST COLLECTIONS
+        // Used by Collections page
+        // =====================================================
+
+        public DbSet<PostCollection> PostCollections { get; set; }
+
+
+        // =====================================================
+        // POSTS INSIDE COLLECTIONS
+        // =====================================================
+
+        public DbSet<CollectionPost> CollectionPosts { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // BlogVerse Identity tables
+
+            // =====================================================
+            // BLOGVERSE IDENTITY TABLES
+            // =====================================================
+
             builder.Entity<ApplicationUser>()
                 .ToTable("BlogVerseUsers");
 
@@ -43,6 +102,7 @@ namespace BlogVerse.Models
             builder.Entity<IdentityUserToken<string>>()
                 .ToTable("BlogVerseUserTokens");
 
+
             // =====================================================
             // POST LIKE RELATIONSHIP
             // =====================================================
@@ -52,6 +112,7 @@ namespace BlogVerse.Models
                 .WithMany()
                 .HasForeignKey(pl => pl.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.Entity<PostLike>()
                 .HasOne(pl => pl.User)
@@ -69,6 +130,7 @@ namespace BlogVerse.Models
                 .WithMany()
                 .HasForeignKey(c => c.PostId)
                 .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.Entity<Comment>()
                 .HasOne(c => c.User)
@@ -93,19 +155,130 @@ namespace BlogVerse.Models
             // =====================================================
 
             builder.Entity<PostLike>()
-                .HasIndex(pl => new { pl.PostId, pl.UserId })
+                .HasIndex(pl => new
+                {
+                    pl.PostId,
+                    pl.UserId
+                })
                 .IsUnique();
 
+
             // =====================================================
-            // [NEW] USER DASHBOARD PREFERENCE CONFIGURATION
+            // USER DASHBOARD PREFERENCE
+            // Existing functionality
             // =====================================================
 
             builder.Entity<UserDashboardPreference>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasIndex(e => e.UserId).IsUnique();
-                entity.Property(e => e.LayoutConfiguration).IsRequired();
+
+                entity.HasIndex(e => e.UserId)
+                    .IsUnique();
+
+                entity.Property(e => e.LayoutConfiguration)
+                    .IsRequired();
             });
+
+
+            // =====================================================
+            // POST VIEW HISTORY
+            // =====================================================
+
+            builder.Entity<PostView>()
+                .HasOne(v => v.Post)
+                .WithMany()
+                .HasForeignKey(v => v.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<PostView>()
+                .HasOne(v => v.User)
+                .WithMany()
+                .HasForeignKey(v => v.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // Prevent the same user from creating
+            // duplicate history records for the same post.
+
+            builder.Entity<PostView>()
+                .HasIndex(v => new
+                {
+                    v.PostId,
+                    v.UserId
+                })
+                .IsUnique();
+
+
+            // =====================================================
+            // SAVED POSTS
+            // =====================================================
+
+            builder.Entity<SavedPost>()
+                .HasOne(s => s.Post)
+                .WithMany()
+                .HasForeignKey(s => s.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<SavedPost>()
+                .HasOne(s => s.User)
+                .WithMany()
+                .HasForeignKey(s => s.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // Prevent same user from saving
+            // the same post more than once.
+
+            builder.Entity<SavedPost>()
+                .HasIndex(s => new
+                {
+                    s.PostId,
+                    s.UserId
+                })
+                .IsUnique();
+
+
+            // =====================================================
+            // POST COLLECTION
+            // =====================================================
+
+            builder.Entity<PostCollection>()
+                .HasOne(c => c.User)
+                .WithMany()
+                .HasForeignKey(c => c.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            // =====================================================
+            // COLLECTION POST
+            // =====================================================
+
+            builder.Entity<CollectionPost>()
+                .HasOne(cp => cp.Collection)
+                .WithMany(c => c.Posts)
+                .HasForeignKey(cp => cp.CollectionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            builder.Entity<CollectionPost>()
+                .HasOne(cp => cp.Post)
+                .WithMany()
+                .HasForeignKey(cp => cp.PostId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            // Prevent adding the same post
+            // to the same collection twice.
+
+            builder.Entity<CollectionPost>()
+                .HasIndex(cp => new
+                {
+                    cp.CollectionId,
+                    cp.PostId
+                })
+                .IsUnique();
         }
     }
 }

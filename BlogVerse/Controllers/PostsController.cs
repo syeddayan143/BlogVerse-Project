@@ -201,8 +201,45 @@ namespace BlogVerse.Controllers
                 return NotFound();
             }
 
-            // Increase views
+            // =====================================================
+            // INCREASE POST VIEWS
+            // =====================================================
+
             post.Views++;
+
+            // =====================================================
+            // SAVE USER VIEW HISTORY
+            // =====================================================
+
+            var userId =
+                User.FindFirstValue(
+                    ClaimTypes.NameIdentifier);
+
+            if (!string.IsNullOrWhiteSpace(userId))
+            {
+                var existingView =
+                    await _context.PostViews
+                        .FirstOrDefaultAsync(v =>
+                            v.PostId == id &&
+                            v.UserId == userId);
+
+                if (existingView == null)
+                {
+                    var postView = new PostView
+                    {
+                        PostId = id,
+                        UserId = userId,
+                        ViewedAt = DateTime.UtcNow
+                    };
+
+                    _context.PostViews.Add(postView);
+                }
+                else
+                {
+                    existingView.ViewedAt =
+                        DateTime.UtcNow;
+                }
+            }
 
             await _context.SaveChangesAsync();
 
@@ -214,10 +251,6 @@ namespace BlogVerse.Controllers
                 await _context.PostLikes
                     .CountAsync(x =>
                         x.PostId == id);
-
-            var userId =
-                User.FindFirstValue(
-                    ClaimTypes.NameIdentifier);
 
             var isLiked =
                 !string.IsNullOrEmpty(userId) &&

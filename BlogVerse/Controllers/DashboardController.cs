@@ -41,14 +41,17 @@ namespace BlogVerse.Controllers
         public async Task<IActionResult> Index()
         {
             var userId = _userManager.GetUserId(User);
+
             if (!string.IsNullOrWhiteSpace(userId))
             {
                 var preference = await _context.DashboardPreferences
                     .AsNoTracking()
                     .FirstOrDefaultAsync(p => p.UserId == userId);
 
-                ViewBag.LayoutConfig = preference?.LayoutConfiguration ?? "{}";
-                ViewBag.UserPreferences = preference; // Loaded for custom styles and widgets
+                ViewBag.LayoutConfig =
+                    preference?.LayoutConfiguration ?? "{}";
+
+                ViewBag.UserPreferences = preference;
             }
             else
             {
@@ -77,13 +80,15 @@ namespace BlogVerse.Controllers
         }
 
         // =========================================================
-        // SAVE LAYOUT PREFERENCE [NEW]
+        // SAVE LAYOUT PREFERENCE
         // =========================================================
 
         [HttpPost]
-        public async Task<IActionResult> SaveLayout([FromBody] string layoutConfig)
+        public async Task<IActionResult> SaveLayout(
+            [FromBody] string layoutConfig)
         {
             var userId = _userManager.GetUserId(User);
+
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return Unauthorized();
@@ -91,11 +96,13 @@ namespace BlogVerse.Controllers
 
             if (string.IsNullOrEmpty(layoutConfig))
             {
-                return BadRequest("Invalid layout configuration.");
+                return BadRequest(
+                    "Invalid layout configuration.");
             }
 
             var preference = await _context.DashboardPreferences
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+                .FirstOrDefaultAsync(
+                    p => p.UserId == userId);
 
             if (preference == null)
             {
@@ -104,69 +111,115 @@ namespace BlogVerse.Controllers
                     UserId = userId,
                     LayoutConfiguration = layoutConfig
                 };
+
                 _context.DashboardPreferences.Add(preference);
             }
             else
             {
-                preference.LayoutConfiguration = layoutConfig;
-                preference.UpdatedAt = DateTime.UtcNow;
+                preference.LayoutConfiguration =
+                    layoutConfig;
+
+                preference.UpdatedAt =
+                    DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();
-            return Ok(new { success = true, message = "Layout saved successfully." });
+
+            return Ok(new
+            {
+                success = true,
+                message = "Layout saved successfully."
+            });
         }
 
         // =========================================================
-        // [NEW] SAVE FULL DASHBOARD CUSTOMIZATION SETTINGS
+        // SAVE FULL DASHBOARD CUSTOMIZATION SETTINGS
         // =========================================================
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SaveCustomizationSettings(string themeColor, string accentColor, string fontFamily, string dashboardStyle, string customWidgetName)
+        public async Task<IActionResult> SaveCustomizationSettings(
+            string themeColor,
+            string accentColor,
+            string fontFamily,
+            string dashboardStyle,
+            string customWidgetName)
         {
             var userId = _userManager.GetUserId(User);
+
             if (string.IsNullOrWhiteSpace(userId))
             {
                 return Unauthorized();
             }
 
-            var preference = await _context.DashboardPreferences
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+            var preference =
+                await _context.DashboardPreferences
+                    .FirstOrDefaultAsync(
+                        p => p.UserId == userId);
 
             if (preference == null)
             {
                 preference = new UserDashboardPreference
                 {
                     UserId = userId,
-                    ThemeColor = themeColor ?? "#0f172a",
-                    AccentColor = accentColor ?? "#38bdf8",
-                    FontFamily = fontFamily ?? "Segoe UI",
-                    DashboardStyle = dashboardStyle ?? "glassmorphism",
+                    ThemeColor =
+                        themeColor ?? "#0f172a",
+                    AccentColor =
+                        accentColor ?? "#38bdf8",
+                    FontFamily =
+                        fontFamily ?? "Segoe UI",
+                    DashboardStyle =
+                        dashboardStyle ?? "glassmorphism",
                     LayoutConfiguration = "{}"
                 };
-                _context.DashboardPreferences.Add(preference);
+
+                _context.DashboardPreferences
+                    .Add(preference);
             }
             else
             {
-                preference.ThemeColor = themeColor ?? preference.ThemeColor;
-                preference.AccentColor = accentColor ?? preference.AccentColor;
-                preference.FontFamily = fontFamily ?? preference.FontFamily;
-                preference.DashboardStyle = dashboardStyle ?? preference.DashboardStyle;
+                preference.ThemeColor =
+                    themeColor ?? preference.ThemeColor;
 
-                if (!string.IsNullOrWhiteSpace(customWidgetName))
+                preference.AccentColor =
+                    accentColor ?? preference.AccentColor;
+
+                preference.FontFamily =
+                    fontFamily ?? preference.FontFamily;
+
+                preference.DashboardStyle =
+                    dashboardStyle ??
+                    preference.DashboardStyle;
+
+                if (!string.IsNullOrWhiteSpace(
+                    customWidgetName))
                 {
-                    var widgets = string.IsNullOrEmpty(preference.CustomWidgetsJson)
+                    var widgets =
+                        string.IsNullOrEmpty(
+                            preference.CustomWidgetsJson)
                         ? new List<string>()
-                        : System.Text.Json.JsonSerializer.Deserialize<List<string>>(preference.CustomWidgetsJson) ?? new List<string>();
+                        : System.Text.Json.JsonSerializer
+                            .Deserialize<List<string>>(
+                                preference.CustomWidgetsJson)
+                          ?? new List<string>();
 
-                    widgets.Add(customWidgetName.Trim());
-                    preference.CustomWidgetsJson = System.Text.Json.JsonSerializer.Serialize(widgets);
+                    widgets.Add(
+                        customWidgetName.Trim());
+
+                    preference.CustomWidgetsJson =
+                        System.Text.Json.JsonSerializer
+                            .Serialize(widgets);
                 }
 
-                preference.UpdatedAt = DateTime.UtcNow;
+                preference.UpdatedAt =
+                    DateTime.UtcNow;
             }
 
             await _context.SaveChangesAsync();
-            TempData["Success"] = "Dashboard customization and theme updated successfully!";
+
+            TempData["Success"] =
+                "Dashboard customization and theme updated successfully!";
+
             return RedirectToAction(nameof(Settings));
         }
 
@@ -178,6 +231,7 @@ namespace BlogVerse.Controllers
         public IActionResult Account()
         {
             ViewData["Title"] = "Account";
+
             return View();
         }
 
@@ -188,22 +242,31 @@ namespace BlogVerse.Controllers
         [HttpGet]
         public async Task<IActionResult> Settings()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user =
+                await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction(
+                    "Login",
+                    "Account");
             }
 
             var userId = user.Id;
-            var preference = await _context.DashboardPreferences
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.UserId == userId);
+
+            var preference =
+                await _context.DashboardPreferences
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(
+                        p => p.UserId == userId);
 
             ViewBag.UserName = user.Name;
             ViewBag.UserEmail = user.Email;
-            ViewBag.ProfileImagePath = user.ProfileImagePath;
-            ViewBag.UserPreferences = preference; // Loaded into settings for customization
+            ViewBag.ProfileImagePath =
+                user.ProfileImagePath;
+
+            ViewBag.UserPreferences =
+                preference;
 
             ViewData["Title"] = "Settings";
 
@@ -219,11 +282,14 @@ namespace BlogVerse.Controllers
         public async Task<IActionResult> UploadProfilePhoto(
             IFormFile? ProfilePhoto)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user =
+                await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction(
+                    "Login",
+                    "Account");
             }
 
             if (ProfilePhoto == null ||
@@ -232,45 +298,53 @@ namespace BlogVerse.Controllers
                 TempData["Error"] =
                     "Please select a profile photo.";
 
-                return RedirectToAction(nameof(Settings));
+                return RedirectToAction(
+                    nameof(Settings));
             }
 
-            if (ProfilePhoto.Length > 5 * 1024 * 1024)
+            if (ProfilePhoto.Length >
+                5 * 1024 * 1024)
             {
                 TempData["Error"] =
                     "Profile photo must be less than 5 MB.";
 
-                return RedirectToAction(nameof(Settings));
+                return RedirectToAction(
+                    nameof(Settings));
             }
 
-            var allowedExtensions = new[]
-            {
-                ".jpg",
-                ".jpeg",
-                ".png",
-                ".gif",
-                ".webp"
-            };
+            var allowedExtensions =
+                new[]
+                {
+                    ".jpg",
+                    ".jpeg",
+                    ".png",
+                    ".gif",
+                    ".webp"
+                };
 
             var extension =
-                Path.GetExtension(ProfilePhoto.FileName)
-                    .ToLowerInvariant();
+                Path.GetExtension(
+                    ProfilePhoto.FileName)
+                .ToLowerInvariant();
 
-            if (!allowedExtensions.Contains(extension))
+            if (!allowedExtensions.Contains(
+                extension))
             {
                 TempData["Error"] =
                     "Only JPG, JPEG, PNG, GIF and WEBP images are allowed.";
 
-                return RedirectToAction(nameof(Settings));
+                return RedirectToAction(
+                    nameof(Settings));
             }
 
-            var uploadFolder = Path.Combine(
-                _environment.WebRootPath,
-                "uploads",
-                "profiles"
-            );
+            var uploadFolder =
+                Path.Combine(
+                    _environment.WebRootPath,
+                    "uploads",
+                    "profiles");
 
-            Directory.CreateDirectory(uploadFolder);
+            Directory.CreateDirectory(
+                uploadFolder);
 
             // Delete old profile photo
             if (!string.IsNullOrWhiteSpace(
@@ -285,25 +359,42 @@ namespace BlogVerse.Controllers
                         uploadFolder,
                         oldFileName);
 
-                if (System.IO.File.Exists(oldFilePath))
+                if (System.IO.File.Exists(
+                    oldFilePath))
                 {
-                    System.IO.File.Delete(oldFilePath);
+                    System.IO.File.Delete(
+                        oldFilePath);
                 }
             }
 
-            var fileName = $"{Guid.NewGuid():N}{extension}";
-            var filePath = Path.Combine(uploadFolder, fileName);
+            var fileName =
+                $"{Guid.NewGuid():N}{extension}";
 
-            using (var stream = new FileStream(filePath, FileMode.Create))
+            var filePath =
+                Path.Combine(
+                    uploadFolder,
+                    fileName);
+
+            using (var stream =
+                   new FileStream(
+                       filePath,
+                       FileMode.Create))
             {
-                await ProfilePhoto.CopyToAsync(stream);
+                await ProfilePhoto.CopyToAsync(
+                    stream);
             }
 
-            user.ProfileImagePath = $"/uploads/profiles/{fileName}";
-            await _userManager.UpdateAsync(user);
+            user.ProfileImagePath =
+                $"/uploads/profiles/{fileName}";
 
-            TempData["Success"] = "Profile photo updated successfully.";
-            return RedirectToAction(nameof(Settings));
+            await _userManager.UpdateAsync(
+                user);
+
+            TempData["Success"] =
+                "Profile photo updated successfully.";
+
+            return RedirectToAction(
+                nameof(Settings));
         }
 
         // =========================================================
@@ -314,11 +405,14 @@ namespace BlogVerse.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveProfilePhoto()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user =
+                await _userManager.GetUserAsync(User);
 
             if (user == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction(
+                    "Login",
+                    "Account");
             }
 
             if (!string.IsNullOrWhiteSpace(
@@ -328,27 +422,31 @@ namespace BlogVerse.Controllers
                     Path.GetFileName(
                         user.ProfileImagePath);
 
-                var filePath = Path.Combine(
-                    _environment.WebRootPath,
-                    "uploads",
-                    "profiles",
-                    fileName
-                );
+                var filePath =
+                    Path.Combine(
+                        _environment.WebRootPath,
+                        "uploads",
+                        "profiles",
+                        fileName);
 
-                if (System.IO.File.Exists(filePath))
+                if (System.IO.File.Exists(
+                    filePath))
                 {
-                    System.IO.File.Delete(filePath);
+                    System.IO.File.Delete(
+                        filePath);
                 }
 
                 user.ProfileImagePath = null;
 
-                await _userManager.UpdateAsync(user);
+                await _userManager.UpdateAsync(
+                    user);
             }
 
             TempData["Success"] =
                 "Profile photo removed successfully.";
 
-            return RedirectToAction(nameof(Settings));
+            return RedirectToAction(
+                nameof(Settings));
         }
 
         // =========================================================
@@ -358,8 +456,584 @@ namespace BlogVerse.Controllers
         [HttpGet]
         public IActionResult BreakingNews()
         {
-            ViewData["Title"] = "Breaking News";
+            ViewData["Title"] =
+                "Breaking News";
+
             return View();
+        }
+
+        // =========================================================
+        // TRENDING
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Trending()
+        {
+            var posts = await _context.Posts
+                .AsNoTracking()
+                .Include(p => p.User)
+                .Where(p =>
+                    p.IsPublished &&
+                    p.User != null &&
+                    p.User.IsActive)
+                .OrderByDescending(
+                    p => (p.Likes * 3) + p.Views)
+                .ThenByDescending(
+                    p => p.PublishedAt ?? p.CreatedAt)
+                .ToListAsync();
+
+            return View(posts);
+        }
+
+        // =========================================================
+        // CATEGORY
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Category(
+            string? name)
+        {
+            var query =
+                _context.Posts
+                    .AsNoTracking()
+                    .Include(p => p.User)
+                    .Where(p =>
+                        p.IsPublished &&
+                        p.User != null &&
+                        p.User.IsActive);
+
+            var categories =
+                await _context.Posts
+                    .AsNoTracking()
+                    .Where(p =>
+                        p.IsPublished &&
+                        !string.IsNullOrWhiteSpace(
+                            p.Category))
+                    .Select(p => p.Category!)
+                    .Distinct()
+                    .OrderBy(c => c)
+                    .ToListAsync();
+
+            ViewBag.Categories =
+                categories;
+
+            ViewBag.SelectedCategory =
+                name;
+
+            if (!string.IsNullOrWhiteSpace(name))
+            {
+                query =
+                    query.Where(
+                        p => p.Category == name);
+            }
+
+            var posts =
+                await query
+                    .OrderByDescending(
+                        p => p.PublishedAt ??
+                             p.CreatedAt)
+                    .ToListAsync();
+
+            return View(posts);
+        }
+
+        // =========================================================
+        // HISTORY
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> History()
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var history =
+                await _context.PostViews
+                    .AsNoTracking()
+                    .Include(v => v.Post)
+                    .ThenInclude(p => p.User)
+                    .Where(v =>
+                        v.UserId == userId &&
+                        v.Post != null &&
+                        v.Post.IsPublished)
+                    .OrderByDescending(
+                        v => v.ViewedAt)
+                    .ToListAsync();
+
+            return View(history);
+        }
+
+        // =========================================================
+        // SAVED POSTS
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Saved()
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var savedPosts =
+                await _context.SavedPosts
+                    .AsNoTracking()
+                    .Include(s => s.Post)
+                    .ThenInclude(p => p.User)
+                    .Where(s =>
+                        s.UserId == userId &&
+                        s.Post != null &&
+                        s.Post.IsPublished)
+                    .OrderByDescending(
+                        s => s.SavedAt)
+                    .ToListAsync();
+
+            return View(savedPosts);
+        }
+
+        // =========================================================
+        // SAVE POST
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SavePost(
+            int postId)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var post =
+                await _context.Posts
+                    .FirstOrDefaultAsync(p =>
+                        p.Id == postId &&
+                        p.IsPublished);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var existing =
+                await _context.SavedPosts
+                    .FirstOrDefaultAsync(s =>
+                        s.PostId == postId &&
+                        s.UserId == userId);
+
+            if (existing == null)
+            {
+                var savedPost =
+                    new SavedPost
+                    {
+                        PostId = postId,
+                        UserId = userId,
+                        SavedAt = DateTime.UtcNow
+                    };
+
+                _context.SavedPosts.Add(
+                    savedPost);
+
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] =
+                    "Post saved successfully.";
+            }
+            else
+            {
+                TempData["Success"] =
+                    "Post is already saved.";
+            }
+
+            return RedirectToAction(
+                "Details",
+                "Posts",
+                new
+                {
+                    id = postId
+                });
+        }
+
+        // =========================================================
+        // REMOVE SAVED POST
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveSavedPost(
+            int postId)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var savedPost =
+                await _context.SavedPosts
+                    .FirstOrDefaultAsync(s =>
+                        s.PostId == postId &&
+                        s.UserId == userId);
+
+            if (savedPost != null)
+            {
+                _context.SavedPosts.Remove(
+                    savedPost);
+
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] =
+                    "Post removed from saved posts.";
+            }
+
+            return RedirectToAction(
+                nameof(Saved));
+        }
+
+        // =========================================================
+        // COLLECTIONS
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Collections()
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var collections =
+                await _context.PostCollections
+                    .AsNoTracking()
+                    .Include(c => c.Posts)
+                    .ThenInclude(cp => cp.Post)
+                    .Where(c =>
+                        c.UserId == userId)
+                    .OrderByDescending(
+                        c => c.CreatedAt)
+                    .ToListAsync();
+
+            return View(collections);
+        }
+
+        // =========================================================
+        // CREATE COLLECTION - GET
+        // =========================================================
+
+        [HttpGet]
+        public IActionResult CreateCollection()
+        {
+            ViewData["Title"] =
+                "Create Collection";
+
+            return View();
+        }
+
+        // =========================================================
+        // CREATE COLLECTION - POST
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCollection(
+            string name)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            if (string.IsNullOrWhiteSpace(
+                name))
+            {
+                TempData["Error"] =
+                    "Collection name is required.";
+
+                return RedirectToAction(
+                    nameof(Collections));
+            }
+
+            name = name.Trim();
+
+            if (name.Length > 100)
+            {
+                TempData["Error"] =
+                    "Collection name cannot be more than 100 characters.";
+
+                return RedirectToAction(
+                    nameof(Collections));
+            }
+
+            var collection =
+                new PostCollection
+                {
+                    Name = name,
+                    UserId = userId,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+            _context.PostCollections.Add(
+                collection);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] =
+                "Collection created successfully.";
+
+            return RedirectToAction(
+                nameof(Collections));
+        }
+
+        // =========================================================
+        // COLLECTION DETAILS
+        // =========================================================
+
+        [HttpGet]
+        public async Task<IActionResult> Collection(
+            int id)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var collection =
+                await _context.PostCollections
+                    .Include(c => c.Posts)
+                    .ThenInclude(cp => cp.Post)
+                    .ThenInclude(p => p.User)
+                    .FirstOrDefaultAsync(c =>
+                        c.Id == id &&
+                        c.UserId == userId);
+
+            if (collection == null)
+            {
+                return NotFound();
+            }
+
+            return View(collection);
+        }
+
+        // =========================================================
+        // ADD POST TO COLLECTION
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCollection(
+            int collectionId,
+            int postId)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var collection =
+                await _context.PostCollections
+                    .FirstOrDefaultAsync(c =>
+                        c.Id == collectionId &&
+                        c.UserId == userId);
+
+            if (collection == null)
+            {
+                return NotFound();
+            }
+
+            var post =
+                await _context.Posts
+                    .FirstOrDefaultAsync(p =>
+                        p.Id == postId &&
+                        p.IsPublished);
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var alreadyExists =
+                await _context.CollectionPosts
+                    .AnyAsync(cp =>
+                        cp.CollectionId ==
+                            collectionId &&
+                        cp.PostId ==
+                            postId);
+
+            if (!alreadyExists)
+            {
+                var collectionPost =
+                    new CollectionPost
+                    {
+                        CollectionId =
+                            collectionId,
+                        PostId =
+                            postId
+                    };
+
+                _context.CollectionPosts.Add(
+                    collectionPost);
+
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] =
+                    "Post added to collection successfully.";
+            }
+            else
+            {
+                TempData["Error"] =
+                    "Post is already in this collection.";
+            }
+
+            return RedirectToAction(
+                nameof(Collection),
+                new
+                {
+                    id = collectionId
+                });
+        }
+
+        // =========================================================
+        // REMOVE POST FROM COLLECTION
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveFromCollection(
+            int collectionId,
+            int postId)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var collectionExists =
+                await _context.PostCollections
+                    .AnyAsync(c =>
+                        c.Id == collectionId &&
+                        c.UserId == userId);
+
+            if (!collectionExists)
+            {
+                return NotFound();
+            }
+
+            var collectionPost =
+                await _context.CollectionPosts
+                    .FirstOrDefaultAsync(cp =>
+                        cp.CollectionId ==
+                            collectionId &&
+                        cp.PostId ==
+                            postId);
+
+            if (collectionPost != null)
+            {
+                _context.CollectionPosts.Remove(
+                    collectionPost);
+
+                await _context.SaveChangesAsync();
+
+                TempData["Success"] =
+                    "Post removed from collection.";
+            }
+
+            return RedirectToAction(
+                nameof(Collection),
+                new
+                {
+                    id = collectionId
+                });
+        }
+
+        // =========================================================
+        // DELETE COLLECTION
+        // =========================================================
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCollection(
+            int id)
+        {
+            var userId =
+                _userManager.GetUserId(User);
+
+            if (string.IsNullOrWhiteSpace(
+                userId))
+            {
+                return Unauthorized();
+            }
+
+            var collection =
+                await _context.PostCollections
+                    .FirstOrDefaultAsync(c =>
+                        c.Id == id &&
+                        c.UserId == userId);
+
+            if (collection == null)
+            {
+                return NotFound();
+            }
+
+            var collectionPosts =
+                await _context.CollectionPosts
+                    .Where(cp =>
+                        cp.CollectionId == id)
+                    .ToListAsync();
+
+            if (collectionPosts.Any())
+            {
+                _context.CollectionPosts.RemoveRange(
+                    collectionPosts);
+            }
+
+            _context.PostCollections.Remove(
+                collection);
+
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] =
+                "Collection deleted successfully.";
+
+            return RedirectToAction(
+                nameof(Collections));
         }
 
         // =========================================================
@@ -384,10 +1058,12 @@ namespace BlogVerse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult JoinCommunity(int communityId)
+        public IActionResult JoinCommunity(
+            int communityId)
         {
             var community =
-                GetCommunityById(communityId);
+                GetCommunityById(
+                    communityId);
 
             if (community != null)
             {
@@ -400,7 +1076,8 @@ namespace BlogVerse.Controllers
                     "Error: Community not found!";
             }
 
-            return RedirectToAction(nameof(Community));
+            return RedirectToAction(
+                nameof(Community));
         }
 
         // =========================================================
@@ -413,18 +1090,21 @@ namespace BlogVerse.Controllers
             var userId =
                 _userManager.GetUserId(User);
 
-            if (string.IsNullOrWhiteSpace(userId))
+            if (string.IsNullOrWhiteSpace(
+                userId))
             {
                 return Unauthorized();
             }
 
-            var posts = await _context.Posts
-                .Where(p =>
-                    p.UserId == userId &&
-                    p.IsPublished)
-                .OrderByDescending(
-                    p => p.PublishedAt ?? p.CreatedAt)
-                .ToListAsync();
+            var posts =
+                await _context.Posts
+                    .Where(p =>
+                        p.UserId == userId &&
+                        p.IsPublished)
+                    .OrderByDescending(
+                        p => p.PublishedAt ??
+                             p.CreatedAt)
+                    .ToListAsync();
 
             return View(posts);
         }
@@ -439,18 +1119,20 @@ namespace BlogVerse.Controllers
             var userId =
                 _userManager.GetUserId(User);
 
-            if (string.IsNullOrWhiteSpace(userId))
+            if (string.IsNullOrWhiteSpace(
+                userId))
             {
                 return Unauthorized();
             }
 
-            var posts = await _context.Posts
-                .Where(p =>
-                    p.UserId == userId &&
-                    p.IsPublished)
-                .OrderByDescending(
-                    p => p.CreatedAt)
-                .ToListAsync();
+            var posts =
+                await _context.Posts
+                    .Where(p =>
+                        p.UserId == userId &&
+                        p.IsPublished)
+                    .OrderByDescending(
+                        p => p.CreatedAt)
+                    .ToListAsync();
 
             return View(posts);
         }
@@ -461,7 +1143,8 @@ namespace BlogVerse.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ToggleFollow(int channelId)
+        public IActionResult ToggleFollow(
+            int channelId)
         {
             return Json(new
             {
@@ -555,10 +1238,16 @@ namespace BlogVerse.Controllers
             };
         }
 
-        private CommunityModel? GetCommunityById(int id)
+        // =========================================================
+        // GET COMMUNITY BY ID
+        // =========================================================
+
+        private CommunityModel? GetCommunityById(
+            int id)
         {
             return GetCommunities()
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefault(
+                    c => c.Id == id);
         }
     }
 }
