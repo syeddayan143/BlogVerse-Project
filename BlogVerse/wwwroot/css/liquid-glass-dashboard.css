@@ -1,0 +1,648 @@
+﻿/* =========================================================
+   BLOGVERSE - LIQUID GLASS DASHBOARD
+   Applies to User Dashboard + Admin Dashboard
+========================================================= */
+
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.58);
+    --glass-bg-light: rgba(255, 255, 255, 0.72);
+    --glass-bg-soft: rgba(255, 255, 255, 0.38);
+    --glass-border: rgba(255, 255, 255, 0.78);
+    --glass-shadow: 0 18px 55px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    --glass-blur: blur(24px);
+    --glass-text: #171717;
+    --glass-muted: #777777;
+    --glass-radius: 24px;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
+body {
+    background: radial-gradient( circle at 10% 10%, rgba(255,255,255,0.95), transparent 28% ), radial-gradient( circle at 90% 20%, rgba(220,220,220,0.65), transparent 30% ), radial-gradient( circle at 50% 100%, rgba(255,255,255,0.85), transparent 35% ), linear-gradient( 135deg, #eeeeee, #f8f8f8, #e7e7e7 ) !important;
+    color: var(--glass-text);
+}
+
+
+/* =========================================================
+   MAIN DASHBOARD CONTAINER
+========================================================= */
+
+.dashboard-container {
+    min-height: 100vh !important;
+    background: radial-gradient( circle at 15% 15%, rgba(255,255,255,0.8), transparent 25% ), radial-gradient( circle at 85% 30%, rgba(220,220,220,0.45), transparent 30% ), transparent !important;
+}
+
+
+/* =========================================================
+   LEFT SIDEBAR - LIQUID GLASS
+========================================================= */
+
+.sidebar {
+    background: linear-gradient( 145deg, rgba(255,255,255,0.70), rgba(255,255,255,0.35) ) !important;
+    border-right: 1px solid rgba(255,255,255,0.85) !important;
+    box-shadow: 12px 0 45px rgba(0,0,0,0.07), inset -1px 0 0 rgba(255,255,255,0.65) !important;
+    backdrop-filter: blur(30px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(30px) saturate(150%) !important;
+    color: #171717 !important;
+}
+
+
+    /* =========================================================
+   SIDEBAR NAV
+========================================================= */
+
+    .sidebar .nav-link {
+        color: #202020 !important;
+        border-radius: 15px;
+        transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .sidebar .nav-link i {
+            color: #666666 !important;
+        }
+
+        .sidebar .nav-link:hover {
+            background: rgba(255,255,255,0.62) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 20px rgba(0,0,0,0.05);
+            transform: translateX(4px);
+        }
+
+
+/* Active/Admin navigation */
+
+.admin-nav-item .nav-link {
+    background: rgba(255,255,255,0.48) !important;
+    border: 1px solid rgba(255,255,255,0.65);
+}
+
+
+/* =========================================================
+   HAMBURGER
+========================================================= */
+
+.hamburger-btn {
+    background: rgba(255,255,255,0.62) !important;
+    border: 1px solid rgba(255,255,255,0.8) !important;
+    color: #222 !important;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-radius: 14px !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .hamburger-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 35px rgba(0,0,0,0.12);
+    }
+
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main-content {
+    background: transparent !important;
+}
+
+
+/* =========================================================
+   USER DASHBOARD
+========================================================= */
+
+.blog-dashboard {
+    background: radial-gradient( circle at 15% 5%, rgba(255,255,255,0.75), transparent 25% ), radial-gradient( circle at 85% 15%, rgba(220,220,220,0.45), transparent 28% ) !important;
+    color: var(--glass-text) !important;
+}
+
+
+/* =========================================================
+   USER DASHBOARD HERO
+========================================================= */
+
+.dashboard-hero {
+    background: linear-gradient( 135deg, rgba(255,255,255,0.70), rgba(255,255,255,0.35) ) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 30px !important;
+    box-shadow: var(--glass-shadow) !important;
+    backdrop-filter: blur(28px) saturate(150%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(150%) !important;
+    color: #171717 !important;
+    overflow: hidden;
+    position: relative;
+}
+
+
+    /* Hero glow */
+
+    .dashboard-hero::before {
+        content: "";
+        position: absolute;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.65);
+        filter: blur(70px);
+        top: -120px;
+        right: -80px;
+        pointer-events: none;
+    }
+
+
+    /* =========================================================
+   HERO TEXT
+========================================================= */
+
+    .dashboard-hero h1 {
+        color: #111111 !important;
+    }
+
+    .dashboard-hero p {
+        color: #666666 !important;
+    }
+
+
+/* =========================================================
+   SEARCH BOX
+========================================================= */
+
+.dashboard-search-box {
+    background: rgba(255,255,255,0.58) !important;
+    border: 1px solid rgba(255,255,255,0.80) !important;
+    border-radius: 17px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 30px rgba(0,0,0,0.05);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+    .dashboard-search-box input {
+        background: transparent !important;
+        color: #222 !important;
+    }
+
+        .dashboard-search-box input::placeholder {
+            color: #888 !important;
+        }
+
+
+/* =========================================================
+   DASHBOARD TABS
+========================================================= */
+
+.dashboard-tabs {
+    background: rgba(255,255,255,0.35) !important;
+    border: 1px solid rgba(255,255,255,0.55);
+    border-radius: 20px;
+    padding: 6px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+.dashboard-tab {
+    background: transparent !important;
+    color: #555 !important;
+    border: 1px solid transparent !important;
+    border-radius: 15px !important;
+    transition: all 0.25s ease;
+}
+
+    .dashboard-tab:hover {
+        background: rgba(255,255,255,0.55) !important;
+        color: #111 !important;
+    }
+
+    .dashboard-tab.active {
+        background: rgba(255,255,255,0.82) !important;
+        color: #111 !important;
+        box-shadow: 0 7px 20px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+
+/* =========================================================
+   CATEGORY PILLS
+========================================================= */
+
+.category-pill {
+    background: rgba(255,255,255,0.42) !important;
+    border: 1px solid rgba(255,255,255,0.65) !important;
+    color: #444 !important;
+    border-radius: 14px !important;
+    transition: all 0.25s ease;
+}
+
+    .category-pill:hover {
+        background: rgba(255,255,255,0.70) !important;
+        transform: translateY(-2px);
+    }
+
+    .category-pill.active {
+        background: rgba(255,255,255,0.88) !important;
+        color: #111 !important;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    }
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.dashboard-stat {
+    background: linear-gradient( 145deg, rgba(255,255,255,0.70), rgba(255,255,255,0.38) ) !important;
+    border: 1px solid rgba(255,255,255,0.78) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    color: #171717 !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .dashboard-stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 22px 50px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+
+/* =========================================================
+   POST CARDS
+========================================================= */
+
+.news-card {
+    background: linear-gradient( 145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.34) ) !important;
+    border: 1px solid rgba(255,255,255,0.78) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    color: #171717 !important;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .news-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 28px 60px rgba(0,0,0,0.11), inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+
+/* Post content */
+
+.news-card-content {
+    color: #222 !important;
+}
+
+.news-card h3,
+.news-card h4 {
+    color: #111 !important;
+}
+
+.news-description {
+    color: #666 !important;
+}
+
+
+/* =========================================================
+   POST IMAGE
+========================================================= */
+
+.news-image {
+    background: rgba(255,255,255,0.35);
+    overflow: hidden;
+}
+
+    .news-image img {
+        transition: transform 0.45s ease;
+    }
+
+.news-card:hover .news-image img {
+    transform: scale(1.04);
+}
+
+
+/* =========================================================
+   READ MORE
+========================================================= */
+
+.read-more-btn {
+    background: rgba(255,255,255,0.60) !important;
+    border: 1px solid rgba(255,255,255,0.70);
+    border-radius: 13px;
+    padding: 9px 14px;
+    color: #222 !important;
+    transition: all 0.25s ease;
+}
+
+    .read-more-btn:hover {
+        background: rgba(255,255,255,0.9) !important;
+        color: #000 !important;
+        transform: translateY(-2px);
+    }
+
+
+/* =========================================================
+   ADMIN USER MANAGEMENT
+========================================================= */
+
+.users-page {
+    background: radial-gradient( circle at 10% 10%, rgba(255,255,255,0.7), transparent 25% ), radial-gradient( circle at 90% 20%, rgba(220,220,220,0.45), transparent 30% );
+    min-height: 100vh;
+    color: #171717;
+}
+
+
+/* Admin heading */
+
+.users-title h1 {
+    color: #111 !important;
+}
+
+.users-title p {
+    color: #777 !important;
+}
+
+
+/* =========================================================
+   ADMIN SEARCH
+========================================================= */
+
+.filter-box input,
+.filter-box select {
+    background: rgba(255,255,255,0.62) !important;
+    border: 1px solid rgba(255,255,255,0.78) !important;
+    color: #222 !important;
+    border-radius: 14px !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 8px 25px rgba(0,0,0,0.04);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+}
+
+    .filter-box input:focus,
+    .filter-box select:focus {
+        outline: none;
+        border-color: rgba(80,80,80,0.25) !important;
+        box-shadow: 0 0 0 4px rgba(0,0,0,0.04);
+    }
+
+
+/* Search button */
+
+.filter-box button {
+    background: rgba(30,30,30,0.86) !important;
+    border: 1px solid rgba(255,255,255,0.30) !important;
+    border-radius: 14px !important;
+    color: white !important;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    transition: all 0.25s ease;
+}
+
+    .filter-box button:hover {
+        transform: translateY(-2px);
+        background: #111 !important;
+    }
+
+
+/* Clear */
+
+.clear-btn {
+    background: rgba(255,255,255,0.55) !important;
+    border: 1px solid rgba(255,255,255,0.75);
+    color: #333 !important;
+    border-radius: 14px !important;
+    backdrop-filter: blur(15px);
+}
+
+
+/* =========================================================
+   ADMIN STAT CARDS
+========================================================= */
+
+.user-stat {
+    background: linear-gradient( 145deg, rgba(255,255,255,0.72), rgba(255,255,255,0.38) ) !important;
+    border: 1px solid rgba(255,255,255,0.78) !important;
+    border-radius: 22px !important;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .user-stat:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 55px rgba(0,0,0,0.10);
+    }
+
+    .user-stat h2 {
+        color: #111 !important;
+    }
+
+    .user-stat p {
+        color: #777 !important;
+    }
+
+
+/* =========================================================
+   ADMIN USERS TABLE
+========================================================= */
+
+.users-card {
+    background: rgba(255,255,255,0.52) !important;
+    border: 1px solid rgba(255,255,255,0.78) !important;
+    border-radius: 24px !important;
+    box-shadow: 0 20px 55px rgba(0,0,0,0.07), inset 0 1px 0 rgba(255,255,255,0.9) !important;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+}
+
+
+/* Table */
+
+.users-table {
+    color: #222 !important;
+}
+
+    .users-table th {
+        background: rgba(255,255,255,0.42) !important;
+        color: #555 !important;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+
+    .users-table td {
+        border-top: 1px solid rgba(0,0,0,0.05) !important;
+        color: #222 !important;
+    }
+
+    .users-table tbody tr {
+        transition: background 0.25s ease;
+    }
+
+        .users-table tbody tr:hover {
+            background: rgba(255,255,255,0.38);
+        }
+
+
+/* =========================================================
+   USER AVATAR
+========================================================= */
+
+.user-avatar {
+    background: rgba(255,255,255,0.72) !important;
+    border: 1px solid rgba(255,255,255,0.85);
+    color: #222 !important;
+    box-shadow: 0 7px 18px rgba(0,0,0,0.06);
+}
+
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-active {
+    background: rgba(220,245,230,0.70) !important;
+    color: #267344 !important;
+    border: 1px solid rgba(100,180,125,0.20);
+}
+
+.status-inactive {
+    background: rgba(250,225,225,0.70) !important;
+    color: #a33a3a !important;
+    border: 1px solid rgba(200,100,100,0.18);
+}
+
+
+/* =========================================================
+   ADMIN ACTION BUTTONS
+========================================================= */
+
+.btn-deactivate {
+    background: rgba(255,235,235,0.72) !important;
+    color: #a33a3a !important;
+    border: 1px solid rgba(220,120,120,0.20);
+}
+
+.btn-activate {
+    background: rgba(225,247,233,0.72) !important;
+    color: #267344 !important;
+    border: 1px solid rgba(100,180,125,0.20);
+}
+
+.btn-disabled {
+    background: rgba(230,230,230,0.60) !important;
+    color: #888 !important;
+}
+
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.custom-alert {
+    background: rgba(255,255,255,0.62) !important;
+    border: 1px solid rgba(255,255,255,0.75) !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.no-posts,
+.no-search-result,
+.empty-users {
+    background: rgba(255,255,255,0.42);
+    border: 1px solid rgba(255,255,255,0.70);
+    border-radius: 22px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    color: #666;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.blog-dashboard button,
+.users-page button,
+.blog-dashboard a,
+.users-page a {
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15);
+    border-radius: 20px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        box-shadow: 10px 0 35px rgba(0,0,0,0.12) !important;
+    }
+
+    .dashboard-hero {
+        border-radius: 22px !important;
+    }
+
+    .news-card {
+        border-radius: 20px !important;
+    }
+
+    .user-stat {
+        border-radius: 18px !important;
+    }
+
+    .users-card {
+        border-radius: 20px !important;
+    }
+
+    .users-page {
+        padding: 15px !important;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}

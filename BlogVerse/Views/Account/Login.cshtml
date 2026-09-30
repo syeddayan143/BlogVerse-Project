@@ -1,6 +1,5 @@
 ﻿@model BlogVerse.Models.LoginViewModel
 
-
 @{
     Layout = null;
 }
@@ -10,151 +9,951 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>Login - BlogVerse</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BlogVerse.styles.css" asp-append-version="true" />
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         :root {
-            --primary-bg: #F4EAF1;
-            --navbar-bg: #B9B1CD;
-            --footer-bg: #B6A8CA;
-            --text-color: black;
-            --link-color: #007bff;
+            --bg-one: #f5f5f7;
+            --bg-two: #e9e9ec;
+            --bg-three: #ffffff;
+            --glass: rgba(255,255,255,0.42);
+            --glass-strong: rgba(255,255,255,0.68);
+            --text: #1d1d1f;
+            --muted: #77777d;
+            --button: #1e1e20;
+            --button-hover: #111113;
+            --input-border: rgba(0,0,0,0.08);
+            --accent: rgba(80,80,85,0.35);
+            --circle-one: rgba(255,255,255,0.55);
+            --circle-two: rgba(210,210,215,0.45);
         }
 
-        [data-theme="dark"] {
-            --primary-bg: #2D2D39;
-            --navbar-bg: #4A4A5E;
-            --footer-bg: #3A3A50;
-            --text-color: #E4E4F2;
-            --link-color: #C9C3DE;
+        /* SILVER */
+
+        [data-theme="silver"] {
+            --bg-one: #f5f5f7;
+            --bg-two: #e9e9ec;
+            --bg-three: #ffffff;
+            --glass: rgba(255,255,255,0.42);
+            --glass-strong: rgba(255,255,255,0.68);
+            --text: #1d1d1f;
+            --muted: #77777d;
+            --button: #1e1e20;
+            --button-hover: #111113;
+            --input-border: rgba(0,0,0,0.08);
+            --accent: rgba(80,80,85,0.35);
+            --circle-one: rgba(255,255,255,0.55);
+            --circle-two: rgba(210,210,215,0.45);
         }
 
-        html, body {
+        /* COOL */
+
+        [data-theme="cool"] {
+            --bg-one: #edf3f7;
+            --bg-two: #dce7ee;
+            --bg-three: #f8fbfd;
+            --glass: rgba(255,255,255,0.43);
+            --glass-strong: rgba(255,255,255,0.72);
+            --text: #1c2830;
+            --muted: #68757d;
+            --button: #26343d;
+            --button-hover: #17242c;
+            --input-border: rgba(40,70,85,0.12);
+            --accent: rgba(50,90,110,0.35);
+            --circle-one: rgba(255,255,255,0.65);
+            --circle-two: rgba(190,215,225,0.50);
+        }
+
+        /* SAGE */
+
+        [data-theme="sage"] {
+            --bg-one: #f0f5f1;
+            --bg-two: #dfeae2;
+            --bg-three: #fbfdfb;
+            --glass: rgba(255,255,255,0.43);
+            --glass-strong: rgba(255,255,255,0.72);
+            --text: #243029;
+            --muted: #6f7b73;
+            --button: #304137;
+            --button-hover: #202f26;
+            --input-border: rgba(40,70,50,0.12);
+            --accent: rgba(55,90,65,0.35);
+            --circle-one: rgba(255,255,255,0.65);
+            --circle-two: rgba(195,215,200,0.50);
+        }
+
+        /* ROSE */
+
+        [data-theme="rose"] {
+            --bg-one: #f8f1f3;
+            --bg-two: #eee0e5;
+            --bg-three: #fffafb;
+            --glass: rgba(255,255,255,0.45);
+            --glass-strong: rgba(255,255,255,0.74);
+            --text: #33272b;
+            --muted: #817277;
+            --button: #49363c;
+            --button-hover: #35262b;
+            --input-border: rgba(90,50,65,0.12);
+            --accent: rgba(110,65,80,0.35);
+            --circle-one: rgba(255,255,255,0.68);
+            --circle-two: rgba(225,195,205,0.50);
+        }
+
+        /* LAVENDER */
+
+        [data-theme="lavender"] {
+            --bg-one: #f4f1f8;
+            --bg-two: #e6e0ef;
+            --bg-three: #fcfbfe;
+            --glass: rgba(255,255,255,0.44);
+            --glass-strong: rgba(255,255,255,0.74);
+            --text: #302b38;
+            --muted: #777180;
+            --button: #443b50;
+            --button-hover: #302839;
+            --input-border: rgba(70,50,90,0.12);
+            --accent: rgba(90,70,110,0.35);
+            --circle-one: rgba(255,255,255,0.68);
+            --circle-two: rgba(210,200,225,0.50);
+        }
+
+        /* PEACH */
+
+        [data-theme="peach"] {
+            --bg-one: #faf3ed;
+            --bg-two: #eee0d4;
+            --bg-three: #fffaf6;
+            --glass: rgba(255,255,255,0.45);
+            --glass-strong: rgba(255,255,255,0.74);
+            --text: #382d27;
+            --muted: #81736b;
+            --button: #4a3a31;
+            --button-hover: #342820;
+            --input-border: rgba(90,60,45,0.12);
+            --accent: rgba(110,75,55,0.35);
+            --circle-one: rgba(255,255,255,0.68);
+            --circle-two: rgba(225,200,180,0.50);
+        }
+
+        html,
+        body {
             margin: 0;
             padding: 0;
-            height: 100%;
-            overflow: hidden;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
+            min-height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+            color: var(--text);
         }
 
-        a {
-            color: var(--link-color);
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: radial-gradient( circle at 15% 20%, var(--bg-three), transparent 32% ), radial-gradient( circle at 85% 15%, var(--bg-two), transparent 30% ), linear-gradient( 135deg, var(--bg-one), var(--bg-two) 50%, var(--bg-three) );
+            transition: background 0.45s ease, color 0.45s ease;
         }
 
-        .login-fullpage {
-            height: 100vh;
+        /* =========================
+                   COLOR BUTTON
+                ========================== */
+
+        .theme-control {
+            position: fixed;
+            top: 22px;
+            right: 22px;
+            z-index: 100;
+        }
+
+        .theme-button {
+            width: 46px;
+            height: 46px;
+            border: 1px solid rgba(255,255,255,0.75);
+            border-radius: 50%;
+            background: rgba(255,255,255,0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.10), inset 0 1px 1px rgba(255,255,255,0.9);
+            cursor: pointer;
+            font-size: 20px;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.25s ease, background 0.25s ease;
         }
 
-        .login-left-image {
-            flex: 1;
-            padding: 0 !important;
-            margin: 0 !important;
+            .theme-button:hover {
+                transform: scale(1.08);
+                background: rgba(255,255,255,0.78);
+            }
+
+        .theme-menu {
+            position: absolute;
+            right: 0;
+            top: 55px;
+            width: 190px;
+            padding: 10px;
+            border-radius: 20px;
+            background: var(--glass-strong);
+            border: 1px solid rgba(255,255,255,0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.14);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px) scale(0.96);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
         }
 
-            .login-left-image img {
-                height: 100%;
+            .theme-menu.show {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0) scale(1);
+            }
+
+        .theme-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--muted);
+            padding: 7px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .theme-option {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            padding: 9px 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 13px;
+            text-align: left;
+            transition: background 0.2s ease;
+        }
+
+            .theme-option:hover {
+                background: rgba(255,255,255,0.55);
+            }
+
+        .theme-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.08);
+            flex-shrink: 0;
+        }
+
+        .dot-silver {
+            background: #e9e9ec;
+        }
+
+        .dot-cool {
+            background: #dce7ee;
+        }
+
+        .dot-sage {
+            background: #dfeae2;
+        }
+
+        .dot-rose {
+            background: #eee0e5;
+        }
+
+        .dot-lavender {
+            background: #e6e0ef;
+        }
+
+        .dot-peach {
+            background: #eee0d4;
+        }
+
+        /* =========================
+                   BACKGROUND SHAPES
+                ========================== */
+
+        .background-shape {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+            transition: background 0.5s ease;
+        }
+
+        .shape-one {
+            width: 280px;
+            height: 280px;
+            top: -90px;
+            left: -70px;
+            background: var(--circle-one);
+        }
+
+        .shape-two {
+            width: 350px;
+            height: 350px;
+            right: -120px;
+            bottom: -130px;
+            background: var(--circle-two);
+        }
+
+        .shape-three {
+            width: 180px;
+            height: 180px;
+            right: 20%;
+            top: 8%;
+            background: var(--circle-one);
+        }
+
+        /* =========================
+                   MAIN
+                ========================== */
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 1.05fr 0.95fr;
+            border: 1px solid rgba(255,255,255,0.75);
+            border-radius: 34px;
+            background: var(--glass);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.12), inset 0 1px 1px rgba(255,255,255,0.9);
+            overflow: hidden;
+            animation: containerAppear 0.8s ease forwards;
+            transition: background 0.4s ease;
+        }
+
+        /* =========================
+                   IMAGE
+                ========================== */
+
+        .login-image {
+            position: relative;
+            min-height: 650px;
+            overflow: hidden;
+        }
+
+            .login-image img {
                 width: 100%;
+                height: 100%;
                 object-fit: cover;
                 display: block;
+                transform: scale(1.02);
+                transition: transform 0.8s ease;
             }
 
-        .login-form-section {
-            flex-basis: 400px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-left: 20px;
+        .login-container:hover .login-image img {
+            transform: scale(1.05);
         }
 
-        .login-form-wrapper {
-            width: 100%;
-            max-width: 400px;
-            background-color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-            .login-form-wrapper input.form-control {
-                border: 1px solid #C9C3DE;
-            }
-
-        .btn-primary {
-            background-color: #8E83A9;
-            border: none;
-            color: white;
-        }
-
-        #theme-toggle {
-            background-color: transparent;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
+        .image-overlay {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            color: var(--text-color);
-            z-index: 10;
+            inset: 0;
+            background: linear-gradient( 180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.48) );
+            display: flex;
+            align-items: flex-end;
+            padding: 42px;
         }
-    </style>
+
+        .image-content {
+            color: white;
+            max-width: 420px;
+        }
+
+            .image-content .logo-text {
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: 1px;
+                margin-bottom: 14px;
+            }
+
+            .image-content h1 {
+                font-size: clamp(34px, 4vw, 52px);
+                font-weight: 700;
+                line-height: 1.05;
+                margin: 0 0 14px;
+                letter-spacing: -1.5px;
+            }
+
+            .image-content p {
+                margin: 0;
+                font-size: 15px;
+                line-height: 1.6;
+                color: rgba(255,255,255,0.85);
+            }
+
+        /* =========================
+                   FORM SECTION
+                ========================== */
+
+        .login-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px;
+            background: var(--glass);
+            border-left: 1px solid rgba(255,255,255,0.65);
+            transition: background 0.4s ease;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 390px;
+            animation: formAppear 0.8s ease 0.15s both;
+        }
+
+        .brand {
+            margin-bottom: 35px;
+        }
+
+        .brand-small {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 9px;
+        }
+
+        .brand h2 {
+            margin: 0;
+            font-size: 38px;
+            line-height: 1.1;
+            letter-spacing: -1.5px;
+            font-weight: 700;
+            color: var(--text);
+            transition: color 0.4s ease;
+        }
+
+        .brand p {
+            margin: 12px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .validation-summary {
+            background: rgba(255,235,235,0.65);
+            border: 1px solid rgba(180,70,70,0.15);
+            border-radius: 14px;
+            padding: 11px 14px;
+            font-size: 13px;
+        }
+
+        .field {
+            margin-bottom: 19px;
+        }
+
+            .field label {
+                display: block;
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--muted);
+                margin-bottom: 8px;
+            }
+
+        .glass-input {
+            width: 100%;
+            height: 54px;
+            border-radius: 16px;
+            border: 1px solid var(--input-border);
+            background: rgba(255,255,255,0.62);
+            padding: 0 17px;
+            font-size: 15px;
+            color: var(--text);
+            outline: none;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.025), 0 4px 15px rgba(0,0,0,0.025);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, transform 0.25s ease;
+        }
+
+            .glass-input::placeholder {
+                color: #99999f;
+            }
+
+            .glass-input:focus {
+                background: rgba(255,255,255,0.88);
+                border-color: var(--accent);
+                box-shadow: 0 0 0 4px rgba(0,0,0,0.045), 0 8px 22px rgba(0,0,0,0.05);
+                transform: translateY(-1px);
+            }
+
+        .field .text-danger {
+            display: block;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 54px;
+            border: 0;
+            border-radius: 16px;
+            background: var(--button);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 8px 22px rgba(0,0,0,0.16), inset 0 1px 1px rgba(255,255,255,0.12);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+            .login-button:hover {
+                background: var(--button-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 12px 28px rgba(0,0,0,0.20);
+            }
+
+            .login-button:active {
+                transform: translateY(0);
+            }
+
+        .register-text {
+            text-align: center;
+            margin-top: 25px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .register-link {
+            color: var(--text);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+            .register-link:hover {
+                text-decoration: underline;
+            }
+
+        .secure-text {
+            text-align: center;
+            margin-top: 28px;
+            font-size: 11px;
+            color: var(--muted);
+            letter-spacing: 0.3px;
+        }
+
+        @@keyframes containerAppear {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px) scale(0.985);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        }
+
+        @@keyframes formAppear {
+            from
+
+        {
+            opacity: 0;
+            transform: translateX(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        }
+
+        @@media (max-width: 850px) {
+            .login-page
+
+        {
+            padding: 18px;
+        }
+
+        .login-container {
+            grid-template-columns: 1fr;
+            min-height: auto;
+            max-width: 520px;
+            border-radius: 28px;
+        }
+
+        .login-image {
+            min-height: 250px;
+            height: 250px;
+        }
+
+        .image-overlay {
+            padding: 28px;
+        }
+
+        .image-content h1 {
+            font-size: 34px;
+        }
+
+        .image-content p {
+            display: none;
+        }
+
+        .login-section {
+            padding: 38px 25px 35px;
+            border-left: none;
+            border-top: 1px solid rgba(255,255,255,0.65);
+        }
+
+        .login-card {
+            max-width: 100%;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .login-page
+
+        {
+            padding: 12px;
+        }
+
+        .login-container {
+            border-radius: 24px;
+        }
+
+        .login-image {
+            min-height: 210px;
+            height: 210px;
+        }
+
+        .image-overlay {
+            padding: 22px;
+        }
+
+        .image-content h1 {
+            font-size: 29px;
+        }
+
+        .login-section {
+            padding: 32px 20px 28px;
+        }
+
+        .brand h2 {
+            font-size: 32px;
+        }
+
+        .glass-input,
+        .login-button {
+            height: 52px;
+        }
+
+        .theme-control {
+            top: 14px;
+            right: 14px;
+        }
+
+        }
+
+        @@media (prefers-reduced-motion: reduce) {
+            .login-container, .login-card
+
+        {
+            animation: none;
+        }
+
+        .login-container:hover .login-image img {
+            transform: none;
+        }
+
+        }</style>
 </head>
+
 <body>
-    <button id="theme-toggle" title="Toggle light/dark mode">🌓</button>
-    <div class="login-fullpage">
-        <div class="login-left-image">
-            <img src="~/images/left-side4.jpeg" class="img-fluid" />
-        </div>
 
-        <div class="login-form-section">
-            <div class="login-form-wrapper p-4">
-                <h2 class="mb-4 text-center brand-name">Welcome Back</h2>
+    <!-- =========================
+         COLOR / THEME CONTROL
+    ========================== -->
 
-                <!-- ✅ Added error summary here -->
-                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+    <div class="theme-control">
 
-                <form method="post" asp-action="Login">
-                    <div class="mb-3">
-                        <input asp-for="Email" class="form-control" placeholder="Email" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="mb-3">
-                        <input asp-for="Password" class="form-control" placeholder="Password" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
+        <button type="button"
+                class="theme-button"
+                id="themeButton"
+                aria-label="Change color theme">
+            🎨
+        </button>
 
-                <p class="mt-3 text-center">
-                    Don't have an account? <a href="/Account/Register">Register</a>
-                </p>
+        <div class="theme-menu" id="themeMenu">
+
+            <div class="theme-title">
+                Choose Theme
             </div>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="silver">
+                <span class="theme-dot dot-silver"></span>
+                Silver Glass
+            </button>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="cool">
+                <span class="theme-dot dot-cool"></span>
+                Cool Glass
+            </button>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="sage">
+                <span class="theme-dot dot-sage"></span>
+                Sage Glass
+            </button>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="rose">
+                <span class="theme-dot dot-rose"></span>
+                Rose Glass
+            </button>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="lavender">
+                <span class="theme-dot dot-lavender"></span>
+                Lavender Glass
+            </button>
+
+            <button type="button"
+                    class="theme-option"
+                    data-theme-option="peach">
+                <span class="theme-dot dot-peach"></span>
+                Peach Glass
+            </button>
+
         </div>
+
     </div>
 
+
+    <div class="background-shape shape-one"></div>
+    <div class="background-shape shape-two"></div>
+    <div class="background-shape shape-three"></div>
+
+
+    <main class="login-page">
+
+        <div class="login-container">
+
+            <section class="login-image">
+
+                <img src="~/images/left-side4.jpeg"
+                     alt="BlogVerse" />
+
+                <div class="image-overlay">
+
+                    <div class="image-content">
+
+                        <div class="logo-text">
+                            BlogVerse
+                        </div>
+
+                        <h1>
+                            Welcome back.
+                        </h1>
+
+                        <p>
+                            Continue exploring stories, ideas and
+                            conversations from the BlogVerse community.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <section class="login-section">
+
+                <div class="login-card">
+
+                    <div class="brand">
+
+                        <div class="brand-small">
+                            BlogVerse
+                        </div>
+
+                        <h2>
+                            Sign in
+                        </h2>
+
+                        <p>
+                            Enter your account details to continue.
+                        </p>
+
+                    </div>
+
+
+                    <div asp-validation-summary="All"
+                         class="text-danger validation-summary mb-3">
+                    </div>
+
+
+                    <form method="post" asp-action="Login">
+
+                        <div class="field">
+
+                            <label asp-for="Email">
+                                Email
+                            </label>
+
+                            <input asp-for="Email"
+                                   class="glass-input"
+                                   placeholder="Enter your email"
+                                   autocomplete="email" />
+
+                            <span asp-validation-for="Email"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label asp-for="Password">
+                                Password
+                            </label>
+
+                            <input asp-for="Password"
+                                   type="password"
+                                   class="glass-input"
+                                   placeholder="Enter your password"
+                                   autocomplete="current-password" />
+
+                            <span asp-validation-for="Password"
+                                  class="text-danger">
+                            </span>
+
+                        </div>
+
+
+                        <button type="submit"
+                                class="login-button">
+                            Sign In
+                        </button>
+
+                    </form>
+
+
+                    <div class="register-text">
+
+                        Don't have an account?
+
+                        <a href="/Account/Register"
+                           class="register-link">
+                            Create account
+                        </a>
+
+                    </div>
+
+
+                    <div class="secure-text">
+                        © @DateTime.Now.Year BlogVerse
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script src="~/js/site.js"
+            asp-append-version="true"></script>
+
     <partial name="_ValidationScriptsPartial" />
 
+
     <script>
-        const toggle = document.getElementById('theme-toggle');
-        const currentTheme = localStorage.getItem('theme');
+        const themeButton = document.getElementById("themeButton");
+        const themeMenu = document.getElementById("themeMenu");
+        const themeOptions = document.querySelectorAll(".theme-option");
 
-        if (currentTheme) {
-            document.documentElement.setAttribute('data-theme', currentTheme);
-        }
+        const savedTheme =
+            localStorage.getItem("blogverse-theme") || "silver";
 
-        toggle?.addEventListener('click', () => {
-            const current = document.documentElement.getAttribute('data-theme') || 'light';
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('theme', next);
+        document.documentElement.setAttribute(
+            "data-theme",
+            savedTheme
+        );
+
+        themeButton?.addEventListener("click", function (event) {
+
+            event.stopPropagation();
+
+            themeMenu.classList.toggle("show");
+        });
+
+
+        themeOptions.forEach(function (option) {
+
+            option.addEventListener("click", function () {
+
+                const selectedTheme =
+                    this.getAttribute("data-theme-option");
+
+                document.documentElement.setAttribute(
+                    "data-theme",
+                    selectedTheme
+                );
+
+                localStorage.setItem(
+                    "blogverse-theme",
+                    selectedTheme
+                );
+
+                themeMenu.classList.remove("show");
+            });
+
+        });
+
+
+        document.addEventListener("click", function (event) {
+
+            if (!themeMenu.contains(event.target) &&
+                !themeButton.contains(event.target)) {
+
+                themeMenu.classList.remove("show");
+            }
+
         });
     </script>
+
 </body>
 </html>

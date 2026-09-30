@@ -1,100 +1,1793 @@
 ﻿@{
-    ViewData["Title"] = "Welcome to BlogVerse";
+    ViewData["Title"] = "BlogVerse — Stories Worth Reading";
+
+    var isLoggedIn =
+        User.Identity?.IsAuthenticated ?? false;
 }
 
-<!-- Hero Section -->
-<section class="hero-section position-relative">
-    <div class="hero-overlay"></div>
-    <div class="hero-content position-relative text-white text-center">
-        <h1 class="hero-title">
-            Welcome to <span class="brand-name">BlogVerse</span>
-        </h1>
-        <p>Discover. Write. Share. Your voice matters.</p>
-        <div class="mt-3">
-            <a href="/Account/Login" class="btn btn-primary me-2">Sign In</a>
-            <a href="/Account/Register" class="btn btn-outline-light">Get Started</a>
+
+<main class="bv-home">
+
+    <!-- =====================================================
+         AMBIENT BACKGROUND
+         ===================================================== -->
+
+    <div class="bv-liquid-orb bv-orb-one"></div>
+    <div class="bv-liquid-orb bv-orb-two"></div>
+    <div class="bv-liquid-orb bv-orb-three"></div>
+
+
+    <!-- =====================================================
+         HERO
+         ===================================================== -->
+
+    <section class="bv-hero">
+
+        <div class="bv-hero-grid"></div>
+
+        <div class="container bv-hero-container">
+
+            <div class="bv-glass-hero-panel">
+
+                <div class="bv-hero-content">
+
+                    <div class="bv-glass-badge">
+
+                        <span class="bv-live-dot"></span>
+
+                        A place for ideas, stories & conversations
+
+                    </div>
+
+
+                    <h1 class="bv-hero-title">
+
+                        Stories that
+
+                        <span>
+                            stay with you.
+                        </span>
+
+                    </h1>
+
+
+                    <p class="bv-hero-text">
+
+                        Discover thoughtful stories,
+                        share your ideas and connect
+                        with people who love to write.
+
+                    </p>
+
+
+                    <div class="bv-hero-actions">
+
+                        @if (isLoggedIn)
+                        {
+                            <a href="/Dashboard"
+                               class="bv-glass-button bv-button-dark">
+
+                                Explore BlogVerse
+
+                                <span>↗</span>
+
+                            </a>
+
+                            <a href="/Posts/Create"
+                               class="bv-glass-button bv-button-light">
+
+                                Write a Story
+
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Account/Register"
+                               class="bv-glass-button bv-button-dark">
+
+                                Start Writing
+
+                                <span>↗</span>
+
+                            </a>
+
+                            <a href="/Account/Login"
+                               class="bv-glass-button bv-button-light">
+
+                                Sign In
+
+                            </a>
+                        }
+
+                    </div>
+
+
+                    <div class="bv-hero-stats">
+
+                        <div>
+
+                            <strong>01</strong>
+
+                            <span>Discover</span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>02</strong>
+
+                            <span>Write</span>
+
+                        </div>
+
+
+                        <div>
+
+                            <strong>03</strong>
+
+                            <span>Connect</span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FLOATING GLASS CARD -->
+
+                <div class="bv-glass-floating bv-floating-top">
+
+                    <small>
+                        TRENDING
+                    </small>
+
+                    <strong>
+                        Technology & AI
+                    </strong>
+
+                    <span>
+                        Explore what's shaping tomorrow.
+                    </span>
+
+                </div>
+
+
+                <div class="bv-glass-floating bv-floating-bottom">
+
+                    <div class="bv-floating-icon">
+                        ✦
+                    </div>
+
+                    <strong>
+                        Fresh Perspectives
+                    </strong>
+
+                    <span>
+                        Ideas from real writers.
+                    </span>
+
+                </div>
+
+            </div>
+
         </div>
-    </div>
-</section>
+
+    </section>
 
 
-<!-- Why BlogVerse Section -->
-<section class="why-section py-5">
-    <div class="container text-center">
-        <h2 class="mb-4 text-accent">Why BlogVerse?</h2>
-        <div class="row">
-            <div class="col-md-3">
-                <div class="icon-frame mb-2">
-                    <img src="~/images/icon-trending.jpg" alt="Trending" class="icon-img rounded-circle" />
-                </div>
-                <h5>Trending Topics</h5>
-                <p>Stay ahead with the latest blog trends and insights.</p>
+    <!-- =====================================================
+         INTRO
+         ===================================================== -->
+
+    <section class="bv-intro">
+
+        <div class="container">
+
+            <div class="bv-section-heading">
+
+                <span class="bv-label">
+                    THE BLOGVERSE EXPERIENCE
+                </span>
+
+                <h2>
+
+                    More than a blog.
+
+                    <em>
+                        A place for your voice.
+                    </em>
+
+                </h2>
+
+                <p>
+
+                    BlogVerse brings writers and readers
+                    together through meaningful stories,
+                    creative ideas and conversations worth having.
+
+                </p>
+
             </div>
-            <div class="col-md-3">
-                <div class="icon-frame mb-2">
-                    <img src="~/images/icon-topics.jpg" alt="Engaging Reads" class="icon-img rounded-circle" />
+
+
+            <!-- FEATURE CARDS -->
+
+            <div class="row g-4">
+
+                <div class="col-lg-3 col-md-6">
+
+                    <article class="bv-glass-card">
+
+                        <span class="bv-card-number">
+                            01
+                        </span>
+
+                        <div class="bv-card-icon">
+                            ✦
+                        </div>
+
+                        <h3>
+                            Discover
+                        </h3>
+
+                        <p>
+                            Explore different topics and discover
+                            stories that match your interests.
+                        </p>
+
+                        <span class="bv-card-arrow">
+                            ↗
+                        </span>
+
+                    </article>
+
                 </div>
-                <h5>Engaging Reads</h5>
-                <p>Explore diverse genres and voices that inspire.</p>
-            </div>
-            <div class="col-md-3">
-                <div class="icon-frame mb-2">
-                    <img src="~/images/icon-save.jpg" alt="Save for Later" class="icon-img rounded-circle" />
+
+
+                <div class="col-lg-3 col-md-6">
+
+                    <article class="bv-glass-card">
+
+                        <span class="bv-card-number">
+                            02
+                        </span>
+
+                        <div class="bv-card-icon">
+                            ◇
+                        </div>
+
+                        <h3>
+                            Write
+                        </h3>
+
+                        <p>
+                            Turn your thoughts and experiences
+                            into stories people want to read.
+                        </p>
+
+                        <span class="bv-card-arrow">
+                            ↗
+                        </span>
+
+                    </article>
+
                 </div>
-                <h5>Save for Later</h5>
-                <p>Bookmark blogs you love and revisit anytime.</p>
-            </div>
-            <div class="col-md-3">
-                <div class="icon-frame mb-2">
-                    <img src="~/images/icon-recommend.jpg" alt="Smart Suggestions" class="icon-img rounded-circle" />
+
+
+                <div class="col-lg-3 col-md-6">
+
+                    <article class="bv-glass-card">
+
+                        <span class="bv-card-number">
+                            03
+                        </span>
+
+                        <div class="bv-card-icon">
+                            ◎
+                        </div>
+
+                        <h3>
+                            Connect
+                        </h3>
+
+                        <p>
+                            Meet readers and writers who share
+                            your interests and ideas.
+                        </p>
+
+                        <span class="bv-card-arrow">
+                            ↗
+                        </span>
+
+                    </article>
+
                 </div>
-                <h5>Smart Suggestions</h5>
-                <p>Get personalized writing prompts and ideas.</p>
+
+
+                <div class="col-lg-3 col-md-6">
+
+                    <article class="bv-glass-card">
+
+                        <span class="bv-card-number">
+                            04
+                        </span>
+
+                        <div class="bv-card-icon">
+                            ♢
+                        </div>
+
+                        <h3>
+                            Save
+                        </h3>
+
+                        <p>
+                            Keep the stories you love and come
+                            back to them whenever you want.
+                        </p>
+
+                        <span class="bv-card-arrow">
+                            ↗
+                        </span>
+
+                    </article>
+
+                </div>
+
             </div>
+
         </div>
-    </div>
-</section>
 
-<!-- Trending Blogs Section -->
-<section class="trending-section py-5 bg-light">
-    <div class="container text-center">
-        <h2 class="mb-4 text-accent">Trending Blogs</h2>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <a href="/Blog/HowToStartBlogging2025" class="text-decoration-none text-dark">
-                    <img src="~/images/trending-blog-1.jpg" class="img-thumbnail" alt="Trending Blog 1" />
-                    <h6 class="mt-2">How to Start Blogging in 2025</h6>
-                </a>
+    </section>
+
+
+    <!-- =====================================================
+         EDITORIAL
+         ===================================================== -->
+
+    <section class="bv-editorial">
+
+        <div class="container">
+
+            <div class="bv-editorial-heading">
+
+                <div>
+
+                    <span class="bv-label">
+                        EDITOR'S PICKS
+                    </span>
+
+                    <h2>
+
+                        Ideas worth
+                        <em>exploring.</em>
+
+                    </h2>
+
+                </div>
+
+
+                <p>
+
+                    A glimpse into the conversations,
+                    stories and ideas happening across BlogVerse.
+
+                </p>
+
             </div>
-            <div class="col-md-4 mb-3">
-                <a href="/Blog/Top10TechBlogs" class="text-decoration-none text-dark">
-                    <img src="~/images/trending-blog-2.jpg" class="img-thumbnail" alt="Trending Blog 2" />
-                    <h6 class="mt-2">Top 10 Tech Blogs to Follow</h6>
-                </a>
+
+
+            <div class="row g-4">
+
+                <!-- MAIN -->
+
+                <div class="col-lg-7">
+
+                    <article class="bv-editorial-main">
+
+                        <div class="bv-editorial-glow"></div>
+
+                        <span class="bv-story-label">
+                            TECHNOLOGY
+                        </span>
+
+
+                        <div class="bv-editorial-content">
+
+                            <small>
+                                6 min read · Featured
+                            </small>
+
+                            <h3>
+
+                                How technology is changing
+                                the way we tell stories.
+
+                            </h3>
+
+                            <p>
+
+                                Explore the connection between
+                                creativity, technology and modern
+                                storytelling.
+
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                </div>
+
+
+                <!-- SMALL STORIES -->
+
+                <div class="col-lg-5">
+
+                    <div class="bv-small-stories">
+
+                        <article class="bv-small-story">
+
+                            <span class="bv-story-number">
+                                01
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    CREATIVITY
+                                </small>
+
+                                <h3>
+                                    Finding inspiration
+                                    in everyday life
+                                </h3>
+
+                                <span>
+                                    4 min read
+                                </span>
+
+                            </div>
+
+                            <b>
+                                ↗
+                            </b>
+
+                        </article>
+
+
+                        <article class="bv-small-story">
+
+                            <span class="bv-story-number">
+                                02
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    WRITING
+                                </small>
+
+                                <h3>
+                                    Building your own
+                                    writing habit
+                                </h3>
+
+                                <span>
+                                    5 min read
+                                </span>
+
+                            </div>
+
+                            <b>
+                                ↗
+                            </b>
+
+                        </article>
+
+
+                        <article class="bv-small-story">
+
+                            <span class="bv-story-number">
+                                03
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    LIFESTYLE
+                                </small>
+
+                                <h3>
+                                    Why slowing down
+                                    can make you better
+                                </h3>
+
+                                <span>
+                                    3 min read
+                                </span>
+
+                            </div>
+
+                            <b>
+                                ↗
+                            </b>
+
+                        </article>
+
+                    </div>
+
+                </div>
+
             </div>
-            <div class="col-md-4 mb-3">
-                <a href="/Blog/MentalHealthJourney" class="text-decoration-none text-dark">
-                    <img src="~/images/trending-blog-3.jpg" class="img-thumbnail" alt="Trending Blog 3" />
-                    <h6 class="mt-2">Mental Health &amp; Writing Journey</h6>
-                </a>
-            </div>
+
         </div>
-    </div>
-</section>
 
-<!-- Footer CTA Section -->
-<section class="footer-cta text-center text-white d-flex align-items-center justify-content-center">
-    <div class="cta-overlay"></div>
-    <div class="cta-content container">
-        <h2 class="fw-bold">Ready to start your blogging journey?</h2>
-        <a href="/Account/Register" class="btn btn-primary mt-3 px-4 py-2">Join BlogVerse Now</a>
-    </div>
-</section>
+    </section>
 
-<!-- Real Footer -->
-<footer class="real-footer text-center text-white py-3">
-    <div class="container">
-        &copy; 2025 - <strong>BlogVerse</strong> |
-        <a href="/Home/Privacy" class="text-white text-decoration-underline">Privacy</a>
-    </div>
-</footer>
+
+    <!-- =====================================================
+         CATEGORIES
+         ===================================================== -->
+
+    <section class="bv-categories">
+
+        <div class="container">
+
+            <div class="bv-section-heading">
+
+                <span class="bv-label">
+                    FIND YOUR INTEREST
+                </span>
+
+                <h2>
+
+                    Explore by
+                    <em>topic.</em>
+
+                </h2>
+
+            </div>
+
+
+            <div class="bv-category-grid">
+
+                <a href="/Dashboard">
+                    Technology
+                    <span>↗</span>
+                </a>
+
+                <a href="/Dashboard">
+                    Creativity
+                    <span>↗</span>
+                </a>
+
+                <a href="/Dashboard">
+                    Lifestyle
+                    <span>↗</span>
+                </a>
+
+                <a href="/Dashboard">
+                    Education
+                    <span>↗</span>
+                </a>
+
+                <a href="/Dashboard">
+                    Business
+                    <span>↗</span>
+                </a>
+
+                <a href="/Dashboard">
+                    Travel
+                    <span>↗</span>
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         CTA
+         ===================================================== -->
+
+    <section class="bv-cta">
+
+        <div class="bv-cta-glass"></div>
+
+        <div class="container">
+
+            <div class="bv-cta-content">
+
+                <span class="bv-label">
+                    YOUR STORY STARTS HERE
+                </span>
+
+                <h2>
+
+                    Have something
+                    <em>to say?</em>
+
+                </h2>
+
+                <p>
+
+                    Your perspective could be exactly
+                    what someone needs to read today.
+
+                </p>
+
+
+                @if (isLoggedIn)
+                {
+                    <a href="/Posts/Create"
+                       class="bv-glass-button bv-button-white">
+
+                        Start Writing
+
+                        <span>↗</span>
+
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Register"
+                       class="bv-glass-button bv-button-white">
+
+                        Join BlogVerse
+
+                        <span>↗</span>
+
+                    </a>
+                }
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="bv-footer">
+
+        <div class="container">
+
+            <div class="bv-footer-main">
+
+                <div>
+
+                    <div class="bv-footer-logo">
+                        BlogVerse
+                    </div>
+
+                    <p>
+                        A home for stories,
+                        ideas and conversations.
+                    </p>
+
+                </div>
+
+
+                <div class="bv-footer-links">
+
+                    <div>
+
+                        <span>
+                            EXPLORE
+                        </span>
+
+                        <a href="/Dashboard">
+                            Discover
+                        </a>
+
+                        <a href="/Dashboard">
+                            Trending
+                        </a>
+
+                        <a href="/Dashboard">
+                            Categories
+                        </a>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            CREATE
+                        </span>
+
+                        <a href="/Posts/Create">
+                            Write a Post
+                        </a>
+
+                        <a href="/Account/Register">
+                            Join BlogVerse
+                        </a>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ACCOUNT
+                        </span>
+
+                        @if (isLoggedIn)
+                        {
+                            <a href="/Dashboard">
+                                Dashboard
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="/Account/Login">
+                                Sign In
+                            </a>
+
+                            <a href="/Account/Register">
+                                Register
+                            </a>
+                        }
+
+                        <a href="/Home/Privacy">
+                            Privacy
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="bv-footer-bottom">
+
+                <span>
+                    © @DateTime.Now.Year BlogVerse
+                </span>
+
+                <span>
+                    Made for people who love to write.
+                </span>
+
+            </div>
+
+        </div>
+
+    </footer>
+
+</main>
+
+
+<style>
+
+    /* =========================================================
+       BLOGVERSE LIQUID GLASS HOME
+       ========================================================= */
+
+    .bv-home {
+        --black: #111214;
+        --white: #ffffff;
+        --text: #17181a;
+        --muted: #70747a;
+        background: linear-gradient( 135deg, #f7f8fa, #e8eaed );
+        color: var(--text);
+        overflow: hidden;
+        position: relative;
+    }
+
+
+    [data-theme="dark"] .bv-home {
+        background: linear-gradient( 135deg, #0a0b0d, #17181b );
+        color: #f5f5f5;
+    }
+
+
+    /* =========================================================
+       AMBIENT ORBS
+       ========================================================= */
+
+    .bv-liquid-orb {
+        position: absolute;
+        width: 420px;
+        height: 420px;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: .28;
+        pointer-events: none;
+    }
+
+
+    .bv-orb-one {
+        background: rgba(255,255,255,.9);
+        top: 100px;
+        left: -180px;
+    }
+
+
+    .bv-orb-two {
+        background: rgba(170,175,182,.5);
+        top: 500px;
+        right: -180px;
+    }
+
+
+    .bv-orb-three {
+        background: rgba(255,255,255,.7);
+        top: 1000px;
+        left: 30%;
+    }
+
+
+    /* =========================================================
+       HERO
+       ========================================================= */
+
+    .bv-hero {
+        position: relative;
+        min-height: 850px;
+        padding: 120px 0 80px;
+        display: flex;
+        align-items: center;
+    }
+
+
+    .bv-hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image: linear-gradient( rgba(0,0,0,.025) 1px, transparent 1px ), linear-gradient( 90deg, rgba(0,0,0,.025) 1px, transparent 1px );
+        background-size: 60px 60px;
+        opacity: .7;
+    }
+
+
+    [data-theme="dark"] .bv-hero-grid {
+        background-image: linear-gradient( rgba(255,255,255,.035) 1px, transparent 1px ), linear-gradient( 90deg, rgba(255,255,255,.035) 1px, transparent 1px );
+    }
+
+
+    /* =========================================================
+       HERO GLASS PANEL
+       ========================================================= */
+
+    .bv-glass-hero-panel {
+        min-height: 650px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 42px;
+        border: 1px solid rgba(255,255,255,.78);
+        background: linear-gradient( 135deg, rgba(255,255,255,.55), rgba(255,255,255,.22) );
+        box-shadow: 0 35px 100px rgba(0,0,0,.10), inset 0 1px 0 rgba(255,255,255,.9);
+        backdrop-filter: blur(30px) saturate(160%);
+        -webkit-backdrop-filter: blur(30px) saturate(160%);
+    }
+
+
+    [data-theme="dark"] .bv-glass-hero-panel {
+        background: linear-gradient( 135deg, rgba(255,255,255,.08), rgba(255,255,255,.025) );
+        border-color: rgba(255,255,255,.12);
+        box-shadow: 0 35px 100px rgba(0,0,0,.38), inset 0 1px 0 rgba(255,255,255,.08);
+    }
+
+
+    /* =========================================================
+       HERO CONTENT
+       ========================================================= */
+
+    .bv-hero-content {
+        position: relative;
+        z-index: 3;
+        max-width: 800px;
+        padding: 105px 70px;
+    }
+
+
+    .bv-glass-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        border-radius: 50px;
+        background: rgba(255,255,255,.35);
+        border: 1px solid rgba(255,255,255,.7);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.75);
+        backdrop-filter: blur(15px);
+        font-size: 12px;
+        color: #5f6368;
+    }
+
+
+    [data-theme="dark"]
+    .bv-glass-badge {
+        color: #c4c6ca;
+        background: rgba(255,255,255,.06);
+        border-color: rgba(255,255,255,.13);
+    }
+
+
+    .bv-live-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #18191b;
+        box-shadow: 0 0 0 5px rgba(0,0,0,.06);
+    }
+
+
+    [data-theme="dark"]
+    .bv-live-dot {
+        background: white;
+        box-shadow: 0 0 0 5px rgba(255,255,255,.08);
+    }
+
+
+    /* =========================================================
+       HERO TITLE
+       ========================================================= */
+
+    .bv-hero-title {
+        margin: 30px 0 25px;
+        font-size: clamp(60px, 8vw, 108px);
+        line-height: .91;
+        letter-spacing: -.075em;
+        font-weight: 650;
+        max-width: 850px;
+    }
+
+
+        .bv-hero-title span {
+            display: block;
+            margin-left: 8vw;
+            font-family: Georgia, "Times New Roman", serif;
+            font-style: italic;
+            font-weight: 400;
+            color: #6d7177;
+        }
+
+
+    [data-theme="dark"]
+    .bv-hero-title span {
+        color: #bfc2c7;
+    }
+
+
+    /* =========================================================
+       HERO TEXT
+       ========================================================= */
+
+    .bv-hero-text {
+        max-width: 580px;
+        color: #676b70;
+        font-size: 18px;
+        line-height: 1.75;
+    }
+
+
+    [data-theme="dark"]
+    .bv-hero-text {
+        color: #a8abb0;
+    }
+
+
+    /* =========================================================
+       BUTTONS
+       ========================================================= */
+
+    .bv-hero-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+    }
+
+
+    .bv-glass-button {
+        min-height: 52px;
+        padding: 0 22px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        border-radius: 15px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
+    }
+
+
+        .bv-glass-button:hover {
+            transform: translateY(-3px);
+            text-decoration: none;
+        }
+
+
+    .bv-button-dark {
+        color: white;
+        background: rgba(20,21,23,.90);
+        box-shadow: 0 10px 30px rgba(0,0,0,.18);
+    }
+
+
+        .bv-button-dark:hover {
+            color: white;
+            box-shadow: 0 15px 40px rgba(0,0,0,.25);
+        }
+
+
+    .bv-button-light {
+        color: var(--text);
+        background: rgba(255,255,255,.45);
+        border: 1px solid rgba(255,255,255,.75);
+        backdrop-filter: blur(14px);
+    }
+
+
+    [data-theme="dark"]
+    .bv-button-light {
+        color: white;
+        background: rgba(255,255,255,.07);
+        border-color: rgba(255,255,255,.13);
+    }
+
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    .bv-hero-stats {
+        display: flex;
+        gap: 45px;
+        margin-top: 70px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(0,0,0,.08);
+    }
+
+
+    [data-theme="dark"]
+    .bv-hero-stats {
+        border-color: rgba(255,255,255,.10);
+    }
+
+
+    .bv-hero-stats div {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+
+    .bv-hero-stats strong {
+        font-size: 11px;
+        letter-spacing: .15em;
+    }
+
+
+    .bv-hero-stats span {
+        font-size: 11px;
+        color: #777b80;
+        text-transform: uppercase;
+        letter-spacing: .14em;
+    }
+
+
+    /* =========================================================
+       FLOATING GLASS CARDS
+       ========================================================= */
+
+    .bv-glass-floating {
+        position: absolute;
+        z-index: 5;
+        width: 225px;
+        padding: 20px;
+        border-radius: 22px;
+        background: rgba(255,255,255,.32);
+        border: 1px solid rgba(255,255,255,.72);
+        box-shadow: 0 25px 70px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.8);
+        backdrop-filter: blur(24px) saturate(160%);
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+    }
+
+
+    [data-theme="dark"]
+    .bv-glass-floating {
+        background: rgba(255,255,255,.07);
+        border-color: rgba(255,255,255,.12);
+    }
+
+
+    .bv-floating-top {
+        right: 8%;
+        top: 22%;
+        transform: rotate(2deg);
+        animation: bvFloatOne 5s ease-in-out infinite;
+    }
+
+
+    .bv-floating-bottom {
+        right: 20%;
+        bottom: 14%;
+        transform: rotate(-2deg);
+        animation: bvFloatTwo 6s ease-in-out infinite;
+    }
+
+
+    .bv-glass-floating small {
+        font-size: 9px;
+        letter-spacing: .16em;
+        color: #777b80;
+    }
+
+
+    .bv-glass-floating strong {
+        font-size: 15px;
+    }
+
+
+    .bv-glass-floating span {
+        color: #777b80;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    .bv-floating-icon {
+        font-size: 22px;
+    }
+
+
+    /* =========================================================
+       INTRO
+       ========================================================= */
+
+    .bv-intro {
+        position: relative;
+        padding: 130px 0;
+    }
+
+
+    .bv-section-heading {
+        max-width: 720px;
+        margin-bottom: 65px;
+    }
+
+
+    .bv-label {
+        display: block;
+        margin-bottom: 18px;
+        color: #777b80;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .19em;
+    }
+
+
+    .bv-section-heading h2,
+    .bv-editorial-heading h2 {
+        font-size: clamp(40px, 5vw, 68px);
+        line-height: 1.02;
+        letter-spacing: -.055em;
+        font-weight: 600;
+    }
+
+
+    .bv-section-heading em,
+    .bv-editorial-heading em,
+    .bv-cta h2 em {
+        font-family: Georgia, "Times New Roman", serif;
+        font-weight: 400;
+        color: #777b80;
+    }
+
+
+    .bv-section-heading p {
+        max-width: 600px;
+        color: #70747a;
+        font-size: 17px;
+        line-height: 1.8;
+    }
+
+
+    /* =========================================================
+       GLASS FEATURE CARDS
+       ========================================================= */
+
+    .bv-glass-card {
+        position: relative;
+        min-height: 310px;
+        padding: 30px;
+        border-radius: 27px;
+        background: rgba(255,255,255,.36);
+        border: 1px solid rgba(255,255,255,.70);
+        box-shadow: 0 18px 55px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.8);
+        backdrop-filter: blur(22px) saturate(150%);
+        transition: transform .4s ease, box-shadow .4s ease;
+    }
+
+
+    [data-theme="dark"]
+    .bv-glass-card {
+        background: rgba(255,255,255,.055);
+        border-color: rgba(255,255,255,.11);
+    }
+
+
+    .bv-glass-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 28px 70px rgba(0,0,0,.12);
+    }
+
+
+    .bv-card-number {
+        font-size: 11px;
+        color: #8b8e93;
+    }
+
+
+    .bv-card-icon {
+        margin-top: 50px;
+        font-size: 31px;
+    }
+
+
+    .bv-glass-card h3 {
+        margin-top: 22px;
+        font-size: 22px;
+    }
+
+
+    .bv-glass-card p {
+        color: #74787d;
+        line-height: 1.7;
+        font-size: 14px;
+    }
+
+
+    .bv-card-arrow {
+        position: absolute;
+        right: 28px;
+        bottom: 25px;
+        color: #777b80;
+    }
+
+
+    /* =========================================================
+       EDITORIAL
+       ========================================================= */
+
+    .bv-editorial {
+        padding: 130px 0;
+        background: #111214;
+        color: white;
+    }
+
+
+    .bv-editorial-heading {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 50px;
+        margin-bottom: 60px;
+    }
+
+
+        .bv-editorial-heading p {
+            max-width: 370px;
+            color: #979a9f;
+            line-height: 1.8;
+        }
+
+
+    .bv-editorial-main {
+        min-height: 520px;
+        position: relative;
+        overflow: hidden;
+        padding: 38px;
+        border-radius: 32px;
+        background: radial-gradient( circle at 70% 25%, rgba(255,255,255,.18), transparent 20% ), linear-gradient( 135deg, #282b2f, #0e0f10 );
+        border: 1px solid rgba(255,255,255,.12);
+        box-shadow: 0 30px 80px rgba(0,0,0,.3);
+    }
+
+
+        .bv-editorial-main::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient( rgba(255,255,255,.035) 1px, transparent 1px ), linear-gradient( 90deg, rgba(255,255,255,.035) 1px, transparent 1px );
+            background-size: 35px 35px;
+        }
+
+
+    .bv-editorial-glow {
+        position: absolute;
+        width: 250px;
+        height: 250px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.12);
+        filter: blur(70px);
+        right: 10%;
+        top: 15%;
+    }
+
+
+    .bv-story-label {
+        position: relative;
+        display: inline-block;
+        padding: 8px 12px;
+        border: 1px solid rgba(255,255,255,.15);
+        border-radius: 50px;
+        color: #bfc1c5;
+        font-size: 9px;
+        letter-spacing: .16em;
+    }
+
+
+    .bv-editorial-content {
+        position: absolute;
+        left: 38px;
+        right: 38px;
+        bottom: 38px;
+        z-index: 2;
+    }
+
+
+        .bv-editorial-content small {
+            color: #92959a;
+        }
+
+
+        .bv-editorial-content h3 {
+            max-width: 620px;
+            margin: 12px 0;
+            font-size: clamp(28px, 4vw, 48px);
+            line-height: 1.08;
+            letter-spacing: -.035em;
+        }
+
+
+        .bv-editorial-content p {
+            max-width: 500px;
+            color: #999ca1;
+            line-height: 1.7;
+        }
+
+
+    /* =========================================================
+       SMALL STORIES
+       ========================================================= */
+
+    .bv-small-stories {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+
+    .bv-small-story {
+        display: grid;
+        grid-template-columns: 45px 1fr 25px;
+        gap: 18px;
+        padding: 24px 0;
+        border-top: 1px solid rgba(255,255,255,.12);
+        transition: padding .3s ease;
+    }
+
+
+        .bv-small-story:last-child {
+            border-bottom: 1px solid rgba(255,255,255,.12);
+        }
+
+
+        .bv-small-story:hover {
+            padding-left: 10px;
+        }
+
+
+    .bv-story-number {
+        color: #6f7277;
+        font-size: 11px;
+    }
+
+
+    .bv-small-story small {
+        color: #a5a8ad;
+        font-size: 9px;
+        letter-spacing: .14em;
+    }
+
+
+    .bv-small-story h3 {
+        font-size: 19px;
+        line-height: 1.35;
+        margin: 8px 0;
+    }
+
+
+    .bv-small-story span {
+        color: #72757a;
+        font-size: 11px;
+    }
+
+
+    .bv-small-story b {
+        color: #9da0a5;
+    }
+
+
+    /* =========================================================
+       CATEGORIES
+       ========================================================= */
+
+    .bv-categories {
+        padding: 125px 0;
+    }
+
+
+    .bv-category-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid rgba(0,0,0,.10);
+    }
+
+
+    [data-theme="dark"]
+    .bv-category-grid {
+        border-color: rgba(255,255,255,.10);
+    }
+
+
+    .bv-category-grid a {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 80px;
+        padding: 0 8px;
+        border-bottom: 1px solid rgba(0,0,0,.10);
+        color: var(--text);
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+
+    [data-theme="dark"]
+    .bv-category-grid a {
+        border-color: rgba(255,255,255,.10);
+    }
+
+
+    .bv-category-grid a:hover {
+        padding-left: 18px;
+    }
+
+
+    .bv-category-grid span {
+        color: #777b80;
+    }
+
+
+    /* =========================================================
+       CTA
+       ========================================================= */
+
+    .bv-cta {
+        padding: 130px 0;
+        background: #111214;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+
+    .bv-cta-glass {
+        position: absolute;
+        width: 550px;
+        height: 550px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.08);
+        filter: blur(100px);
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+    }
+
+
+    .bv-cta-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+
+    .bv-cta h2 {
+        max-width: 800px;
+        margin: auto;
+        font-size: clamp(45px, 7vw, 85px);
+        line-height: .98;
+        letter-spacing: -.06em;
+    }
+
+
+    .bv-cta p {
+        max-width: 500px;
+        margin: 25px auto 35px;
+        color: #96999e;
+        line-height: 1.7;
+    }
+
+
+    .bv-button-white {
+        background: rgba(255,255,255,.92);
+        color: #151619;
+        box-shadow: 0 15px 40px rgba(0,0,0,.22);
+    }
+
+
+        .bv-button-white:hover {
+            color: #151619;
+            background: white;
+        }
+
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .bv-footer {
+        padding: 75px 0 25px;
+        background: #090a0b;
+        color: white;
+    }
+
+
+    .bv-footer-main {
+        display: flex;
+        justify-content: space-between;
+        gap: 60px;
+        padding-bottom: 55px;
+        border-bottom: 1px solid rgba(255,255,255,.10);
+    }
+
+
+    .bv-footer-logo {
+        font-size: 27px;
+        font-weight: 700;
+        letter-spacing: -.04em;
+    }
+
+
+    .bv-footer-main p {
+        color: #777a7f;
+        margin-top: 14px;
+    }
+
+
+    .bv-footer-links {
+        display: flex;
+        gap: 80px;
+    }
+
+
+        .bv-footer-links div {
+            display: flex;
+            flex-direction: column;
+            gap: 11px;
+        }
+
+
+        .bv-footer-links span {
+            color: #686b70;
+            font-size: 9px;
+            letter-spacing: .17em;
+            margin-bottom: 5px;
+        }
+
+
+        .bv-footer-links a {
+            color: #a7a9ad;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+
+            .bv-footer-links a:hover {
+                color: white;
+            }
+
+
+    .bv-footer-bottom {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding-top: 22px;
+        color: #5e6166;
+        font-size: 11px;
+    }
+
+
+    /* =========================================================
+       ANIMATIONS
+       ========================================================= */
+
+    @@keyframes bvFloatOne {
+
+        0%, 100% {
+            transform: translateY(0) rotate(2deg);
+        }
+
+        50% {
+            transform: translateY(-16px) rotate(-1deg);
+        }
+    }
+
+
+    @@keyframes bvFloatTwo {
+
+        0%, 100% {
+            transform: translateY(0) rotate(-2deg);
+        }
+
+        50% {
+            transform: translateY(14px) rotate(1deg);
+        }
+    }
+
+
+    /* =========================================================
+       RESPONSIVE
+       ========================================================= */
+
+    @@media (max-width: 991px) {
+
+        .bv-floating-top,
+        .bv-floating-bottom {
+            display: none;
+        }
+
+
+        .bv-hero {
+            min-height: auto;
+            padding: 105px 0 60px;
+        }
+
+
+        .bv-glass-hero-panel {
+            min-height: auto;
+            border-radius: 30px;
+        }
+
+
+        .bv-hero-content {
+            padding: 75px 45px;
+        }
+
+
+        .bv-editorial-heading {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+
+        .bv-category-grid {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+
+        .bv-footer-main {
+            flex-direction: column;
+        }
+    }
+
+
+    @@media (max-width: 767px) {
+
+        .bv-hero {
+            padding: 95px 10px 45px;
+        }
+
+
+        .bv-glass-hero-panel {
+            border-radius: 25px;
+        }
+
+
+        .bv-hero-content {
+            padding: 60px 25px;
+        }
+
+
+        .bv-hero-title {
+            font-size: clamp(50px, 14vw, 72px);
+        }
+
+
+            .bv-hero-title span {
+                margin-left: 0;
+            }
+
+
+        .bv-hero-text {
+            font-size: 16px;
+        }
+
+
+        .bv-hero-actions {
+            flex-direction: column;
+        }
+
+
+        .bv-glass-button {
+            width: 100%;
+        }
+
+
+        .bv-hero-stats {
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+
+        .bv-intro,
+        .bv-editorial,
+        .bv-categories {
+            padding: 85px 0;
+        }
+
+
+        .bv-editorial-main {
+            min-height: 440px;
+            padding: 25px;
+        }
+
+
+        .bv-editorial-content {
+            left: 25px;
+            right: 25px;
+            bottom: 25px;
+        }
+
+
+        .bv-category-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .bv-cta {
+            padding: 90px 0;
+        }
+
+
+        .bv-footer-links {
+            display: grid;
+            grid-template-columns: repeat(2,1fr);
+            gap: 35px;
+        }
+
+
+        .bv-footer-bottom {
+            flex-direction: column;
+        }
+    }
+
+
+    @@media (prefers-reduced-motion: reduce) {
+
+        .bv-home *,
+        .bv-home *::before,
+        .bv-home *::after {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
