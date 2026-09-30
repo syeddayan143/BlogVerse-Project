@@ -1,52 +1,321 @@
 ﻿@{
     ViewData["Title"] = "Breaking News";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
-<div class="container mt-5">
-    <h1 style="color: black;">Breaking News</h1>
-    <hr class="mb-4" />
+<style>
+    .breaking-page {
+        padding: 30px;
+        max-width: 1250px;
+        margin: 0 auto;
+    }
 
-    <div class="row">
-        @* Example Breaking News Item 1 *@
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="~/images/earthquake.png" alt="Earthquake Image" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h2 class="card-title text-danger">Breaking: Major Earthquake Hits Region</h2>
-                            <h6 class="card-subtitle mb-2 text-muted">Updated 5 minutes ago - CNN</h6>
-                            <p class="card-text"><strong>In Brief:</strong> A powerful 7.5 magnitude earthquake struck the central region, causing significant damage.</p>
-                            <p class="card-text"><small class="text-muted">Details: A powerful earthquake with a magnitude of 7.5 on the Richter scale has struck the central region at approximately 05:30 AM local time. Initial reports indicate widespread damage to infrastructure, including collapsed buildings and disrupted transportation networks. Rescue teams have been dispatched to the affected areas, and authorities are urging residents to remain vigilant for aftershocks. The earthquake's epicenter was located approximately 50 kilometers northeast of the capital city...</small></p>
-                            @* Removed "Read More" button *@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    .breaking-header {
+        margin-bottom: 28px;
+    }
 
-        @* Example Breaking News Item 2 *@
-        <div class="col-md-6 mb-4">
-            <div class="card shadow-sm">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="~/images/sharemarket (1).png" alt="Stock Market Image" class="img-fluid rounded-start" style="height: 100%; object-fit: cover;">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h2 class="card-title text-primary">Breaking: Stock Market Surges After Positive Economic Data</h2>
-                            <h6 class="card-subtitle mb-2 text-muted">Published 15 minutes ago - Reuters</h6>
-                            <p class="card-text"><strong>In Brief:</strong> Following the release of strong economic data, the stock market experienced a significant surge this morning.</p>
-                            <p class="card-text"><small class="text-muted">Details: The Dow Jones Industrial Average jumped by over 300 points in early trading today after the Bureau of Labor Statistics released figures showing a stronger-than-expected increase in non-farm payrolls and a decrease in the unemployment rate. Analysts believe this positive economic news signals a robust recovery, leading to increased investor confidence and buying activity across various sectors...</small></p>
-                            @* Removed "Read More" button *@
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        .breaking-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
 
-        @* Add more breaking news items here, potentially using a loop if you're passing a list of news articles from your controller *@
+        .breaking-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+    .breaking-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .news-card {
+        display: flex;
+        overflow: hidden;
+        min-width: 0;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, .06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+        .news-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 18px 42px rgba(0, 0, 0, .09);
+        }
+
+    .news-image-wrapper {
+        width: 38%;
+        min-height: 100%;
+        flex-shrink: 0;
+        overflow: hidden;
+        background: #eeeeee;
+    }
+
+    .news-image {
+        width: 100%;
+        height: 100%;
+        min-height: 300px;
+        display: block;
+        object-fit: cover;
+        transition: transform .35s ease;
+    }
+
+    .news-card:hover .news-image {
+        transform: scale(1.03);
+    }
+
+    .news-content {
+        min-width: 0;
+        padding: 23px;
+        flex: 1;
+    }
+
+    .news-label {
+        display: inline-flex;
+        align-items: center;
+        min-height: 25px;
+        padding: 5px 9px;
+        margin-bottom: 11px;
+        border-radius: 999px;
+        background: #eeeeee;
+        color: #444;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+    }
+
+    .news-title {
+        margin: 0 0 9px;
+        color: #1f1f1f;
+        font-size: 20px;
+        line-height: 1.35;
+        font-weight: 700;
+    }
+
+    .news-meta {
+        margin-bottom: 16px;
+        color: #999;
+        font-size: 11px;
+        line-height: 1.5;
+    }
+
+    .news-brief {
+        margin: 0 0 13px;
+        color: #444;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .news-details {
+        margin: 0;
+        color: #777;
+        font-size: 12px;
+        line-height: 1.65;
+    }
+
+    .news-details-label {
+        color: #555;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 1000px) {
+        .breaking-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .breaking-page {
+            padding: 18px;
+        }
+
+        .breaking-header h1 {
+            font-size: 28px;
+        }
+
+        .news-card {
+            flex-direction: column;
+            border-radius: 20px;
+        }
+
+        .news-image-wrapper {
+            width: 100%;
+            height: 210px;
+        }
+
+        .news-image {
+            min-height: 210px;
+        }
+
+        .news-content {
+            padding: 19px;
+        }
+
+        .news-title {
+            font-size: 19px;
+        }
+    }
+</style>
+
+
+<div class="breaking-page">
+
+    <!-- HEADER -->
+
+    <div class="breaking-header">
+
+        <h1>Breaking News</h1>
+
+        <p>
+            Stay updated with the latest important news and developments.
+        </p>
+
     </div>
+
+
+    <!-- NEWS GRID -->
+
+    <div class="breaking-grid">
+
+
+        <!-- =================================================
+             NEWS ITEM 1
+        ================================================== -->
+
+        <article class="news-card">
+
+            <div class="news-image-wrapper">
+
+                <img src="~/images/earthquake.png"
+                     alt="Earthquake Image"
+                     class="news-image" />
+
+            </div>
+
+
+            <div class="news-content">
+
+                <span class="news-label">
+                    Breaking
+                </span>
+
+                <h2 class="news-title">
+                    Major Earthquake Hits Region
+                </h2>
+
+                <div class="news-meta">
+                    Updated 5 minutes ago · CNN
+                </div>
+
+
+                <p class="news-brief">
+
+                    <strong>In Brief:</strong>
+                    A powerful 7.5 magnitude earthquake struck
+                    the central region, causing significant damage.
+
+                </p>
+
+
+                <p class="news-details">
+
+                    <span class="news-details-label">
+                        Details:
+                    </span>
+
+                    A powerful earthquake with a magnitude of 7.5
+                    on the Richter scale has struck the central
+                    region at approximately 05:30 AM local time.
+                    Initial reports indicate widespread damage to
+                    infrastructure, including collapsed buildings
+                    and disrupted transportation networks. Rescue
+                    teams have been dispatched to the affected
+                    areas, and authorities are urging residents to
+                    remain vigilant for aftershocks. The earthquake's
+                    epicenter was located approximately 50 kilometers
+                    northeast of the capital city...
+
+                </p>
+
+            </div>
+
+        </article>
+
+
+        <!-- =================================================
+             NEWS ITEM 2
+        ================================================== -->
+
+        <article class="news-card">
+
+            <div class="news-image-wrapper">
+
+                <img src="~/images/sharemarket (1).png"
+                     alt="Stock Market Image"
+                     class="news-image" />
+
+            </div>
+
+
+            <div class="news-content">
+
+                <span class="news-label">
+                    Breaking
+                </span>
+
+                <h2 class="news-title">
+                    Stock Market Surges After Positive Economic Data
+                </h2>
+
+                <div class="news-meta">
+                    Published 15 minutes ago · Reuters
+                </div>
+
+
+                <p class="news-brief">
+
+                    <strong>In Brief:</strong>
+                    Following the release of strong economic data,
+                    the stock market experienced a significant
+                    surge this morning.
+
+                </p>
+
+
+                <p class="news-details">
+
+                    <span class="news-details-label">
+                        Details:
+                    </span>
+
+                    The Dow Jones Industrial Average jumped by over
+                    300 points in early trading today after the
+                    Bureau of Labor Statistics released figures
+                    showing a stronger-than-expected increase in
+                    non-farm payrolls and a decrease in the
+                    unemployment rate. Analysts believe this
+                    positive economic news signals a robust recovery,
+                    leading to increased investor confidence and
+                    buying activity across various sectors...
+
+                </p>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
 </div>

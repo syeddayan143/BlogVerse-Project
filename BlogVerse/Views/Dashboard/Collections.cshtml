@@ -1,0 +1,334 @@
+﻿@model IEnumerable<BlogVerse.Models.PostCollection>
+
+@{
+    ViewData["Title"] = "Collections";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .collections-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .collections-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+        .collections-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .collections-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+        }
+
+    .create-collection-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 11px 17px;
+        border-radius: 14px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        transition: all 0.2s ease;
+    }
+
+        .create-collection-btn:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+    .collections-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .collection-card {
+        padding: 22px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .collection-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.09);
+        }
+
+    .collection-icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 18px;
+        border-radius: 17px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+    }
+
+    .collection-name {
+        margin: 0 0 8px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1d1d1d;
+    }
+
+    .collection-info {
+        margin: 0;
+        color: #777;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .collection-date {
+        margin-top: 10px;
+        color: #999;
+        font-size: 11px;
+    }
+
+    .collection-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 20px;
+        flex-wrap: wrap;
+    }
+
+    .open-collection {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .open-collection:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .delete-collection {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 13px;
+        border-radius: 13px;
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        background: rgba(255, 255, 255, 0.65);
+        color: #444;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .delete-collection:hover {
+            background: #eeeeee;
+        }
+
+    .empty-state {
+        padding: 65px 25px;
+        text-align: center;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .empty-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    @@media (max-width: 950px) {
+        .collections-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .collections-page {
+            padding: 18px;
+        }
+
+        .collections-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+            .collections-header h1 {
+                font-size: 28px;
+            }
+
+        .collections-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .collection-card {
+            border-radius: 19px;
+            padding: 18px;
+        }
+
+        .create-collection-btn {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="collections-page">
+
+    <!-- HEADER -->
+    <div class="collections-header">
+
+        <div>
+            <h1>Collections</h1>
+
+            <p>
+                Organize your saved posts into collections.
+            </p>
+        </div>
+
+        <a asp-controller="Dashboard"
+           asp-action="CreateCollection"
+           class="create-collection-btn">
+            + Create Collection
+        </a>
+
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="collections-grid">
+
+            @foreach (var collection in Model)
+            {
+                var postCount =
+                collection.Posts?.Count ?? 0;
+
+                <article class="collection-card">
+
+                    <div class="collection-icon">
+                        ▦
+                    </div>
+
+                    <h2 class="collection-name">
+                        @collection.Name
+                    </h2>
+
+                    <p class="collection-info">
+                        @postCount
+                        @(postCount == 1 ? "post" : "posts")
+                        in this collection.
+                    </p>
+
+                    <div class="collection-date">
+                        Created:
+                        @collection.CreatedAt
+                        .ToLocalTime()
+                        .ToString("dd MMM yyyy")
+                    </div>
+
+                    <div class="collection-actions">
+
+                        <a asp-controller="Dashboard"
+                           asp-action="Collection"
+                           asp-route-id="@collection.Id"
+                           class="open-collection">
+                            Open Collection →
+                        </a>
+
+                        <form asp-controller="Dashboard"
+                              asp-action="DeleteCollection"
+                              method="post"
+                              onsubmit="return confirm('Are you sure you want to delete this collection?');">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="id"
+                                   value="@collection.Id" />
+
+                            <button type="submit"
+                                    class="delete-collection">
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ▦
+            </div>
+
+            <h3>No collections yet</h3>
+
+            <p>
+                Create a collection to organize your saved posts.
+            </p>
+
+        </div>
+    }
+
+</div>

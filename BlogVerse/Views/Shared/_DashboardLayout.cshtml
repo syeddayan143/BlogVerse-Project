@@ -1,24 +1,43 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@using BlogVerse.Models
+
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] ??= "Dashboard";
+
+    var currentUser = await UserManager.GetUserAsync(User);
+}
+
+<!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8">
 
     <meta name="viewport"
-          content="width=device-width, initial-scale=1.0" />
+          content="width=device-width, initial-scale=1.0">
 
     <title>
         @ViewData["Title"] - BlogVerse
     </title>
 
 
+    <!-- Bootstrap -->
+
     <link rel="stylesheet"
           href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+
+    <!-- Dashboard CSS -->
 
     <link rel="stylesheet"
           href="~/css/dashboard.css" />
 
+
+    <!-- Font Awesome -->
 
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -30,402 +49,465 @@
     <style>
 
         /* =====================================================
-                   GLOBAL LIQUID GLASS
-                   ===================================================== */
+                   ROOT
+                ===================================================== */
 
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            min-height: 100%;
-            background: radial-gradient(circle at 10% 10%, #ffffff 0%, transparent 28%), radial-gradient(circle at 90% 10%, #e8ecef 0%, transparent 30%), linear-gradient(135deg, #eef1f4, #dce1e5);
-            color: #1f2937;
-        }
-
-
-        body {
-            overflow-x: hidden;
+        :root {
+            --dashboard-bg: #f2f2f2;
+            --sidebar-bg: rgba(255, 255, 255, .72);
+            --glass-bg: rgba(255, 255, 255, .68);
+            --glass-border: rgba(0, 0, 0, .08);
+            --text-main: #222;
+            --text-muted: #777;
+            --dark: #222;
+            --light: #eeeeee;
         }
 
 
         /* =====================================================
-                   MAIN CONTAINER
-                   ===================================================== */
+                   BODY
+                ===================================================== */
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f2f2f2;
+            color: var(--text-main);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        /* =====================================================
+                   DASHBOARD CONTAINER
+                ===================================================== */
 
         .dashboard-container {
             min-height: 100vh;
             display: flex;
-            background: radial-gradient( circle at 30% 20%, rgba(255,255,255,.45), transparent 30% );
-            gap: 0;
+            width: 100%;
+            background: radial-gradient( circle at 10% 10%, rgba(255,255,255,.95), transparent 28% ), radial-gradient( circle at 90% 20%, rgba(225,225,225,.75), transparent 30% ), linear-gradient( 135deg, #eeeeee, #e2e2e2 50%, #f7f7f7 );
         }
 
 
         /* =====================================================
-                   HAMBURGER
-                   ===================================================== */
-
-        .hamburger-btn {
-            position: fixed;
-            top: 18px;
-            left: 18px;
-            width: 45px;
-            height: 45px;
-            z-index: 1000;
-            border: 1px solid rgba(255,255,255,.75);
-            border-radius: 15px;
-            background: rgba(255,255,255,.55);
-            color: #1f2937;
-            backdrop-filter: blur(18px);
-            -webkit-backdrop-filter: blur(18px);
-            box-shadow: 0 10px 25px rgba(31,41,55,.10), inset 0 1px 0 rgba(255,255,255,.9);
-            cursor: pointer;
-            transition: all .25s ease;
-        }
-
-
-            .hamburger-btn:hover {
-                transform: translateY(-2px);
-                background: rgba(255,255,255,.75);
-            }
-
-
-        /* =====================================================
-                   SIDEBAR
-                   ===================================================== */
+                   LEFT SIDEBAR
+                ===================================================== */
 
         .sidebar {
-            width: 260px !important;
+            width: 260px;
             min-width: 260px;
             min-height: 100vh;
-            padding: 25px 18px !important;
+            padding: 22px 18px;
             position: relative;
-            background: linear-gradient( 180deg, rgba(255,255,255,.62), rgba(255,255,255,.34) ) !important;
-            color: #1f2937 !important;
-            border-right: 1px solid rgba(255,255,255,.75);
-            box-shadow: 10px 0 35px rgba(31,41,55,.07), inset -1px 0 0 rgba(255,255,255,.55);
-            backdrop-filter: blur(28px) saturate(130%);
-            -webkit-backdrop-filter: blur(28px) saturate(130%);
+            display: flex;
+            flex-direction: column;
+            background: rgba(255,255,255,.62) !important;
+            border-right: 1px solid rgba(0,0,0,.08);
+            box-shadow: 8px 0 30px rgba(0,0,0,.05), inset -1px 0 rgba(255,255,255,.7);
+            backdrop-filter: blur(22px);
+            -webkit-backdrop-filter: blur(22px);
             overflow-y: auto;
             overflow-x: hidden;
-            transition: transform .3s ease, width .3s ease;
+            z-index: 100;
         }
 
 
         /* =====================================================
-                   LOGO
-                   ===================================================== */
+                   SIDEBAR LOGO
+                ===================================================== */
 
         .sidebar-logo-container {
-            height: 145px;
+            height: 120px;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
 
         .sidebar-logo {
-            width: 125px !important;
-            height: 125px !important;
-            object-fit: contain;
+            width: 105px !important;
+            height: 105px !important;
             display: block;
+            object-fit: contain;
         }
 
 
         /* =====================================================
                    NAVIGATION
-                   ===================================================== */
+                ===================================================== */
 
         .sidebar nav {
-            flex-shrink: 0;
+            width: 100%;
         }
 
 
         .sidebar .nav {
-            gap: 5px;
+            gap: 4px;
         }
 
 
         .sidebar .nav-link {
-            min-height: 44px;
-            display: flex !important;
+            min-height: 43px;
+            padding: 11px 13px;
+            display: flex;
             align-items: center;
-            padding: 10px 13px !important;
-            border-radius: 15px;
-            color: #374151 !important;
-            text-decoration: none;
-            font-size: 14px;
+            border-radius: 13px;
+            color: #444 !important;
+            font-size: 13px;
             font-weight: 600;
-            border: 1px solid transparent;
-            transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+            text-decoration: none;
+            transition: background .2s ease, color .2s ease, transform .2s ease;
         }
 
 
             .sidebar .nav-link i {
-                width: 21px;
-                color: #6b7280;
-                transition: color .25s ease;
+                width: 20px;
+                text-align: center;
+                color: #555;
+                transition: color .2s ease;
             }
 
 
             .sidebar .nav-link:hover {
-                background: rgba(255,255,255,.58);
-                border-color: rgba(255,255,255,.72);
-                box-shadow: 0 7px 20px rgba(31,41,55,.06);
-                transform: translateX(3px);
+                background: rgba(0,0,0,.07);
+                color: #111 !important;
+                transform: translateX(2px);
             }
 
 
                 .sidebar .nav-link:hover i {
-                    color: #374151;
+                    color: #111;
+                }
+
+
+            /* =====================================================
+                   ACTIVE LINK
+                ===================================================== */
+
+            .sidebar .nav-link.active {
+                background: #222;
+                color: #fff !important;
+            }
+
+
+                .sidebar .nav-link.active i {
+                    color: #fff;
                 }
 
 
         /* =====================================================
                    FOLLOWING
-                   ===================================================== */
+                ===================================================== */
 
         .following-section {
-            flex-shrink: 0;
+            margin-top: 12px;
         }
 
 
             .following-section hr,
             .sidebar > hr {
-                border-color: rgba(75,85,99,.16);
+                border: 0;
+                border-top: 1px solid rgba(0,0,0,.09);
                 opacity: 1;
             }
 
 
-            .following-section h6 {
-                color: #374151 !important;
-                padding-left: 10px;
-                font-weight: 800;
-                margin-bottom: 8px;
-            }
+        .following-title {
+            margin: 0 0 7px;
+            padding-left: 12px;
+            color: #555;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
 
 
-            .following-section .nav-link {
-                color: #6b7280 !important;
-                cursor: default;
-                background: transparent !important;
-                box-shadow: none !important;
-                transform: none !important;
-            }
+        .following-empty {
+            color: #888 !important;
+            font-size: 12px !important;
+            font-weight: 500 !important;
+        }
 
 
         /* =====================================================
                    CREATE POST
-                   ===================================================== */
+                ===================================================== */
 
-        .sidebar .btn-primary {
-            border: 1px solid rgba(255,255,255,.8) !important;
-            border-radius: 15px !important;
-            background: rgba(255,255,255,.65) !important;
-            color: #1f2937 !important;
-            font-weight: 750;
-            padding: 11px 14px;
-            box-shadow: 0 10px 25px rgba(31,41,55,.08), inset 0 1px 0 rgba(255,255,255,.9);
-            transition: all .25s ease;
+        .create-post-button {
+            width: 100%;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 0;
+            border-radius: 13px;
+            background: #222 !important;
+            color: #fff !important;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
         }
 
 
-            .sidebar .btn-primary:hover {
-                transform: translateY(-2px);
-                background: rgba(255,255,255,.82) !important;
-                color: #111827 !important;
+            .create-post-button:hover {
+                background: #000 !important;
+                color: #fff !important;
+                transform: translateY(-1px);
+                box-shadow: 0 8px 20px rgba(0,0,0,.12);
             }
 
 
         /* =====================================================
                    LOGOUT
-                   ===================================================== */
+                ===================================================== */
 
-        .sidebar .text-danger {
-            color: #6b4f55 !important;
+        .logout-button {
+            width: 100%;
+            min-height: 43px;
+            display: flex;
+            align-items: center;
+            padding: 11px 13px;
+            border: 0;
+            border-radius: 13px;
+            background: transparent;
+            color: #555 !important;
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s ease, color .2s ease;
         }
 
 
-        .sidebar form .nav-link:hover {
-            color: #8b3f4a !important;
+            .logout-button i {
+                width: 20px;
+                margin-right: 8px;
+                text-align: center;
+            }
+
+
+            .logout-button:hover {
+                background: rgba(0,0,0,.07);
+                color: #222 !important;
+            }
+
+
+        /* =====================================================
+                   HAMBURGER
+                ===================================================== */
+
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,0,0,.08);
+            border-radius: 13px;
+            background: rgba(255,255,255,.82);
+            color: #222;
+            box-shadow: 0 8px 20px rgba(0,0,0,.08);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            cursor: pointer;
+            z-index: 1000;
         }
+
+
+            .hamburger-btn:hover {
+                background: #fff;
+            }
 
 
         /* =====================================================
                    MAIN CONTENT
-                   ===================================================== */
+                ===================================================== */
 
         .main-content {
             flex: 1;
             min-width: 0;
             min-height: 100vh;
             background: transparent;
-            overflow: hidden;
-            transition: all .3s ease;
+            overflow-x: hidden;
         }
 
 
         /* =====================================================
                    RIGHT SIDEBAR
-                   ===================================================== */
+                ===================================================== */
 
         .right-sidebar {
-            width: 315px;
-            min-width: 315px;
+            width: 285px;
+            min-width: 285px;
             min-height: 100vh;
-            padding: 20px !important;
-            background: linear-gradient( 180deg, rgba(255,255,255,.56), rgba(255,255,255,.32) ) !important;
-            border-left: 1px solid rgba(255,255,255,.75);
-            box-shadow: -10px 0 35px rgba(31,41,55,.06), inset 1px 0 0 rgba(255,255,255,.6);
-            backdrop-filter: blur(28px) saturate(130%);
-            -webkit-backdrop-filter: blur(28px) saturate(130%);
-            color: #1f2937;
+            padding: 22px;
+            background: rgba(255,255,255,.58) !important;
+            border-left: 1px solid rgba(0,0,0,.07);
+            box-shadow: -8px 0 30px rgba(0,0,0,.04);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: #333;
         }
 
 
-            /* Right sidebar hero image */
-
-            .right-sidebar > div:first-child {
-                height: 500px !important;
-                border-radius: 24px;
-                overflow: hidden;
-                border: 1px solid rgba(255,255,255,.78);
-                box-shadow: 0 18px 40px rgba(31,41,55,.10), inset 0 1px 0 rgba(255,255,255,.8);
-            }
-
-
-            .right-sidebar h5 {
-                margin-top: 15px;
-                color: #111827;
-                font-weight: 800;
-            }
-
-
-            .right-sidebar .d-flex {
-                padding: 9px;
-                border-radius: 17px;
-                background: rgba(255,255,255,.30);
-                border: 1px solid transparent;
-                transition: all .25s ease;
-            }
-
-
-                .right-sidebar .d-flex:hover {
-                    background: rgba(255,255,255,.62);
-                    border-color: rgba(255,255,255,.7);
-                    transform: translateX(-3px);
-                    box-shadow: 0 8px 20px rgba(31,41,55,.06);
-                }
-
-
-            .right-sidebar h6 {
-                color: #1f2937;
-                font-weight: 750;
-            }
-
-
-            .right-sidebar .text-muted {
-                color: #6b7280 !important;
-            }
-
-
-        /* =====================================================
-                   SIDEBAR HIDDEN
-                   ===================================================== */
-
-        .sidebar.sidebar-hidden {
-            transform: translateX(-100%);
-            margin-left: -260px;
-        }
-
-
-        .main-content.full-width {
+        .right-sidebar-banner {
             width: 100%;
-        }
-
-
-        /* =====================================================
-                   SCROLLBAR
-                   ===================================================== */
-
-        .sidebar::-webkit-scrollbar {
-            width: 5px;
-        }
-
-
-        .sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(107,114,128,.25);
+            height: 220px;
+            margin-bottom: 25px;
             border-radius: 20px;
+            background-image: url('/images/png.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            box-shadow: 0 10px 28px rgba(0,0,0,.08);
+        }
+
+
+        .right-sidebar-title {
+            margin: 0 0 18px;
+            color: #222;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+
+        .creator-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px;
+            margin-bottom: 8px;
+            border-radius: 15px;
+            background: rgba(255,255,255,.48);
+            transition: background .2s ease, transform .2s ease;
+        }
+
+
+            .creator-item:hover {
+                background: rgba(255,255,255,.75);
+                transform: translateX(-2px);
+            }
+
+
+        .creator-image {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #eee;
+        }
+
+
+        .creator-name {
+            margin: 0 0 3px;
+            color: #333;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+
+        .creator-followers {
+            color: #888;
+            font-size: 10px;
         }
 
 
         /* =====================================================
-                   MOBILE
-                   ===================================================== */
+                   HIDDEN STATES
+                ===================================================== */
+
+        .sidebar-hidden {
+            display: none !important;
+        }
+
+
+        .right-sidebar-hidden {
+            display: none !important;
+        }
+
+
+        .full-width {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+
+        /* =====================================================
+                   RESPONSIVE - TABLET
+                ===================================================== */
 
         @@media (max-width: 1100px) {
 
             .right-sidebar {
-                display: none;
+                display: none !important;
+            }
+
+            .sidebar {
+                width: 235px;
+                min-width: 235px;
             }
         }
 
 
+        /* =====================================================
+                   RESPONSIVE - MOBILE
+                ===================================================== */
+
         @@media (max-width: 768px) {
+
+            .dashboard-container {
+                display: block;
+            }
+
+
+            .hamburger-btn {
+                display: flex;
+            }
+
 
             .sidebar {
                 position: fixed;
                 top: 0;
                 left: 0;
-                z-index: 999;
+                width: 270px;
+                min-width: 270px;
                 height: 100vh;
-                transform: translateX(-100%);
-                margin-left: 0 !important;
-                box-shadow: 15px 0 40px rgba(31,41,55,.15);
+                transform: translateX(-105%);
+                transition: transform .25s ease;
+                z-index: 999;
             }
 
 
-                .sidebar:not(.sidebar-hidden) {
+                .sidebar.mobile-open {
                     transform: translateX(0);
-                }
-
-
-                .sidebar.sidebar-hidden {
-                    transform: translateX(-100%);
-                    margin-left: 0;
                 }
 
 
             .main-content {
                 width: 100%;
-            }
-
-
-            .sidebar-logo {
-                width: 100px !important;
-                height: 100px !important;
-            }
-
-
-            .sidebar-logo-container {
-                height: 120px;
+                min-height: 100vh;
             }
         }
 
 
+        /* =====================================================
+                   SMALL MOBILE
+                ===================================================== */
+
         @@media (max-width: 480px) {
 
-            .hamburger-btn {
-                top: 12px;
-                left: 12px;
-                width: 42px;
-                height: 42px;
+            .sidebar {
+                width: 250px;
+                min-width: 250px;
             }
         }
 
@@ -436,17 +518,18 @@
 
 <body>
 
+
     <div class="dashboard-container">
 
 
         <!-- =====================================================
              HAMBURGER
-             ===================================================== -->
+        ====================================================== -->
 
-        <button class="hamburger-btn"
-                type="button"
+        <button type="button"
+                class="hamburger-btn"
                 onclick="toggleSidebar()"
-                aria-label="Toggle navigation">
+                aria-label="Open navigation">
 
             <i class="fas fa-bars"></i>
 
@@ -455,7 +538,7 @@
 
         <!-- =====================================================
              LEFT SIDEBAR
-             ===================================================== -->
+        ====================================================== -->
 
         <aside class="sidebar">
 
@@ -471,27 +554,13 @@
             </div>
 
 
-            <!-- MAIN NAVIGATION -->
+            <!-- =================================================
+                 NAVIGATION
+            ================================================== -->
 
             <nav>
 
                 <ul class="nav flex-column">
-
-
-                    <!-- HOME -->
-
-                    <li class="nav-item">
-
-                        <a class="nav-link"
-                           href="@Url.Action("Index", "Dashboard")">
-
-                            <i class="fas fa-home me-2"></i>
-
-                            Home
-
-                        </a>
-
-                    </li>
 
 
                     <!-- BREAKING NEWS -->
@@ -515,7 +584,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link"
-                           href="#">
+                           href="@Url.Action("Trending", "Dashboard")">
 
                             <i class="fas fa-chart-line me-2"></i>
 
@@ -547,7 +616,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link"
-                           href="#">
+                           href="@Url.Action("Category", "Dashboard")">
 
                             <i class="fas fa-list-ul me-2"></i>
 
@@ -563,7 +632,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link"
-                           href="#">
+                           href="@Url.Action("History", "Dashboard")">
 
                             <i class="fas fa-history me-2"></i>
 
@@ -579,7 +648,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link"
-                           href="#">
+                           href="@Url.Action("Saved", "Dashboard")">
 
                             <i class="fas fa-bookmark me-2"></i>
 
@@ -595,7 +664,7 @@
                     <li class="nav-item">
 
                         <a class="nav-link"
-                           href="#">
+                           href="@Url.Action("Collections", "Dashboard")">
 
                             <i class="fas fa-folder-open me-2"></i>
 
@@ -624,10 +693,12 @@
 
                     <!-- =================================================
                          ADMIN
-                         ================================================= -->
+                    ================================================== -->
                     @if (User.Identity?.IsAuthenticated == true &&
                                         User.IsInRole("Admin"))
                     {
+
+                        <!-- ADMIN DASHBOARD -->
 
                         <li class="nav-item">
 
@@ -643,12 +714,14 @@
                         </li>
 
 
+                        <!-- USER MANAGEMENT -->
+
                         <li class="nav-item">
 
                             <a class="nav-link"
                                href="@Url.Action("Index", "Users")">
 
-                                <i class="fas fa-users me-2"></i>
+                                <i class="fas fa-user-gear me-2"></i>
 
                                 User Management
 
@@ -679,24 +752,24 @@
             </nav>
 
 
-            <!-- =====================================================
+            <!-- =================================================
                  FOLLOWING
-                 ===================================================== -->
+            ================================================== -->
 
             <div class="following-section">
 
                 <hr class="my-3" />
 
-                <h6>
+                <div class="following-title">
                     Following
-                </h6>
+                </div>
 
 
                 <ul class="nav flex-column">
 
                     <li class="nav-item">
 
-                        <span class="nav-link">
+                        <span class="nav-link following-empty">
 
                             <i class="fas fa-rss me-2"></i>
 
@@ -711,36 +784,34 @@
             </div>
 
 
-            <!-- CREATE POST -->
+            <!-- =================================================
+                 CREATE POST
+            ================================================== -->
+
+            <hr class="my-3" />
+
+
+            <a class="create-post-button"
+               href="@Url.Action("Create", "Posts")">
+
+                <i class="fas fa-pen-nib me-2"></i>
+
+                Create a Post
+
+            </a>
+
+
+            <!-- =================================================
+                 HELP + LOGOUT
+            ================================================== -->
 
             <hr class="my-3" />
 
 
             <ul class="nav flex-column">
 
-                <li class="nav-item">
 
-                    <a class="btn btn-primary w-100"
-                       href="@Url.Action("Create", "Posts")">
-
-                        <i class="fas fa-pen-nib me-2"></i>
-
-                        Create a Post
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-
-            <!-- HELP + LOGOUT -->
-
-            <hr class="my-3" />
-
-
-            <ul class="nav flex-column">
-
+                <!-- HELP -->
 
                 <li class="nav-item">
 
@@ -756,21 +827,18 @@
                 </li>
 
 
+                <!-- LOGOUT -->
+
                 <li class="nav-item">
 
                     <form method="post"
                           action="@Url.Action("Logout", "Logout")"
-                          style="margin:0;">
+                          style="margin: 0;">
 
                         <button type="submit"
-                                class="nav-link btn btn-link"
-                                style="
-                                    width:100%;
-                                    border:none;
-                                    text-decoration:none;
-                                ">
+                                class="logout-button">
 
-                            <i class="fas fa-sign-out-alt me-2"></i>
+                            <i class="fas fa-sign-out-alt"></i>
 
                             Log Out
 
@@ -782,12 +850,13 @@
 
             </ul>
 
+
         </aside>
 
 
         <!-- =====================================================
              MAIN CONTENT
-             ===================================================== -->
+        ====================================================== -->
 
         <main class="main-content">
 
@@ -798,43 +867,37 @@
 
         <!-- =====================================================
              RIGHT SIDEBAR
-             ===================================================== -->
+        ====================================================== -->
 
         <aside class="right-sidebar">
 
 
-            <div style="
-                background-image:url('/images/png.png');
-                background-size:cover;
-                background-position:center;
-            ">
+            <div class="right-sidebar-banner">
             </div>
 
 
-            <h5 class="mb-3">
+            <h5 class="right-sidebar-title">
                 Top Creator
             </h5>
 
 
             <!-- CREATOR 1 -->
 
-            <div class="d-flex align-items-center mb-3">
+            <div class="creator-item">
 
                 <img src="~/images/person3.png"
                      alt="Anne Johnson"
-                     class="rounded-circle me-3"
-                     width="40"
-                     height="40" />
+                     class="creator-image" />
 
                 <div>
 
-                    <h6 class="mb-0">
+                    <h6 class="creator-name">
                         Anne Johnson
                     </h6>
 
-                    <small class="text-muted">
+                    <span class="creator-followers">
                         10.5k Followers
-                    </small>
+                    </span>
 
                 </div>
 
@@ -843,23 +906,21 @@
 
             <!-- CREATOR 2 -->
 
-            <div class="d-flex align-items-center mb-3">
+            <div class="creator-item">
 
                 <img src="~/images/person2.png"
                      alt="Jane Smith"
-                     class="rounded-circle me-3"
-                     width="40"
-                     height="40" />
+                     class="creator-image" />
 
                 <div>
 
-                    <h6 class="mb-0">
+                    <h6 class="creator-name">
                         Jane Smith
                     </h6>
 
-                    <small class="text-muted">
+                    <span class="creator-followers">
                         7.8k Followers
-                    </small>
+                    </span>
 
                 </div>
 
@@ -868,50 +929,46 @@
 
             <!-- CREATOR 3 -->
 
-            <div class="d-flex align-items-center mb-3">
+            <div class="creator-item">
 
                 <img src="~/images/person1.png"
                      alt="Peter Jones"
-                     class="rounded-circle me-3"
-                     width="40"
-                     height="40" />
+                     class="creator-image" />
 
                 <div>
 
-                    <h6 class="mb-0">
+                    <h6 class="creator-name">
                         Peter Jones
                     </h6>
 
-                    <small class="text-muted">
+                    <span class="creator-followers">
                         5.2k Followers
-                    </small>
+                    </span>
 
                 </div>
 
             </div>
 
+
         </aside>
+
 
     </div>
 
 
-    <!-- =====================================================
+    <!-- =========================================================
          SCRIPTS
-         ===================================================== -->
+    ========================================================= -->
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="~/js/site.js"
-            asp-append-version="true">
-    </script>
+            asp-append-version="true"></script>
 
 
-    @await RenderSectionAsync(
-    "Scripts",
-        required: false
-        )
+    @await RenderSectionAsync("Scripts", required: false)
 
 
     <script>
@@ -926,13 +983,49 @@
             }
 
 
-            sidebar.classList.toggle(
-                "sidebar-hidden"
-            );
+            sidebar.classList.toggle("mobile-open");
 
         }
 
+
+        /*
+           Close mobile sidebar after clicking a navigation link.
+        */
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sidebar =
+                document.querySelector(".sidebar");
+
+            if (!sidebar) {
+                return;
+            }
+
+
+            const links =
+                sidebar.querySelectorAll("a.nav-link");
+
+
+            links.forEach(function (link) {
+
+                link.addEventListener("click", function () {
+
+                    if (window.innerWidth <= 768) {
+
+                        sidebar.classList.remove(
+                            "mobile-open"
+                        );
+
+                    }
+
+                });
+
+            });
+
+        });
+
     </script>
+
 
 </body>
 

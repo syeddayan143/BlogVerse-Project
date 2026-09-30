@@ -1,0 +1,367 @@
+﻿@model IEnumerable<BlogVerse.Models.SavedPost>
+
+@{
+    ViewData["Title"] = "Saved";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<style>
+    .saved-page {
+        padding: 28px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .saved-header {
+        margin-bottom: 28px;
+    }
+
+        .saved-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
+        }
+
+        .saved-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+        }
+
+    .saved-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .saved-card {
+        position: relative;
+        padding: 22px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.74);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+        .saved-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 38px rgba(0, 0, 0, 0.09);
+        }
+
+    .saved-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 14px;
+    }
+
+    .saved-icon {
+        width: 48px;
+        height: 48px;
+        flex: 0 0 48px;
+        border-radius: 16px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+
+    .saved-category {
+        display: inline-block;
+        margin-bottom: 8px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        background: #eeeeee;
+        color: #555;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .saved-title {
+        margin: 0;
+        font-size: 20px;
+        line-height: 1.35;
+        font-weight: 700;
+        color: #1d1d1d;
+    }
+
+        .saved-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+            .saved-title a:hover {
+                text-decoration: underline;
+                text-underline-offset: 4px;
+            }
+
+    .saved-author {
+        margin-top: 9px;
+        color: #777;
+        font-size: 13px;
+    }
+
+        .saved-author strong {
+            color: #333;
+        }
+
+    .saved-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 18px;
+        padding-top: 15px;
+        border-top: 1px solid rgba(0, 0, 0, 0.07);
+        color: #777;
+        font-size: 12px;
+    }
+
+        .saved-meta strong {
+            color: #333;
+        }
+
+    .saved-actions {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 18px;
+    }
+
+    .saved-open {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 13px;
+        background: #222;
+        color: #fff;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+        transition: all 0.2s ease;
+    }
+
+        .saved-open:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+    .saved-remove {
+        border: 1px solid rgba(0, 0, 0, 0.10);
+        background: rgba(255, 255, 255, 0.65);
+        color: #444;
+        padding: 9px 13px;
+        border-radius: 13px;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+        .saved-remove:hover {
+            background: #eeeeee;
+        }
+
+    .empty-state {
+        padding: 65px 25px;
+        text-align: center;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+        backdrop-filter: blur(18px);
+        -webkit-backdrop-filter: blur(18px);
+    }
+
+    .empty-icon {
+        width: 65px;
+        height: 65px;
+        margin: 0 auto 18px;
+        border-radius: 20px;
+        background: #eeeeee;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 27px;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 8px;
+        color: #222;
+        font-size: 21px;
+    }
+
+    .empty-state p {
+        margin: 0;
+        color: #777;
+        font-size: 14px;
+    }
+
+    @@media (max-width: 800px) {
+        .saved-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .saved-page {
+            padding: 18px;
+        }
+
+        .saved-header h1 {
+            font-size: 28px;
+        }
+
+        .saved-card {
+            padding: 18px;
+            border-radius: 19px;
+        }
+
+        .saved-title {
+            font-size: 18px;
+        }
+
+        .saved-actions {
+            flex-wrap: wrap;
+        }
+    }
+</style>
+
+<div class="saved-page">
+
+    <!-- HEADER -->
+    <div class="saved-header">
+        <h1>Saved</h1>
+        <p>Posts you saved to read later.</p>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="saved-grid">
+
+            @foreach (var saved in Model)
+            {
+                var post = saved.Post;
+
+                if (post == null)
+                {
+                    continue;
+                }
+
+                <article class="saved-card">
+
+                    <div class="saved-top">
+
+                        <div>
+                            @if (!string.IsNullOrWhiteSpace(post.Category))
+                            {
+                                <span class="saved-category">
+                                    @post.Category
+                                </span>
+                            }
+
+                            <h2 class="saved-title">
+                                <a asp-controller="Posts"
+                                   asp-action="Details"
+                                   asp-route-id="@post.Id">
+                                    @post.Title
+                                </a>
+                            </h2>
+
+                            <div class="saved-author">
+                                By
+                                <strong>
+                                    @(post.User?.Name ?? "Unknown User")
+                                </strong>
+                            </div>
+                        </div>
+
+                        <div class="saved-icon">
+                            ♡
+                        </div>
+
+                    </div>
+
+                    <div class="saved-meta">
+
+                        <span>
+                            👁
+                            <strong>@post.Views</strong> views
+                        </span>
+
+                        <span>
+                            ♥
+                            <strong>@post.Likes</strong> likes
+                        </span>
+
+                        <span>
+                            Saved:
+                            <strong>
+                                @saved.SavedAt.ToLocalTime()
+                                .ToString("dd MMM yyyy")
+                            </strong>
+                        </span>
+
+                    </div>
+
+                    <div class="saved-actions">
+
+                        <a asp-controller="Posts"
+                           asp-action="Details"
+                           asp-route-id="@post.Id"
+                           class="saved-open">
+                            Read Post →
+                        </a>
+
+                        <form asp-controller="Dashboard"
+                              asp-action="RemoveSavedPost"
+                              method="post">
+
+                            @Html.AntiForgeryToken()
+
+                            <input type="hidden"
+                                   name="postId"
+                                   value="@post.Id" />
+
+                            <button type="submit"
+                                    class="saved-remove">
+                                Remove
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </article>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-state">
+
+            <div class="empty-icon">
+                ♡
+            </div>
+
+            <h3>No saved posts</h3>
+
+            <p>
+                Posts you save will appear here.
+            </p>
+
+        </div>
+    }
+
+</div>

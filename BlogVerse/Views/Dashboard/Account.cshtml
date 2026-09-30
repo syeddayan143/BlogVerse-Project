@@ -1,110 +1,357 @@
 ﻿@* Views/Dashboard/Account.cshtml *@
 @{
     ViewData["Title"] = "Account";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
 }
 
 <style>
-    .card-header {
-        background-color: var(--navbar-bg) !important;
-        color: var(--text-color) !important;
-        border-bottom: 1px solid #ddd;
+    .account-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px;
     }
 
-    .card-body {
-        background-color: var(--primary-bg) !important;
-        /* Set text color to navbar background color */
-        color: var(--navbar-bg) !important;
+    .account-header {
+        margin-bottom: 28px;
     }
 
-    h3, h4, p, label, strong, .form-control {
-        color: var(--navbar-bg) !important; /* Apply navbar background color to these elements */
-    }
-
-    .form-label {
-        color: var(--navbar-bg) !important;
-    }
-
-    .border {
-        border-color: #ccc !important;
-        background-color: white;
-        color: var(--navbar-bg) !important; /* Apply to text inside border */
-    }
-
-    .text-muted {
-        color: #6c757d !important; /* Keep a slightly lighter shade if desired */
-    }
-
-    .btn-primary {
-        background-color: var(--link-color) !important;
-        border-color: var(--link-color) !important;
-        color: white !important;
-    }
-
-        .btn-primary:hover {
-            background-color: darken(var(--link-color), 10%) !important;
-            border-color: darken(var(--link-color), 10%) !important;
+        .account-header h1 {
+            margin: 0 0 8px;
+            color: #1f1f1f;
+            font-size: 34px;
+            font-weight: 700;
+            letter-spacing: -0.8px;
         }
 
-    .btn-secondary {
-        background-color: #6c757d !important;
-        border-color: #6c757d !important;
-        color: white !important;
+        .account-header p {
+            margin: 0;
+            color: #777;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+    .account-card {
+        overflow: hidden;
+        border-radius: 26px;
+        background: rgba(255, 255, 255, .74);
+        border: 1px solid rgba(0, 0, 0, .08);
+        box-shadow: 0 14px 40px rgba(0, 0, 0, .07);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
     }
 
-        .btn-secondary:hover {
-            background-color: darken(#6c757d, 10%) !important;
-            border-color: darken(#6c757d, 10%) !important;
+    .profile-section {
+        padding: 35px 30px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, .07);
+    }
+
+    .profile-image-wrapper {
+        width: 105px;
+        height: 105px;
+        margin: 0 auto 16px;
+        overflow: hidden;
+        border-radius: 50%;
+        background: #eeeeee;
+        border: 4px solid rgba(255, 255, 255, .9);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, .10);
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .profile-name {
+        margin: 0;
+        color: #1f1f1f;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .profile-subtitle {
+        margin: 6px 0 0;
+        color: #888;
+        font-size: 13px;
+    }
+
+    .account-content {
+        padding: 30px;
+    }
+
+    .account-field {
+        margin-bottom: 22px;
+    }
+
+    .account-label {
+        display: block;
+        margin-bottom: 8px;
+        color: #444;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .account-input {
+        width: 100%;
+        height: 48px;
+        padding: 0 15px;
+        border: 1px solid rgba(0, 0, 0, .10);
+        border-radius: 13px;
+        outline: none;
+        background: rgba(245, 245, 245, .72);
+        color: #333;
+        font-family: inherit;
+        font-size: 13px;
+        box-sizing: border-box;
+    }
+
+        .account-input:focus {
+            border-color: rgba(0, 0, 0, .20);
+            background: #fff;
         }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+        margin: 28px 0;
+    }
+
+    .stat-card {
+        padding: 23px;
+        text-align: center;
+        border-radius: 19px;
+        background: rgba(255, 255, 255, .68);
+        border: 1px solid rgba(0, 0, 0, .07);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, .04);
+    }
+
+    .stat-number {
+        margin: 0 0 5px;
+        color: #222;
+        font-size: 27px;
+        font-weight: 700;
+    }
+
+    .stat-label {
+        margin: 0;
+        color: #888;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .account-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .account-button {
+        min-height: 44px;
+        padding: 10px 17px;
+        border: 0;
+        border-radius: 13px;
+        font-family: inherit;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+        .account-button:hover {
+            transform: translateY(-1px);
+        }
+
+    .edit-button {
+        background: #222;
+        color: #fff;
+    }
+
+        .edit-button:hover {
+            background: #000;
+        }
+
+    .settings-button {
+        background: #eeeeee;
+        color: #333;
+    }
+
+        .settings-button:hover {
+            background: #e2e2e2;
+        }
+
+    @@media (max-width: 650px) {
+
+        .account-page {
+            padding: 18px;
+        }
+
+        .account-header h1 {
+            font-size: 28px;
+        }
+
+        .account-card {
+            border-radius: 21px;
+        }
+
+        .profile-section {
+            padding: 28px 20px;
+        }
+
+        .account-content {
+            padding: 22px 18px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .account-actions {
+            flex-direction: column;
+        }
+
+        .account-button {
+            width: 100%;
+        }
+    }
 </style>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-header">
-                    <h2 class="mb-0">Your Account</h2>
-                </div>
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <img src="~/images/avatar-default.jpg" alt="Profile Icon" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
-                        <h3 class="mt-2">@User.Identity.Name</h3>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="contact" class="form-label"><strong>Contact:</strong></label>
-                        <input type="text" class="form-control" id="contact" value="+91 9876543210" readonly>
-                    </div>
+<div class="account-page">
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label"><strong>Email ID:</strong></label>
-                        <input type="email" class="form-control" id="email" value="sa@example.com" readonly>
-                    </div>
+    <div class="account-header">
 
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <div class="border p-3 text-center">
-                                <h4>125</h4>
-                                <p class="mb-0 text-muted">Blogs Read</p>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="border p-3 text-center">
-                                <h4>32</h4>
-                                <p class="mb-0 text-muted">Blogs Posted</p>
-                            </div>
-                        </div>
-                    </div>
+        <h1>Account</h1>
 
-                    <div class="d-flex">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-edit me-2"></i> Edit Profile
-                        </button>
-                        <button class="btn btn-secondary ms-2">
-                            <i class="fas fa-cog me-2"></i> Account Settings
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <p>
+            Manage your profile information and account details.
+        </p>
+
     </div>
+
+
+    <div class="account-card">
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+
+            <div class="profile-image-wrapper">
+
+                <img src="~/images/avatar-default.jpg"
+                     alt="Profile Icon"
+                     class="profile-image" />
+
+            </div>
+
+            <h2 class="profile-name">
+                @User.Identity?.Name
+            </h2>
+
+            <p class="profile-subtitle">
+                BlogVerse Member
+            </p>
+
+        </div>
+
+
+        <!-- Account Details -->
+        <div class="account-content">
+
+            <div class="account-field">
+
+                <label for="contact"
+                       class="account-label">
+                    Contact
+                </label>
+
+                <input type="text"
+                       class="account-input"
+                       id="contact"
+                       value="+91 9876543210"
+                       readonly />
+
+            </div>
+
+
+            <div class="account-field">
+
+                <label for="email"
+                       class="account-label">
+                    Email ID
+                </label>
+
+                <input type="email"
+                       class="account-input"
+                       id="email"
+                       value="sa@example.com"
+                       readonly />
+
+            </div>
+
+
+            <!-- Statistics -->
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <h3 class="stat-number">
+                        125
+                    </h3>
+
+                    <p class="stat-label">
+                        Blogs Read
+                    </p>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <h3 class="stat-number">
+                        32
+                    </h3>
+
+                    <p class="stat-label">
+                        Blogs Posted
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Actions -->
+            <div class="account-actions">
+
+                <button type="button"
+                        class="account-button edit-button">
+
+                    <i class="fas fa-edit"></i>
+
+                    <span>
+                        Edit Profile
+                    </span>
+
+                </button>
+
+
+                <button type="button"
+                        class="account-button settings-button">
+
+                    <i class="fas fa-cog"></i>
+
+                    <span>
+                        Account Settings
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
